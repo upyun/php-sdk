@@ -303,7 +303,7 @@ class UpYun {
                 //return $this->_get_headers_data(substr($response, 0 , $header_size));
                 return $this->_getHeadersData($header_string);
             }
-            return true;
+            return True;
         }
         else {
             $message = $this->_getErrorMessage($header_string);

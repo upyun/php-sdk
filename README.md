@@ -5,14 +5,18 @@
 ## 使用说明
 
 ### 初始化UpYun
-> require_once('upyun.class.php');
->
-> $upyun = new UpYun('bucketname', 'username', 'password');
+````
+require_once('upyun.class.php');
+$upyun = new UpYun('bucketname', 'username', 'password');
+````
 
 参数 `bucketname` 为空间名称，`useranme`、`password` 为授权操作员的账号密码，不是又拍云的登陆账号密码。
 
 根据国内的网络情况，又拍云存储API目前提供了电信、网通、铁通三个接入点，在初始化的时候可以添加可选的第四个参数来指定API接入点。
-> $upyun = new UpYun('bucketname', 'username', 'password', UpYun::$ED_TELECOM);
+
+````
+$upyun = new UpYun('bucketname', 'username', 'password', UpYun::$ED_TELECOM);
+````
 
 接入点有四个值可选：
 
@@ -21,4 +25,14 @@
 * **UpYun::$ED_CNC** 网通接入点
 * **UpYun::$ED_CTT** 铁通接入点
 
-默认参数为自动选择API接入点。但是我们推荐根据服务器网络状况，手动选择合理的接入点已获取最佳的反问速度。
+默认参数为自动选择API接入点。但是我们推荐根据服务器网络状况，手动设置合理的接入点已获取最佳的访问速度。
+
+### 创建目录
+````
+$upyun->mkDir('/demo/');
+````
+创建成功返回 `True`，否则抛出 `UpYun`
+
+## 异常处理
+
+
