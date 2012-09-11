@@ -125,7 +125,7 @@ class UpYun {
             if (!is_null($this->_file_secret)) array_push($opts, self::$CONTENT_SECRET . " {$this->_file_secret}");
         }
 
-        $this->_do_request('PUT', $path, $opts, $file);
+        return $this->_do_request('PUT', $path, $opts, $file);
     }/*}}}*/
 
     /**
@@ -143,11 +143,10 @@ class UpYun {
      * 获取目录文件列表
      *
      * @param string $path 查询路径
-     * @param string $format 返回数据格式
      *
      * @return mixed
      */
-    public function getList($path, $format = NULL) {/*{{{*/
+    public function getList($path) {/*{{{*/
         $rsp = $this->_do_request('GET', $path);
 
         $list = array();
@@ -169,12 +168,7 @@ class UpYun {
             }
         }
 
-        if (is_null($format)) {
-            return $list;
-        }
-        elseif ($format == 'json') {
-            return json_encode(array('data' => $list));
-        }
+        return $list;
     }/*}}}*/
 
     /**
@@ -193,15 +187,11 @@ class UpYun {
      * 获取文件、目录信息
      *
      * @param string $path 路径
-     * @param string $format 返回数据格式
      *
      * @return mixed
      */
-    public function head($path, $format = NULL) {/*{{{*/
+    public function head($path) {/*{{{*/
         $rsp = $this->_do_request('HEAD', $path);
-        if ($format == 'json') {
-            return json_encode($rsp);
-        }
 
         return $rsp;
     }/*}}}*/
@@ -299,11 +289,15 @@ class UpYun {
             if ($method == 'GET' && is_null($file_handle)) {
                 return $body;
             }
-            elseif ($method == 'HEAD') {
-                //return $this->_get_headers_data(substr($response, 0 , $header_size));
-                return $this->_getHeadersData($header_string);
+            else {
+                $data = $this->_getHeadersData($header_string);
+                return count($data) > 0 ? $data : true;
             }
-            return True;
+            //elseif ($method == 'HEAD') {
+            //    //return $this->_get_headers_data(substr($response, 0 , $header_size));
+            //    return $this->_getHeadersData($header_string);
+            //}
+            //return True;
         }
         else {
             $message = $this->_getErrorMessage($header_string);

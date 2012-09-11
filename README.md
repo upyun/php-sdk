@@ -31,7 +31,14 @@ $upyun = new UpYun('bucketname', 'username', 'password', UpYun::$ED_TELECOM);
 ````
 $upyun->mkDir('/demo/');
 ````
-创建成功返回 `True`，否则抛出 `UpYun`
+目录路径必须以斜杠 `/` 结尾，创建成功返回 `True`，否则抛出异常
+
+### 删除目录或者文件
+````
+$upyun->delete('/demo/');
+$upyun->delete('/demo/demo.png');
+````
+删除成功返回True，否则抛出异常
 
 ## 异常处理
 
