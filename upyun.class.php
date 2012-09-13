@@ -37,6 +37,7 @@ class UpYunServiceUnavailable extends UpYunException {/*{{{*/
 }/*}}}*/
 
 class UpYun {
+    public static $VERSION            = '1.1.1';
 
 /*{{{*/
     public static $ED_AUTO            = 'v0.api.upyun.com';
@@ -46,12 +47,12 @@ class UpYun {
 
     public static $CONTENT_TYPE       = 'Content-Type';
     public static $CONTENT_MD5        = 'Content-MD5';
-    public static $CONTENT_SECRET     = 'Content­Secret';
+    public static $CONTENT_SECRET     = 'Content-Secret';
 
     // 缩略图
-    public static $X_GMKERL_THUMBNAIL = 'x­gmkerl­thumbnail';
-    public static $X_GMKERL_TYPE      = 'x­gmkerl-type';
-    public static $X_GMKERL_VALUE     = 'x­gmkerl-value';
+    public static $X_GMKERL_THUMBNAIL = 'x-gmkerl-thumbnail';
+    public static $X_GMKERL_TYPE      = 'x-gmkerl-type';
+    public static $X_GMKERL_VALUE     = 'x-gmkerl-value';
     public static $X_GMKERL_QUALITY   = 'x­gmkerl-quality';
     public static $X_GMKERL_UNSHARP   = 'x­gmkerl-unsharp';
 /*}}}*/
@@ -88,6 +89,13 @@ class UpYun {
         $this->endpoint = is_null($endpoint) ? self::$ED_AUTO : $endpoint;
 	}/*}}}*/
 
+    /**
+     * 获取当前SDK版本号
+     */
+    public function version() {
+        return sels::$VERSION;
+    }
+
     /** 
      * 创建目录
      * @param $path 路径
@@ -108,22 +116,33 @@ class UpYun {
      * @return boolean
      */
     public function delete($path) {/*{{{*/
-        $this->_do_request('DELETE', $path);
+        return $this->_do_request('DELETE', $path);
     }/*}}}*/
 
 
     /**
      * 上传文件
-     * @param $path 存储路径
-     * @param $file 需要上传的文件，可以是文件流或者文件内容
-     * @param $opts 可选参数
+     * @param string $path 存储路径
+     * @param boolean $auto_mkdir 自动创建目录
+     * @param mixed $file 需要上传的文件，可以是文件流或者文件内容
+     * @param array $opts 可选参数
      */
-    public function writeFile($path, $file, $opts = NULL) {/*{{{*/
+    public function writeFile($path, $file, $auto_mkdir = False, $opts = NULL) {/*{{{*/
+        if (is_null($opts)) $opts = array();
         if (!is_null($this->_content_md5) || !is_null($this->_file_secret)) {
-            if (is_null($opts)) $opts = array();
-            if (!is_null($this->_content_md5)) array_push($opts, self::$CONTENT_MD5 . " {$this->_content_md5}");
-            if (!is_null($this->_file_secret)) array_push($opts, self::$CONTENT_SECRET . " {$this->_file_secret}");
+            //if (!is_null($this->_content_md5)) array_push($opts, self::$CONTENT_MD5 . ": {$this->_content_md5}");
+            //if (!is_null($this->_file_secret)) array_push($opts, self::$CONTENT_SECRET . ": {$this->_file_secret}");
+            if (!is_null($this->_content_md5)) $opts[self::$CONTENT_MD5] = $this->_content_md5;
+            if (!is_null($this->_file_secret)) $opts[self::$CONTENT_SECRET] = $this->_file_secret;
         }
+
+        // 如果设置了缩略版本或者缩略图类型，则添加默认压缩质量和锐化参数
+        //if (isset($opts[self::$X_GMKERL_THUMBNAIL]) || isset($opts[self::$X_GMKERL_TYPE])) {
+        //    if (!isset($opts[self::$X_GMKERL_QUALITY])) $opts[self::$X_GMKERL_QUALITY] = 95;
+        //    if (!isset($opts[self::$X_GMKERL_UNSHARP])) $opts[self::$X_GMKERL_UNSHARP] = 'true';
+        //}
+
+        if ($auto_mkdir === True) $opts['Mkdir'] = 'true';
 
         return $this->_do_request('PUT', $path, $opts, $file);
     }/*}}}*/

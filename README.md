@@ -10,9 +10,9 @@ require_once('upyun.class.php');
 $upyun = new UpYun('bucketname', 'username', 'password');
 ````
 
-参数 `bucketname` 为空间名称，`useranme`、`password` 为授权操作员的账号密码，不是又拍云的登陆账号密码。
+参数 `bucketname` 为空间名称，`useranme`、`password` 为授权操作员的账号密码。
 
-根据国内的网络情况，又拍云存储API目前提供了电信、网通、铁通三个接入点，在初始化的时候可以添加可选的第四个参数来指定API接入点。
+根据国内的网络情况，又拍云存储API目前提供了电信、联通网通、移动铁通三个接入点，在初始化的时候可以添加可选的第四个参数来指定API接入点。
 
 ````
 $upyun = new UpYun('bucketname', 'username', 'password', UpYun::$ED_TELECOM);
@@ -27,6 +27,43 @@ $upyun = new UpYun('bucketname', 'username', 'password', UpYun::$ED_TELECOM);
 
 默认参数为自动选择API接入点。但是我们推荐根据服务器网络状况，手动设置合理的接入点已获取最佳的访问速度。
 
+### 上传文件
+
+````
+// 直接传递文件内容的形式上传
+$upyun->writeFile('/temp/text_demo.txt', 'Hello World', True);
+
+// 文档流方式上传，可降低内存占用
+$fh = fopen('demo.png', 'r');
+$upyun->writeFile('/temp/upload_demo.png', $fh, True);
+fclose($fh);
+````
+第三个参数为可选。True 表示自动创建相应目录，默认值为False。
+
+本方法还有一个数组类型的可选参数，用来设置文件类型、缩略图处理等参数。
+
+````
+$opts = array(
+	UpYun::$X_GMKERL_THUMBNAIL => 'square' // 缩略图版本，仅适用于图片空间
+);
+
+$fh = fopen('demo.png', 'r');
+$upyun->writeFile('/temp/upload_demo.png', $fh, True, $opts);
+fclose($fh);
+````
+该参数可以设置的值还包括：
+
+* UpYun::$CONTENT_TYPE
+* UpYun::$CONTENT_MD5
+* UpYun::$CONTENT_SECRET
+* UpYun::$X_GMKERL_THUMBNAIL
+* UpYun::$X_GMKERL_TYPE
+* UpYun::$X_GMKERL_VALUE
+* UpYun::$X_GMKERL_QUALITY
+* UpYun::$X_GMKERL_UNSHARP
+
+参数的具体使用方法，请参考 [标准API上传文件](http://wiki.upyun.com/index.php?title=%E6%A0%87%E5%87%86API%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6)
+
 ### 创建目录
 ````
 $upyun->mkDir('/demo/');
@@ -35,10 +72,10 @@ $upyun->mkDir('/demo/');
 
 ### 删除目录或者文件
 ````
-$upyun->delete('/demo/');
-$upyun->delete('/demo/demo.png');
+$upyun->delete('/demo/'); // 删除目录
+$upyun->delete('/demo/demo.png'); // 删除文件
 ````
-删除成功返回True，否则抛出异常
+删除成功返回True，否则抛出异常。注意删除目录时，`必须保证目录为空` ，否则也会抛出异常。
 
 ## 异常处理
 
