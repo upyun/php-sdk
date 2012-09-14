@@ -37,23 +37,24 @@ class UpYunServiceUnavailable extends UpYunException {/*{{{*/
 }/*}}}*/
 
 class UpYun {
+    const VERSION            = '1.1.1';
 
 /*{{{*/
-    public static $ED_AUTO            = 'v0.api.upyun.com';
-    public static $ED_TELECOM         = 'v1.api.upyun.com';
-    public static $ED_CNC             = 'v2.api.upyun.com';
-    public static $ED_CTT             = 'v3.api.upyun.com';
+    const ED_AUTO            = 'v0.api.upyun.com';
+    const ED_TELECOM         = 'v1.api.upyun.com';
+    const ED_CNC             = 'v2.api.upyun.com';
+    const ED_CTT             = 'v3.api.upyun.com';
 
-    public static $CONTENT_TYPE       = 'Content-Type';
-    public static $CONTENT_MD5        = 'Content-MD5';
-    public static $CONTENT_SECRET     = 'Content­Secret';
+    const CONTENT_TYPE       = 'Content-Type';
+    const CONTENT_MD5        = 'Content-MD5';
+    const CONTENT_SECRET     = 'Content-Secret';
 
     // 缩略图
-    public static $X_GMKERL_THUMBNAIL = 'x­gmkerl­thumbnail';
-    public static $X_GMKERL_TYPE      = 'x­gmkerl-type';
-    public static $X_GMKERL_VALUE     = 'x­gmkerl-value';
-    public static $X_GMKERL_QUALITY   = 'x­gmkerl-quality';
-    public static $X_GMKERL_UNSHARP   = 'x­gmkerl-unsharp';
+    const X_GMKERL_THUMBNAIL = 'x-gmkerl-thumbnail';
+    const X_GMKERL_TYPE      = 'x-gmkerl-type';
+    const X_GMKERL_VALUE     = 'x-gmkerl-value';
+    const X_GMKERL_QUALITY   = 'x­gmkerl-quality';
+    const X_GMKERL_UNSHARP   = 'x­gmkerl-unsharp';
 /*}}}*/
 
     private $_bucket_name;
@@ -85,8 +86,15 @@ class UpYun {
 		$this->_username = $username;
 		$this->_password = md5($password);
 
-        $this->endpoint = is_null($endpoint) ? self::$ED_AUTO : $endpoint;
+        $this->endpoint = is_null($endpoint) ? self::ED_AUTO : $endpoint;
 	}/*}}}*/
+
+    /**
+     * 获取当前SDK版本号
+     */
+    public function version() {
+        return sels::$VERSION;
+    }
 
     /** 
      * 创建目录
@@ -98,7 +106,7 @@ class UpYun {
     public function mkDir($path, $auto_mkdir = false) {/*{{{*/
         $headers = array('Folder' => 'true');
         if ($auto_mkdir) $headers['Mkdir'] = 'true';
-        $this->_do_request('PUT', $path, $headers);
+        return $this->_do_request('PUT', $path, $headers);
     }/*}}}*/
 
     /**
@@ -108,24 +116,35 @@ class UpYun {
      * @return boolean
      */
     public function delete($path) {/*{{{*/
-        $this->_do_request('DELETE', $path);
+        return $this->_do_request('DELETE', $path);
     }/*}}}*/
 
 
     /**
      * 上传文件
-     * @param $path 存储路径
-     * @param $file 需要上传的文件，可以是文件流或者文件内容
-     * @param $opts 可选参数
+     * @param string $path 存储路径
+     * @param boolean $auto_mkdir 自动创建目录
+     * @param mixed $file 需要上传的文件，可以是文件流或者文件内容
+     * @param array $opts 可选参数
      */
-    public function writeFile($path, $file, $opts = NULL) {/*{{{*/
+    public function writeFile($path, $file, $auto_mkdir = False, $opts = NULL) {/*{{{*/
+        if (is_null($opts)) $opts = array();
         if (!is_null($this->_content_md5) || !is_null($this->_file_secret)) {
-            if (is_null($opts)) $opts = array();
-            if (!is_null($this->_content_md5)) array_push($opts, self::$CONTENT_MD5 . " {$this->_content_md5}");
-            if (!is_null($this->_file_secret)) array_push($opts, self::$CONTENT_SECRET . " {$this->_file_secret}");
+            //if (!is_null($this->_content_md5)) array_push($opts, self::CONTENT_MD5 . ": {$this->_content_md5}");
+            //if (!is_null($this->_file_secret)) array_push($opts, self::CONTENT_SECRET . ": {$this->_file_secret}");
+            if (!is_null($this->_content_md5)) $opts[self::CONTENT_MD5] = $this->_content_md5;
+            if (!is_null($this->_file_secret)) $opts[self::CONTENT_SECRET] = $this->_file_secret;
         }
 
-        $this->_do_request('PUT', $path, $opts, $file);
+        // 如果设置了缩略版本或者缩略图类型，则添加默认压缩质量和锐化参数
+        //if (isset($opts[self::X_GMKERL_THUMBNAIL]) || isset($opts[self::X_GMKERL_TYPE])) {
+        //    if (!isset($opts[self::X_GMKERL_QUALITY])) $opts[self::X_GMKERL_QUALITY] = 95;
+        //    if (!isset($opts[self::X_GMKERL_UNSHARP])) $opts[self::X_GMKERL_UNSHARP] = 'true';
+        //}
+
+        if ($auto_mkdir === True) $opts['Mkdir'] = 'true';
+
+        return $this->_do_request('PUT', $path, $opts, $file);
     }/*}}}*/
 
     /**
@@ -143,11 +162,10 @@ class UpYun {
      * 获取目录文件列表
      *
      * @param string $path 查询路径
-     * @param string $format 返回数据格式
      *
      * @return mixed
      */
-    public function getList($path, $format = NULL) {/*{{{*/
+    public function getList($path) {/*{{{*/
         $rsp = $this->_do_request('GET', $path);
 
         $list = array();
@@ -169,12 +187,7 @@ class UpYun {
             }
         }
 
-        if (is_null($format)) {
-            return $list;
-        }
-        elseif ($format == 'json') {
-            return json_encode(array('data' => $list));
-        }
+        return $list;
     }/*}}}*/
 
     /**
@@ -193,15 +206,11 @@ class UpYun {
      * 获取文件、目录信息
      *
      * @param string $path 路径
-     * @param string $format 返回数据格式
      *
      * @return mixed
      */
-    public function head($path, $format = NULL) {/*{{{*/
+    public function head($path) {/*{{{*/
         $rsp = $this->_do_request('HEAD', $path);
-        if ($format == 'json') {
-            return json_encode($rsp);
-        }
 
         return $rsp;
     }/*}}}*/
@@ -276,6 +285,7 @@ class UpYun {
         }
 
         if ($method == 'GET' && is_resource($file_handle)) {
+            curl_setopt($ch, CURLOPT_HEADER, 0);
 			curl_setopt($ch, CURLOPT_FILE, $file_handle);
         }
 
@@ -299,14 +309,21 @@ class UpYun {
             if ($method == 'GET' && is_null($file_handle)) {
                 return $body;
             }
-            elseif ($method == 'HEAD') {
-                //return $this->_get_headers_data(substr($response, 0 , $header_size));
-                return $this->_getHeadersData($header_string);
+            else {
+                $data = $this->_getHeadersData($header_string);
+                return count($data) > 0 ? $data : true;
             }
-            return true;
+            //elseif ($method == 'HEAD') {
+            //    //return $this->_get_headers_data(substr($response, 0 , $header_size));
+            //    return $this->_getHeadersData($header_string);
+            //}
+            //return True;
         }
         else {
             $message = $this->_getErrorMessage($header_string);
+            if (is_null($message) && $method == 'GET' && is_resource($file_handle)) {
+                $message = 'File Not Found';
+            }
             switch($http_code) {
                 case 401:
                     throw new UpYunAuthorizationException($message);
@@ -453,5 +470,4 @@ class UpYun {
 	public function setFileSecret($str){/*{{{*/
 		$this->_file_secret = $str;
 	}/*}}}*/
-
 }
