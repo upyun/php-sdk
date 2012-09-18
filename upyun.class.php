@@ -37,7 +37,7 @@ class UpYunServiceUnavailable extends UpYunException {/*{{{*/
 }/*}}}*/
 
 class UpYun {
-    const VERSION            = '1.1.1';
+    const VERSION            = '2.0';
 
 /*{{{*/
     const ED_AUTO            = 'v0.api.upyun.com';
@@ -103,7 +103,7 @@ class UpYun {
      *
      * @return void
      */
-    public function mkDir($path, $auto_mkdir = false) {/*{{{*/
+    public function makeDir($path, $auto_mkdir = false) {/*{{{*/
         $headers = array('Folder' => 'true');
         if ($auto_mkdir) $headers['Mkdir'] = 'true';
         return $this->_do_request('PUT', $path, $headers);
@@ -165,7 +165,7 @@ class UpYun {
      *
      * @return mixed
      */
-    public function getList($path) {/*{{{*/
+    public function getList($path = '/') {/*{{{*/
         $rsp = $this->_do_request('GET', $path);
 
         $list = array();
@@ -183,7 +183,7 @@ class UpYun {
                     'size' => intval($size),
                     'time' => intval($time),
                 );
-                array_push($list, (is_null($format) ? (object)$item : $item));
+                array_push($list, $item);
             }
         }
 
@@ -209,7 +209,7 @@ class UpYun {
      *
      * @return mixed
      */
-    public function head($path) {/*{{{*/
+    public function getFileInfo($path) {/*{{{*/
         $rsp = $this->_do_request('HEAD', $path);
 
         return $rsp;
@@ -431,11 +431,11 @@ class UpYun {
 	* @param $file 文件路径（包含文件名）
 	* return array('type'=> file | folder, 'size'=> file size, 'date'=> unix time) 或 null
 	*/
-	public function getFileInfo($file){/*{{{*/
-        $result = $this->head($file);
-		if(is_null($r))return null;
-		return array('type'=> $this->tmp_infos['x-upyun-file-type'], 'size'=> @intval($this->tmp_infos['x-upyun-file-size']), 'date'=> @intval($this->tmp_infos['x-upyun-file-date']));
-	}/*}}}*/
+	//public function getFileInfo($file){/*{{{*/
+    //    $result = $this->head($file);
+	//	if(is_null($r))return null;
+	//	return array('type'=> $this->tmp_infos['x-upyun-file-type'], 'size'=> @intval($this->tmp_infos['x-upyun-file-size']), 'date'=> @intval($this->tmp_infos['x-upyun-file-date']));
+	//}/*}}}*/
 
 	/**
 	* 切换 API 接口的域名
