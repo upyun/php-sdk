@@ -105,8 +105,54 @@ $upyun->delete('/demo/demo.png'); // 删除文件
 
 ### 获取目录文件列表
 ````
-$upyun->getList('/demo/');
+$list = $upyun->getList('/demo/');
+$file = $list[0];
+echo $file['name'];	// 文件名
+echo $file['type'];	// 类型（目录: folder; 文件: file）
+echo $file['size'];	// 尺寸
+echo $file['time'];	// 创建时间
 ````
+获取目录文件以及子目录列表。需要获取根目录列表是，使用 `$upyun->getList('/')` ，或直接表用方法不传递参数。
+目录获取失败则抛出异常。
 
+### 获取文件信息
+````
+$result = $upyun->getFileInfo('/demo/demo.png');
+echo $result['x-upyun-file-type]; // 文件类型
+echo $result['x-upyun-file-size']; // 文件大小
+echo $result['x-upyun-file-date']; // 创建日期
+````
+返回结果为一个数组。
+
+### 获取空间使用状况
+````
+$upyun->getFolderUsage();	// 获取Bucket空间使用情况
+$upyun->getFolderUsage('/demo/'); 获取目录空间使用情况
+````
+返回的结果为空间使用量，单位 ***Byte***
 
 ## 异常处理
+当API请求发生错误时，SDK将抛出异常，具体错误代码请参考 [标准API错误代码表](http://wiki.upyun.com/index.php?title=%E6%A0%87%E5%87%86API%E9%94%99%E8%AF%AF%E4%BB%A3%E7%A0%81%E8%A1%A8)
+
+根据返回HTTP CODE的不同，SDK将抛出以下异常：
+
+* **UpYunAuthorizationException** 401，授权错误
+* **UpYunForbiddenException** 403，权限错误
+* **UpYunNotFoundException** 404，文件或目录不存在
+* **UpYunNotAcceptableException** 406， 目录错误
+* **UpYunServiceUnavailable** 503，系统错误
+
+未包含在以上异常中的错误，将统一抛出 `UpYunException` 异常。
+
+为了真确处理API请求中可能出现的异常，建议将API操作放在`try{...}catch(Exception $e){…}` 块中
+
+````
+try{
+	$upyun->getFolderUsage('/demo/');
+	...
+}
+catch(Exception $e) {
+	echo $e->getCode();		// 错误代码
+	echo $e->getMessage();	// 具体错误信息
+}
+````
