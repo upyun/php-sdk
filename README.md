@@ -2,6 +2,9 @@
 
 又拍云存储PHP SDK，基于 [又拍云存储HTTP REST API接口](http://wiki.upyun.com/index.php?title=HTTP_REST_API%E6%8E%A5%E5%8F%A3) 开发。
 
+## 更新说明
+使用1.0.x系列版本SDK的用户，注意原有部分方法已经不再推荐使用，但是处于兼容考虑目前任然保留，建议更新升级程序使用新版SDK提供的方法。
+
 ## 使用说明
 
 ### 初始化UpYun

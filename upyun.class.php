@@ -71,6 +71,11 @@ class UpYun {
      */
     private $_file_secret = NULL;
 
+    /**
+     * @deprecated
+     */
+    private $_file_infos= NULL;
+
     protected $endpoint;
 
 	/**
@@ -144,7 +149,9 @@ class UpYun {
 
         if ($auto_mkdir === True) $opts['Mkdir'] = 'true';
 
-        return $this->_do_request('PUT', $path, $opts, $file);
+        $this->_file_infos = $this->_do_request('PUT', $path, $opts, $file);
+
+        return $this->_file_infos;
     }/*}}}*/
 
     /**
@@ -302,7 +309,6 @@ class UpYun {
         $body = '';
         list($header_string, $body) = explode("\r\n\r\n", $response, 2);
 
-        var_dump($response);
         //var_dump($header_string, $body);
         //var_dump($http_code);
         if ($http_code == 200) {
@@ -469,5 +475,16 @@ class UpYun {
 	*/
 	public function setFileSecret($str){/*{{{*/
 		$this->_file_secret = $str;
+	}/*}}}*/
+
+	/**
+     * @deprecated
+	* 获取上传文件后的信息（仅图片空间有返回数据）
+	* @param $key 信息字段名（x-upyun-width、x-upyun-height、x-upyun-frames、x-upyun-file-type）
+	* return value or NULL
+	*/
+	public function getWritedFileInfo($key){/*{{{*/
+		if(!isset($this->_file_infos))return NULL;
+		return $this->_file_infos[$key];
 	}/*}}}*/
 }
