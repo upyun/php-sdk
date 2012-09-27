@@ -128,8 +128,8 @@ class UpYun {
     /**
      * 上传文件
      * @param string $path 存储路径
-     * @param boolean $auto_mkdir 自动创建目录
      * @param mixed $file 需要上传的文件，可以是文件流或者文件内容
+     * @param boolean $auto_mkdir 自动创建目录
      * @param array $opts 可选参数
      */
     public function writeFile($path, $file, $auto_mkdir = False, $opts = NULL) {/*{{{*/
@@ -267,6 +267,8 @@ class UpYun {
                 curl_setopt($ch, CURLOPT_INFILESIZE, $length);
             }
             else {
+                $length = @strlen($body);
+                array_push($_headers, "Content-Length: {$length}");
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
             }
         }
