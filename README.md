@@ -82,7 +82,7 @@ array(
 ### 下载文件
 ````
 // 直接读取文件内容
-$data = $upyun->readFile(''/temp/upload_demo.png');
+$data = $upyun->readFile('/temp/upload_demo.png');
 
 // 使用数据流模式下载，节省内存占用
 $fh = fopen('/tmp/demo.png', 'w');
@@ -121,7 +121,7 @@ echo $file['time'];	// 创建时间
 ### 获取文件信息
 ````
 $result = $upyun->getFileInfo('/demo/demo.png');
-echo $result['x-upyun-file-type]; // 文件类型
+echo $result['x-upyun-file-type']; // 文件类型
 echo $result['x-upyun-file-size']; // 文件大小
 echo $result['x-upyun-file-date']; // 创建日期
 ````
