@@ -10,6 +10,6 @@ try {
     echo "=========DONE\r\n\r\n";
 }
 catch(Exception $e) {
-    $e->getCode();
-    $e->getMessage();
+    echo $e->getCode();
+    echo $e->getMessage();
 }

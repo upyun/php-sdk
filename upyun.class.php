@@ -309,9 +309,15 @@ class UpYun {
 
         $header_string = '';
         $body = '';
-        list($header_string, $body) = explode("\r\n\r\n", $response, 2);
 
-        //var_dump($header_string, $body);
+        if ($method == 'GET' && is_resource($file_handle)) {
+            $header_string = '';
+            $body = $response;
+        }
+        else {
+            list($header_string, $body) = explode("\r\n\r\n", $response, 2);
+        }
+
         //var_dump($http_code);
         if ($http_code == 200) {
             if ($method == 'GET' && is_null($file_handle)) {
