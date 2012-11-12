@@ -98,7 +98,7 @@ class UpYun {
      * 获取当前SDK版本号
      */
     public function version() {
-        return sels::$VERSION;
+        return self::$VERSION;
     }
 
     /** 
