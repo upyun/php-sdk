@@ -25,8 +25,8 @@ $upyun = new UpYun('bucketname', 'username', 'password', UpYun::$ED_TELECOM);
 
 * **UpYun::ED_AUTO** 根据网络条件自动选择接入点
 * **UpYun::ED_TELECOM** 电信接入点
-* **UpYun::ED_CNC** 网通接入点
-* **UpYun::ED_CTT** 铁通接入点
+* **UpYun::ED_CNC** 联通网通接入点
+* **UpYun::ED_CTT** 移动铁通接入点
 
 默认参数为自动选择API接入点。但是我们推荐根据服务器网络状况，手动设置合理的接入点已获取最佳的访问速度。
 
