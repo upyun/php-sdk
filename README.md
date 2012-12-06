@@ -3,7 +3,7 @@
 又拍云存储PHP SDK，基于 [又拍云存储HTTP REST API接口](http://wiki.upyun.com/index.php?title=HTTP_REST_API%E6%8E%A5%E5%8F%A3) 开发。
 
 ## 更新说明
-使用1.0.x系列版本SDK的用户，注意原有部分方法已经不再推荐使用，但是处于兼容考虑目前任然保留，建议更新升级程序使用新版SDK提供的方法。
+使用1.0.x系列版本SDK的用户，注意原有部分方法已经不再推荐使用，但是出于兼容考虑目前任然保留，建议更新升级程序使用新版SDK提供的方法。
 
 ## 使用说明
 
@@ -25,8 +25,8 @@ $upyun = new UpYun('bucketname', 'username', 'password', UpYun::$ED_TELECOM);
 
 * **UpYun::ED_AUTO** 根据网络条件自动选择接入点
 * **UpYun::ED_TELECOM** 电信接入点
-* **UpYun::ED_CNC** 网通接入点
-* **UpYun::ED_CTT** 铁通接入点
+* **UpYun::ED_CNC** 联通网通接入点
+* **UpYun::ED_CTT** 移动铁通接入点
 
 默认参数为自动选择API接入点。但是我们推荐根据服务器网络状况，手动设置合理的接入点已获取最佳的访问速度。
 
@@ -159,4 +159,3 @@ catch(Exception $e) {
 	echo $e->getMessage();	// 具体错误信息
 }
 ````
-

@@ -81,8 +81,8 @@ class UpYun {
 	/**
 	* 初始化 UpYun 存储接口
 	* @param $bucketname 空间名称
-	* @param $username 操作员名称
-	* @param $password 密码
+	* @param $username 操作员账号
+	* @param $password 操作员密码
     *
 	* @return object
 	*/
@@ -456,7 +456,7 @@ class UpYun {
 	* 切换 API 接口的域名
     *
     * @deprecated
-	* @param $domain {默然 v0.api.upyun.com 自动识别, v1.api.upyun.com 电信, v2.api.upyun.com 联通, v3.api.upyun.com 移动}
+	* @param $domain {默认 v0.api.upyun.com 自动识别, v1.api.upyun.com 电信, v2.api.upyun.com 联通网通, v3.api.upyun.com 移动铁通}
 	* return null;
 	*/
 	public function setApiDomain($domain){/*{{{*/
@@ -475,7 +475,7 @@ class UpYun {
 	}/*}}}*/
 
 	/**
-	* 设置待上传文件的 访问密钥（注意：仅支持图片空！，设置密钥后，无法根据原文件URL直接访问，需带 URL 后面加上 （缩略图间隔标志符+密钥） 进行访问）
+	* 设置待上传文件的 访问密钥（注意：仅支持图片空间！，设置密钥后，无法根据原文件URL直接访问，需带 URL 后面加上 （缩略图间隔标志符+密钥） 进行访问）
 	* 如缩略图间隔标志符为 ! ，密钥为 bac，上传文件路径为 /folder/test.jpg ，那么该图片的对外访问地址为： http://空间域名/folder/test.jpg!bac
     *
     * @deprecated
