@@ -7,31 +7,31 @@ class UpYunException extends Exception {/*{{{*/
 }/*}}}*/
 
 class UpYunAuthorizationException extends UpYunException {/*{{{*/
-    public function __construct($message, Exception $previous = null) {
+    public function __construct($message, $code = 0, Exception $previous = null) {
         parent::__construct($message, 401, $previous);
     }
 }/*}}}*/
 
 class UpYunForbiddenException extends UpYunException {/*{{{*/
-    public function __construct($message, Exception $previous = null) {
+    public function __construct($message, $code = 0, Exception $previous = null) {
         parent::__construct($message, 403, $previous);
     }
 }/*}}}*/
 
 class UpYunNotFoundException extends UpYunException {/*{{{*/
-    public function __construct($message, Exception $previous = null) {
+    public function __construct($message, $code = 0, Exception $previous = null) {
         parent::__construct($message, 404, $previous);
     }
 }/*}}}*/
 
 class UpYunNotAcceptableException extends UpYunException {/*{{{*/
-    public function __construct($message, Exception $previous = null) {
+    public function __construct($message, $code = 0, Exception $previous = null) {
         parent::__construct($message, 406, $previous);
     }
 }/*}}}*/
 
 class UpYunServiceUnavailable extends UpYunException {/*{{{*/
-    public function __construct($message, Exception $previous = null) {
+    public function __construct($message, $code = 0, Exception $previous = null) {
         parent::__construct($message, 503, $previous);
     }
 }/*}}}*/
