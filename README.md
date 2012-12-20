@@ -18,7 +18,7 @@ $upyun = new UpYun('bucketname', 'username', 'password');
 根据国内的网络情况，又拍云存储API目前提供了电信、联通网通、移动铁通三个接入点，在初始化的时候可以添加可选的第四个参数来指定API接入点。
 
 ````
-$upyun = new UpYun('bucketname', 'username', 'password', UpYun::$ED_TELECOM);
+$upyun = new UpYun('bucketname', 'username', 'password', UpYun::ED_TELECOM);
 ````
 
 接入点有四个值可选：
