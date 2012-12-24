@@ -360,7 +360,7 @@ class UpYun {
                     throw new UpYunServiceUnavailable($message);
                     break;
                 default:
-                    throw new UpYunException($message);
+                    throw new UpYunException($message, $http_code);
             }
         }
     }/*}}}*/
