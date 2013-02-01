@@ -310,6 +310,8 @@ class UpYun {
         $response = curl_exec($ch);
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
+        if ($http_code == 0) throw new UpYunException('Connection Failed', $http_code);
+
         curl_close($ch);
 
         $header_string = '';
