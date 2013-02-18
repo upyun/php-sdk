@@ -64,6 +64,7 @@ class UpYun {
     private $_bucket_name;
     private $_username;
     private $_password;
+    private $_timeout = 30;
 
     /**
      * @deprecated
@@ -90,10 +91,11 @@ class UpYun {
     *
 	* @return object
 	*/
-	public function __construct($bucketname, $username, $password, $endpoint = NULL) {/*{{{*/
+	public function __construct($bucketname, $username, $password, $endpoint = NULL, $timeout = 30) {/*{{{*/
 		$this->_bucketname = $bucketname;
 		$this->_username = $username;
 		$this->_password = md5($password);
+        $this->_timeout = $timeout;
 
         $this->endpoint = is_null($endpoint) ? self::ED_AUTO : $endpoint;
 	}/*}}}*/
@@ -284,7 +286,7 @@ class UpYun {
         array_push($_headers, "Date: {$date}");
 
         curl_setopt($ch, CURLOPT_HTTPHEADER, $_headers);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_TIMEOUT, $this->_timeout);
         curl_setopt($ch, CURLOPT_HEADER, 1);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         //curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
