@@ -153,6 +153,7 @@ class UpYun {
         //    if (!isset($opts[self::X_GMKERL_UNSHARP])) $opts[self::X_GMKERL_UNSHARP] = 'true';
         //}
 
+        var_dump($opts);
         if ($auto_mkdir === True) $opts['Mkdir'] = 'true';
 
         $this->_file_infos = $this->_do_request('PUT', $path, $opts, $file);
