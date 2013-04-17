@@ -47,7 +47,7 @@ fclose($fh);
 
 ````
 $opts = array(
-	UpYun::$X_GMKERL_THUMBNAIL => 'square' // 缩略图版本，仅适用于图片空间
+	UpYun::X_GMKERL_THUMBNAIL => 'square' // 缩略图版本，仅适用于图片空间
 );
 
 $fh = fopen('demo.png', 'r');
