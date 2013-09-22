@@ -30,6 +30,12 @@ $upyun = new UpYun('bucketname', 'username', 'password', UpYun::ED_TELECOM);
 
 默认参数为自动选择API接入点。但是我们推荐根据服务器网络状况，手动设置合理的接入点已获取最佳的访问速度。
 
+**超时时间设置**
+在初始化UpYun上传时，可以选择设置上传请求超时时间（默认30s）:
+```
+$upyun = new UpYun('bucketname', 'username', 'password', UpYun::ED_TELECOM, 600);
+```
+
 ### 上传文件
 
 ````
