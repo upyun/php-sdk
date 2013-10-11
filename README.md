@@ -135,8 +135,7 @@ echo $result['x-upyun-file-date']; // 创建日期
 
 ### 获取空间使用状况
 ````
-$upyun->getFolderUsage();	// 获取Bucket空间使用情况
-$upyun->getFolderUsage('/demo/'); 获取目录空间使用情况
+$upyun->getBucketUsage();	// 获取Bucket空间使用情况
 ````
 返回的结果为空间使用量，单位 ***Byte***
 
