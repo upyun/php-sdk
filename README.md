@@ -152,7 +152,7 @@ $upyun->getBucketUsage();	// 获取Bucket空间使用情况
 
 未包含在以上异常中的错误，将统一抛出 `UpYunException` 异常。
 
-为了真确处理API请求中可能出现的异常，建议将API操作放在`try{...}catch(Exception $e){…}` 块中
+为了正确处理API请求中可能出现的异常，建议将API操作放在`try{...}catch(Exception $e){…}` 块中
 
 ````
 try{
