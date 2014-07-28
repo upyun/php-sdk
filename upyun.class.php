@@ -309,6 +309,7 @@ class UpYun {
 
         $response = curl_exec($ch);
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        var_dump($response);
 
         if ($http_code == 0) throw new UpYunException('Connection Failed', $http_code);
 
@@ -324,8 +325,6 @@ class UpYun {
         else {
             list($header_string, $body) = explode("\r\n\r\n", $response, 2);
         }
-
-        //var_dump($http_code);
         if ($http_code == 200) {
             if ($method == 'GET' && is_null($file_handle)) {
                 return $body;
