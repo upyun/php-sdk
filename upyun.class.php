@@ -64,8 +64,7 @@ class UpYun {
     private $_bucket_name;
     private $_username;
     private $_password;
-    # private $_timeout = 30;
-    private $_timeout = 6000;
+    private $_timeout = 30;
 
     /**
      * @deprecated
