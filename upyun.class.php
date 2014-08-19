@@ -64,7 +64,8 @@ class UpYun {
     private $_bucket_name;
     private $_username;
     private $_password;
-    private $_timeout = 30;
+    # private $_timeout = 30;
+    private $_timeout = 6000;
 
     /**
      * @deprecated
@@ -379,7 +380,7 @@ class UpYun {
         $items = array();
         foreach($headers as $header) {
             $header = trim($header);
-			if(strpos($header, 'x-upyun') !== False){
+			if(stripos($header, 'x-upyun') !== False){
 				list($k, $v) = explode(':', $header);
                 $items[trim($k)] = in_array(substr($k,8,5), array('width','heigh','frame')) ? intval($v) : trim($v);
 			}
