@@ -38,6 +38,7 @@ $upyun = new UpYun('bucketname', 'username', 'password', UpYun::ED_TELECOM, 600)
 ```
 ## 示例
 ### 上传文件
+文件类空间可以上传任意形式的二进制文件
 **1.直接读取整个文件内容:**
 ```php
 $upyun->writeFile('/path/to/server/file.ext', 'your file content', true);
@@ -50,22 +51,29 @@ $upyun->writeFile('/path/to/server/demo.png', $file_handler, true);
 fclose($fh);
 ```
 `writeFile()`第三个参数为可选，`true`表示自动创建相应目录，默认值为`false`。
+文件空间上传成功后返回`true`。
+如果上传失败，则会抛出异常。
+### 上传图片
+图片可以上传到图片类空间或文件类空间
+* 图片空间上传的图片不能超过20M，图片`宽*高*帧数`不能超过`2亿`
+* 文件空间上传的图片不能超过1G
+*建议站点图片上传到图片空间，便于在请求图片时可以生成自定义版本图片*
 
-**3.创建缩略图:**
+**1.上传图片并创建缩略图:**
 
 `writeFile()`方法第四个参数为数组类型可选参数，用来设置文件类型、缩略图处理。
 ```php
 $opts = array(
-	UpYun::X_GMKERL_THUMBNAIL => 'square' // 缩略图版本，仅适用于图片空间
+	UpYun::X_GMKERL_THUMBNAIL => 'square' //创建缩略图,该参数仅适用于图片空间
 );
 
 $fh = fopen('demo.png', 'r');
 $upyun->writeFile('/temp/upload_demo.png', $fh, true, $opts);
 fclose($fh);
 ```
-该参数可以设置的值还包括：
+`writeFile()`方法第四个参数可以设置的值还包括：
 
-* UpYun::CONtENT_TYPE
+* UpYun::CONTENT_TYPE
 * UpYun::CONTENT_MD5
 * UpYun::CONTENT_SECRET
 * UpYun::X_GMKERL_THUMBNAIL
@@ -76,7 +84,6 @@ fclose($fh);
 
 参数的具体使用方法，请参考 [标准API上传文件](http://wiki.upyun.com/index.php?title=%E6%A0%87%E5%87%86API%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6)
 
-* 文件空间上传成功后返回`true`
 * 图片空间上传成功后会返回一维数组，包含了图片信息，示例如下:
 ```php
 array(
