@@ -85,6 +85,7 @@ fclose($fh);
 参数的具体使用方法，请参考 [标准API上传文件](http://wiki.upyun.com/index.php?title=%E6%A0%87%E5%87%86API%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6)
 
 * 图片空间上传成功后会返回一维数组，包含了图片信息，示例如下:
+
 ```php
 array(
   'x-upyun-width' => 2000,
