@@ -1,12 +1,34 @@
 # 又拍云PHP SDK
 
 又拍云存储PHP SDK，基于 [又拍云存储HTTP REST API接口](http://wiki.upyun.com/index.php?title=HTTP_REST_API%E6%8E%A5%E5%8F%A3) 开发。
+- [更新说明](#update instructions)
+- [使用说明](#use instructions)
+  - [初始化UpYun](#init)
+- [示例](#usage)
+  - [上传文件](#upload file)
+  - [上传图片](#upload img)
+  - [下载文件](#download file)
+  - [创建目录](#mkdir)
+  - [删除目录或者文件](#delete)
+  - [获取目录文件列表](#file list)
+  - [获取文件信息](#file info)
+  - [获取空间使用状况](#bucket info)
+- [异常处理](#exception)
+- [贡献代码](#contribute)
+- [社区](#community)
+- [许可证](#license)
 
+<a name="update instructions"></a>
 ## 更新说明
-使用1.0.x系列版本SDK的用户，注意原有部分方法已经不再推荐使用，但是出于兼容考虑目前任然保留，建议更新升级程序使用新版SDK提供的方法。
+使用1.0.x系列版本SDK的用户，注意原有部分方法已经不再推荐使用(`@deprecated`标注)，但是出于兼容考虑目前任然保留，建议更新升级程序使用新版SDK提供的方法。
 
+
+
+<a name="use instructions"></a>
 ## 使用说明
 下载`upyun.class.php`到项目目录
+
+<a name="init"></a>
 ### 初始化UpYun
 ```php
 require_once('upyun.class.php');
@@ -34,9 +56,15 @@ $upyun = new UpYun('bucketname', 'operator_name', 'operator_pwd', UpYun::ED_TELE
 
 在初始化UpYun上传时，可以选择设置上传请求超时时间（默认30s）:
 ```php
-$upyun = new UpYun('bucketname', 'username', 'password', UpYun::ED_TELECOM, 600);
+$upyun = new UpYun('bucketname', 'operator_name', 'operator_pwd', UpYun::ED_TELECOM, 600);
 ```
+
+<a name="usage"></a>
 ## 示例
+
+*示例代码中所有`bucketname`，`operator_name`，`operator_pwd`以及路径需要替换成实际环境的值，账户密码请注意保密*
+
+<a name="upload file"></a>
 ### 上传文件
 文件类空间可以上传任意形式的二进制文件
 **1.直接读取整个文件内容:**
@@ -53,6 +81,8 @@ fclose($fh);
 `writeFile()`第三个参数为可选，`true`表示自动创建相应目录，默认值为`false`。
 文件空间上传成功后返回`true`。
 如果上传失败，则会抛出异常。
+
+<a name="upload img"></a>
 ### 上传图片
 图片可以上传到图片类空间或文件类空间
 * 图片空间上传的图片不能超过20M，图片`宽*高*帧数`不能超过`2亿`
@@ -96,6 +126,7 @@ array(
 ```
 如果上传失败，则会抛出异常。
 
+<a name="download file"></a>
 ### 下载文件
 
 **1.直接读取文件内容:**
@@ -113,12 +144,14 @@ fclose($fh);
 直接获取文件时，返回文件内容，使用数据流形式获取时，成功返回`true`。
 如果获取文件失败，则抛出异常。
 
+<a name="mkdir"></a>
 ### 创建目录
 ```php
 $upyun->mkDir('/demo/');
 ```
 目录路径必须以斜杠 `/` 结尾，创建成功返回 `true`，否则抛出异常。
 
+<a name="delete"></a>
 ### 删除目录或者文件
 ```php
 $upyun->delete('/demo/'); // 删除目录
@@ -126,6 +159,7 @@ $upyun->delete('/demo/demo.png'); // 删除文件
 ```
 删除成功返回`true`，否则抛出异常。注意删除目录时，`必须保证目录为空` ，否则也会抛出异常。
 
+<a name="file list"></a>
 ### 获取目录文件列表
 ```php
 $list = $upyun->getList('/demo/');
@@ -138,6 +172,7 @@ echo $file['time'];	// 创建时间
 获取目录文件以及子目录列表。需要获取根目录列表是，使用 `$upyun->getList('/')` ，或直接表用方法不传递参数。
 目录获取失败则抛出异常。
 
+<a name="file info"></a>
 ### 获取文件信息
 ```php
 $result = $upyun->getFileInfo('/demo/demo.png');
@@ -147,12 +182,14 @@ echo $result['x-upyun-file-date']; // 创建日期
 ```
 返回结果为一个数组。
 
+<a name="bucket info"></a>
 ### 获取空间使用状况
 ```php
 $upyun->getBucketUsage();	// 获取Bucket空间使用情况
 ```
 返回的结果为空间使用量，单位 ***Byte***
 
+<a name="exception"></a>
 ## 异常处理
 当API请求发生错误时，SDK将抛出异常，具体错误代码请参考 [标准API错误代码表](http://wiki.upyun.com/index.php?title=%E6%A0%87%E5%87%86API%E9%94%99%E8%AF%AF%E4%BB%A3%E7%A0%81%E8%A1%A8)
 
@@ -179,3 +216,23 @@ try {
 	echo $e->getMessage();	// 具体错误信息
 }
 ```
+
+<a name="contribute"></a>
+## 贡献代码
+ 1. Fork
+ 2. 为新特性创建一个新的分支
+ 3. 发送一个 pull request 到 develop 分支
+
+<a name="community"></a>
+## 社区
+
+ - [UPYUN问答社区](http://segmentfault.com/upyun)
+ - [UPYUN微博](http://weibo.com/upaiyun)
+
+<a name="license"></a>
+## 许可证
+
+UPYUN PHP-SDK基于 MIT 开源协议
+
+<http://www.opensource.org/licenses/MIT>
+
