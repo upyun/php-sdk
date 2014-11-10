@@ -378,7 +378,7 @@ class UpYun {
         $items = array();
         foreach($headers as $header) {
             $header = trim($header);
-			if(strpos($header, 'x-upyun') !== False){
+			if(stripos($header, 'x-upyun') !== False){
 				list($k, $v) = explode(':', $header);
                 $items[trim($k)] = in_array(substr($k,8,5), array('width','heigh','frame')) ? intval($v) : trim($v);
 			}
