@@ -1,7 +1,7 @@
 # 又拍云PHP SDK
 ![build](https://travis-ci.org/upyun/php-sdk.svg)
 
-又拍云存储PHP SDK，基于 [又拍云存储HTTP REST API接口](http://wiki.upyun.com/index.php?title=HTTP_REST_API%E6%8E%A5%E5%8F%A3) 开发。
+又拍云存储PHP SDK，基于 [又拍云存储HTTP REST API接口](http://docs.upyun.com/api/rest_api/) 开发。
 - [更新说明](#update instructions)
 - [使用说明](#use instructions)
   - [初始化UpYun](#init)
@@ -113,7 +113,7 @@ fclose($fh);
 * UpYun::X_GMKERL_QUALITY
 * UpYun::X_GMKERL_UNSHARP
 
-参数的具体使用方法，请参考 [标准API上传文件](http://wiki.upyun.com/index.php?title=%E6%A0%87%E5%87%86API%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6)
+参数的具体使用方法，请参考[标准API上传文件](http://docs.upyun.com/api/rest_api/#_4)
 
 * 图片空间上传成功后会返回一维数组，包含了图片信息，示例如下:
 
@@ -192,7 +192,7 @@ $upyun->getBucketUsage();	// 获取Bucket空间使用情况
 
 <a name="exception"></a>
 ## 异常处理
-当API请求发生错误时，SDK将抛出异常，具体错误代码请参考 [标准API错误代码表](http://wiki.upyun.com/index.php?title=%E6%A0%87%E5%87%86API%E9%94%99%E8%AF%AF%E4%BB%A3%E7%A0%81%E8%A1%A8)
+当API请求发生错误时，SDK将抛出异常，具体错误代码请参考[标准API错误代码表](http://docs.upyun.com/api/rest_api/#rest-api)
 
 根据返回HTTP CODE的不同，SDK将抛出以下异常：
 
