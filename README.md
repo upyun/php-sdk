@@ -1,5 +1,4 @@
 # 又拍云PHP SDK
-![build](https://travis-ci.org/upyun/php-sdk.svg)
 
 又拍云存储PHP SDK，基于 [又拍云存储HTTP REST API接口](http://docs.upyun.com/api/rest_api/) 开发。
 - [更新说明](#update instructions)
