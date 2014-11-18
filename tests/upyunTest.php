@@ -4,7 +4,7 @@ class unyunTest extends PHPUnit_Framework_TestCase
 {
 
     public function setUp(){
-        $this->upyun = new UpYun(BUCKET, USER_NAME, PWD, UpYun::ED_TELECOM, 250);
+        $this->upyun = new UpYun(BUCKET, USER_NAME, PWD, UpYun::ED_TELECOM, 600);
     }
 
     public function testMakeDir(){
