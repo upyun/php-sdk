@@ -67,7 +67,9 @@ $upyun = new UpYun('bucketname', 'operator_name', 'operator_pwd', UpYun::ED_TELE
 
 <a name="upload file"></a>
 ### 上传文件
+
 文件类空间可以上传任意形式的二进制文件
+
 **1.直接读取整个文件内容:**
 ```php
 $upyun->writeFile('/path/to/server/file.ext', 'your file content', true);
