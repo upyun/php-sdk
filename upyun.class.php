@@ -83,6 +83,9 @@ class UpYun {
 
     protected $endpoint;
 
+    /**
+     * @var string: UPYUN 请求唯一id, 出现错误时, 可以将该id报告给 UPYUN,进行调试
+     */
     private $x_request_id;
 
 	/**
