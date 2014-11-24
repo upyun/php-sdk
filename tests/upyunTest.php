@@ -80,4 +80,12 @@ class unyunTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($rsp);
     }
 
+    /**
+     * 获取错误请求的 X-Request-Id
+     */
+    public function testXRequestId(){
+        $rsp = $this->upyun->getList('/demo/');
+        $x_id = $this->upyun->getXRequestId();
+        $this->assertEquals(strlen($x_id), 32);
+    }
 }

@@ -83,6 +83,8 @@ class UpYun {
 
     protected $endpoint;
 
+    private $x_request_id;
+
 	/**
 	* 初始化 UpYun 存储接口
 	* @param $bucketname 空间名称
@@ -269,14 +271,12 @@ class UpYun {
                 array_push($_headers, "Content-Length: {$length}");
                 curl_setopt($ch, CURLOPT_INFILE, $body);
                 curl_setopt($ch, CURLOPT_INFILESIZE, $length);
-            }
-            else {
+            } else {
                 $length = @strlen($body);
                 array_push($_headers, "Content-Length: {$length}");
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
             }
-        }
-        else {
+        } else {
             array_push($_headers, "Content-Length: {$length}");
         }
 
@@ -293,8 +293,7 @@ class UpYun {
 
         if ($method == 'PUT' || $method == 'POST') {
 			curl_setopt($ch, CURLOPT_POST, 1);
-        }
-        else {
+        } else {
 			curl_setopt($ch, CURLOPT_POST, 0);
         }
 
@@ -320,25 +319,18 @@ class UpYun {
         if ($method == 'GET' && is_resource($file_handle)) {
             $header_string = '';
             $body = $response;
-        }
-        else {
+        } else {
             list($header_string, $body) = explode("\r\n\r\n", $response, 2);
         }
+        $this->setXRequestId($header_string);
         if ($http_code == 200) {
             if ($method == 'GET' && is_null($file_handle)) {
                 return $body;
-            }
-            else {
+            } else {
                 $data = $this->_getHeadersData($header_string);
                 return count($data) > 0 ? $data : true;
             }
-            //elseif ($method == 'HEAD') {
-            //    //return $this->_get_headers_data(substr($response, 0 , $header_size));
-            //    return $this->_getHeadersData($header_string);
-            //}
-            //return True;
-        }
-        else {
+        } else {
             $message = $this->_getErrorMessage($header_string);
             if (is_null($message) && $method == 'GET' && is_resource($file_handle)) {
                 $message = 'File Not Found';
@@ -395,7 +387,16 @@ class UpYun {
     private function _getErrorMessage($header_string) {
         list($status, $stash) = explode("\r\n", $header_string, 2);
         list($v, $code, $message) = explode(" ", $status, 3);
-        return $message;
+        return $message . " X-Request-Id: " . $this->getXRequestId();
+    }
+
+    private function setXRequestId($header_string) {
+        preg_match('~^X-Request-Id: ([0-9a-zA-Z]{32})~ism', $header_string, $result);
+        $this->x_request_id = isset($result[1]) ? $result[1] : '';
+    }
+
+    public function getXRequestId() {
+        return $this->x_request_id;
     }
 
     /**
