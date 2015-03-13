@@ -150,7 +150,7 @@ fclose($fh);
 <a name="mkdir"></a>
 ### 创建目录
 ```php
-$upyun->mkDir('/demo/');
+$upyun->makeDir('/demo/');
 ```
 目录路径必须以斜杠 `/` 结尾，创建成功返回 `true`，否则抛出异常。
 
