@@ -61,7 +61,7 @@ class UpYun {
     const X_GMKERL_UNSHARP   = 'x­gmkerl-unsharp';
 /*}}}*/
 
-    private $_bucket_name;
+    private $_bucketname;
     private $_username;
     private $_password;
     private $_timeout = 30;
