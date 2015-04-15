@@ -79,7 +79,7 @@ $upyun->writeFile('/path/to/server/file.ext', 'your file content', true);
 ```php
 $file_handler = fopen('demo.png', 'r');
 $upyun->writeFile('/path/to/server/demo.png', $file_handler, true);
-fclose($fh);
+fclose($file_handler);
 ```
 `writeFile()`第三个参数为可选，`true`表示自动创建相应目录，默认值为`false`。
 文件空间上传成功后返回`true`。
