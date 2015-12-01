@@ -1,0 +1,21 @@
+{
+  "name": "upyun/sdk",
+  "description": "a sdk for upyun",
+  "minimum-stability": "stable",
+  "license": "upyun",
+  "authors": [
+    {
+      "name": "totoleo",
+      "email": "totoleo@163.com"
+    }
+  ],
+  "autoload":{
+    "files": ["upyun.class.php"]
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^5.0"
+  },
+  "require": {
+    "ext-curl": "*"
+  }
+}

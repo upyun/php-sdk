@@ -1,11 +1,16 @@
 <?php
-require_once('../upyun.class.php');
-
-$upyun = new UpYun('bucket', 'user', 'pwd');
+require_once(dirname(__DIR__).'/vendor/autoload.php');
+$config =  array(
+    'user_name' => 'tester',
+    'pwd' => 'grjxv2mxELR3',
+    'bucket' => 'sdkimg',
+    'picture_path' => dirname(__FILE__) . '/assets/sample.jpeg'
+);
+$upyun = new UpYun($config['bucket'], $config['user_name'], $config['pwd']);
 
 try {
     echo "=========直接上传文件\r\n";
-    $fh = fopen('sample.jpeg', 'rb');
+    $fh = fopen(__DIR__.'/sample.jpeg', 'rb');
     $rsp = $upyun->writeFile('/demo/sample_normal.jpeg', $fh, True);   // 上传图片，自动创建目录
     fclose($fh);
     var_dump($rsp);
@@ -13,9 +18,9 @@ try {
 
     echo "=========设置MD5校验文件完整性\r\n";
     $opts = array(
-        UpYun::CONTENT_MD5 => md5(file_get_contents("sample.jpeg"))
+        UpYun::CONTENT_MD5 => md5(file_get_contents(__DIR__.'/sample.jpeg'))
     );
-    $fh = fopen('sample.jpeg', 'rb');
+    $fh = fopen(__DIR__.'/sample.jpeg', 'rb');
     $rsp = $upyun->writeFile('/demo/sample_md5.jpeg', $fh, True, $opts);   // 上传图片，自动创建目录
     fclose($fh);
     var_dump($rsp);
@@ -28,7 +33,7 @@ try {
         UpYun::X_GMKERL_QUALITY => 95, // 缩略图压缩质量
         UpYun::X_GMKERL_UNSHARP => True // 是否进行锐化处理
     );
-    $fh = fopen('sample.jpeg', 'rb');
+    $fh = fopen(__DIR__.'/sample.jpeg', 'rb');
     $rsp = $upyun->writeFile('/demo/sample_thumb_1.jpeg', $fh, True, $opts);   // 上传图片，自动创建目录
     fclose($fh);
     var_dump($rsp);
@@ -38,7 +43,7 @@ try {
     $opts = array(
         UpYun::X_GMKERL_THUMBNAIL => 'thumbtype'
     );
-    $fh = fopen('sample.jpeg', 'rb');
+    $fh = fopen(__DIR__.'/sample.jpeg', 'rb');
     $rsp = $upyun->writeFile('/demo/sample_thumb_2.jpeg', $fh, True, $opts);   // 上传图片，自动创建目录
     fclose($fh);
     var_dump($rsp);
