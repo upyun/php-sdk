@@ -97,7 +97,7 @@ fclose($file_handler);
 `writeFile()`方法第四个参数为数组类型可选参数，用来设置文件类型、缩略图处理。
 ```php
 $opts = array(
-	UpYun::X_GMKERL_THUMBNAIL => 'square' //创建缩略图,该参数仅适用于图片空间
+	UpYun::X_GMKERL_THUMBNAIL => 'square' //创建缩略图
 );
 
 $fh = fopen('demo.png', 'r');
