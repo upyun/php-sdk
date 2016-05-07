@@ -209,6 +209,7 @@ class Filesystem {
             $headers,
             array('purge' => $urlString)
         );
-        return json_decode($response->body, true)['invalid_domain_of_url'];
+        $result = json_decode($response->body, true);
+        return $result['invalid_domain_of_url'];
     }
 }

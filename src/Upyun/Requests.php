@@ -14,7 +14,8 @@ class Requests {
         } else if(is_resource($data)) {
             $curlOptions[CURLOPT_PUT] = true;
             $curlOptions[CURLOPT_INFILE] = $data;
-            $curlOptions[CURLOPT_INFILESIZE] = fstat($data)['size'];
+            $stat = fstat($data);
+            $curlOptions[CURLOPT_INFILESIZE] = $stat['size'];
             $headers['Content-Length'] = $curlOptions[CURLOPT_INFILESIZE];
         } else if(is_array($data) && !empty($data)) {
             $json = json_encode($data);
