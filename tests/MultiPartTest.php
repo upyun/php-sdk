@@ -22,16 +22,18 @@ class MultiPartTest extends \PHPUnit_Framework_TestCase{
     public function testInit() {
         $file = new LocalFile(__DIR__ . '/assets/sample.jpeg');
         $blockInfo = $this->multiPart->init($file, 'test-sample.jpeg');
-        $this->assertEquals($blockInfo->blocks, 2);
+        $this->assertEquals($blockInfo->blocks, 1);
     }
 
+    /**
+     * @depends testInit
+     */
     public function testBlockUpload() {
         $file = new LocalFile(__DIR__ . '/assets/sample.jpeg');
         $blockInfo = $this->multiPart->init($file, 'test-sample.jpeg');
-        $newBlockInfo = $this->multiPart->blockUpload($blockInfo, 1, $file);
-        $this->assertEquals($newBlockInfo->blocks, 2);
-        $this->assertEquals($newBlockInfo->status[0], 0);
-        $this->assertEquals($newBlockInfo->status[1], 1);
+        $newBlockInfo = $this->multiPart->blockUpload($blockInfo, 0, $file);
+        $this->assertEquals($newBlockInfo->blocks, 1);
+        $this->assertEquals($newBlockInfo->status[0], 1);
     }
 
     public function testUpload() {
