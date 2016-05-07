@@ -41,12 +41,14 @@ class FilesystemTest extends \PHPUnit_Framework_TestCase{
         $this->assertEquals($size, PIC_SIZE);
     }
 
-    /**
-     * @expectedException \Exception
-     */
     public function testWirteWithException() {
         $fs = new Filesystem(new BucketConfig(BUCKET, USER_NAME, 'error-password'));
-        $fs->write('test.txt', 'test file content');
+        try {
+            $fs->write('test.txt', 'test file content');
+        } catch(\Exception $e) {
+            return $this->assertTrue(strpos($e->getMessage(), 'signature error, with x-request-id=') === 0);
+        }
+        throw new \Exception('should get sign error.');
     }
 
     /**
