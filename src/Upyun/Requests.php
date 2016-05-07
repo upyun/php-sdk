@@ -101,6 +101,10 @@ class Requests {
             $curlOptions[CURLOPT_HEADER] = true;
         }
 
+        $curlOptions[CURLOPT_HTTPHEADER] = array_merge(
+            array('Expect: '),
+            $curlOptions[CURLOPT_HTTPHEADER]
+        );
         curl_setopt_array($ch, $curlOptions);
         $result = curl_exec($ch);
 
