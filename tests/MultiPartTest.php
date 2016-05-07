@@ -1,11 +1,12 @@
 <?php
+namespace Upyun\Tests;
 
 use Upyun\BucketConfig;
 use Upyun\MultiPart;
 use Upyun\LocalFile;
 use Upyun\Filesystem;
 
-class MultiPartTest extends PHPUnit_Framework_TestCase{
+class MultiPartTest extends \PHPUnit_Framework_TestCase{
 
     /**
      * @var MultiPart;

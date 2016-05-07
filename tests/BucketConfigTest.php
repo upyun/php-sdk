@@ -1,8 +1,8 @@
 <?php
-
+namespace Upyun\Tests;
 use Upyun\BucketConfig;
 
-class BucketConfigTest extends PHPUnit_Framework_TestCase{
+class BucketConfigTest extends \PHPUnit_Framework_TestCase{
 
     /**
      * @var BucketConfig;
@@ -13,7 +13,7 @@ class BucketConfigTest extends PHPUnit_Framework_TestCase{
     }
 
     public function testGetRestApiSign() {
-        $sign = $this->config->getRestApiSign('GET', '/sub', 'Wed, 29 Oct 2014 02:26:58 GMT', 0);
+        $sign = $this->config->generateRestApiSignature('GET', '/sub', 'Wed, 29 Oct 2014 02:26:58 GMT', 0);
         $this->assertEquals('03db45e2904663c5c9305a9c6ed62af3', $sign);
     }
 

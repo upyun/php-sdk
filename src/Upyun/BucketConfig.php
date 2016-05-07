@@ -3,8 +3,8 @@ namespace Upyun;
 
 /**
  * Class BucketConfig
+ * 
  * @package Upyun
- * 服务配置信息
  */
 class BucketConfig {
 
@@ -26,7 +26,13 @@ class BucketConfig {
     public $formApiKey;
 
     /**
-     * HTTP REST API 和 HTTP FORM  API 所使用的线路
+     * @var string: HTTP REST API 和 HTTP FORM  API 所使用的接口地址, 默认 ED_AUTO
+     */
+    protected $restApiEndPoint;
+    
+    /**
+     * 适合不同国内不同线路的接口地址
+     * 关于国内不同线路选择的详细描述见: http://docs.upyun.com/api/
      */
     const ED_AUTO            = 'v0.api.upyun.com';
     const ED_TELECOM         = 'v1.api.upyun.com';
@@ -34,17 +40,17 @@ class BucketConfig {
     const ED_CTT             = 'v3.api.upyun.com';
 
     /**
-     * 分块上传 API 线路
+     * 分块上传接口地址
      */
     const ED_FORM            = 'm0.api.upyun.com';
 
     /**
-     * 视频预处理接口使用的线路
+     * 视频预处理接口地址
      */
     const ED_VIDEO           = 'p0.api.upyun.com';
 
     /**
-     * 刷新接口
+     * 单个 URL 刷新接口地址
      */
     const ED_PURGE           = 'http://purge.upyun.com/purge/';
 
@@ -61,7 +67,6 @@ class BucketConfig {
      */
     const SIGN_VIDEO_NO_OPERATOR   = 3;
 
-    protected $restApiEndPoint;
 
     public function __construct($bucketName, $operatorName, $operatorPassword) {
         $this->bucketName = $bucketName;
@@ -74,20 +79,43 @@ class BucketConfig {
         $this->restApiEndPoint = $restApiEndPoint;
     }
 
-    public function getRestApiSign($method, $path, $date, $contentLength) {
+    /**
+     * 生成 REST API 签名
+     * @param $method
+     * @param $path
+     * @param $date
+     * @param $contentLength
+     *
+     * @return mixed
+     */
+    public function generateRestApiSignature($method, $path, $date, $contentLength) {
         $path = '/' . $this->bucketName . '/' . ltrim($path, '/');
         $md5Pwd = md5($this->operatorPassword);
         return md5("$method&$path&$date&$contentLength&$md5Pwd");
     }
 
+    /**
+     * 获取 RESET API 请求需要的签名头
+     * @param $method
+     * @param $path
+     * @param $contentLength
+     *
+     * @return array
+     */
     public function getRestApiSignHeader($method, $path, $contentLength) {
         $date = gmdate('D, d M Y H:i:s \G\M\T');
-        $sign = $this->getRestApiSign($method, $path, $date, $contentLength);
+        $sign = $this->generateRestApiSignature($method, $path, $date, $contentLength);
         $header = $this->getSignHeader($sign);
         $header['Date'] = $date;
         return $header;
     }
 
+    /**
+     * 获取请求缓存刷新接口需要的签名头
+     * @param $urlString
+     *
+     * @return array
+     */
     public function getPurgeSignHeader($urlString) {
         $date = gmdate('D, d M Y H:i:s \G\M\T');
         $md5Pwd = md5($this->operatorPassword);
@@ -102,8 +130,18 @@ class BucketConfig {
         return array('Authorization' => "UpYun {$this->operatorName}:$sign");
     }
 
-    public function getRestApiUrl($path) {
-        return "http://{$this->restApiEndPoint}/{$this->bucketName}/" . ltrim($path, '/');
+    /**
+     * 根据文件路径,获取接口地址
+     * @param $remoteFilePath
+     *
+     * @return string
+     */
+    public function getRestApiUrl($remoteFilePath) {
+        return "http://{$this->restApiEndPoint}/{$this->bucketName}/" . ltrim($remoteFilePath, '/');
+    }
+    
+    public function getRestApiEntryPoint() {
+        return "http://{$this->restApiEndPoint}/{$this->bucketName}/";
     }
 
     public function getPolicy($requestParams) {

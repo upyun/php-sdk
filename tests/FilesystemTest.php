@@ -1,8 +1,9 @@
 <?php
+namespace Upyun\Tests;
 use Upyun\BucketConfig;
 use Upyun\Filesystem;
 
-class FilesystemTest extends PHPUnit_Framework_TestCase{
+class FilesystemTest extends \PHPUnit_Framework_TestCase{
 
     /**
      * @var Filesystem
