@@ -16,7 +16,6 @@ class Requests {
             $curlOptions[CURLOPT_INFILE] = $data;
             $stat = fstat($data);
             $curlOptions[CURLOPT_INFILESIZE] = $stat['size'];
-            $headers['Content-Length'] = $curlOptions[CURLOPT_INFILESIZE];
         } else if(is_array($data) && !empty($data)) {
             $json = json_encode($data);
             $headers['Content-Type'] = 'application/json';
@@ -105,6 +104,7 @@ class Requests {
             array('Expect: '),
             $curlOptions[CURLOPT_HTTPHEADER]
         );
+
         curl_setopt_array($ch, $curlOptions);
         $result = curl_exec($ch);
 
