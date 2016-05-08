@@ -1,7 +1,7 @@
 <?php
 namespace Upyun;
 
-class Requests {
+class Request {
 
     public static function put($url, $headers = array(), $data = array()) {
         $curlOptions = array(

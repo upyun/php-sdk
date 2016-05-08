@@ -78,7 +78,7 @@ class MultiPart{
         $signature = $this->config->getSignature($metaData, BucketConfig::SIGN_MULTIPART);
         $postData = compact('policy', 'signature');
 
-        $response = Requests::post(
+        $response = Request::post(
             sprintf('http://%s/%s/', BucketConfig::ED_FORM, $this->config->bucketName),
             array(),
             $postData
@@ -146,7 +146,7 @@ class MultiPart{
         $signature = $this->config->getSignature($metaData, BucketConfig::SIGN_MULTIPART, $initResponse->token_secret);
         $postData = compact('policy', 'signature');
 
-        $response = Requests::post(
+        $response = Request::post(
             sprintf('http://%s/%s/', BucketConfig::ED_FORM, $this->config->bucketName),
             array(),
             $postData

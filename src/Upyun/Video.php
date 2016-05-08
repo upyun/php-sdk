@@ -21,7 +21,7 @@ class Video {
         $postParams['notify_url'] = $notifyUrl;
         $postParams['bucket_name'] = $this->config->bucketName;
         $sign = $this->config->getSignature($postParams, BucketConfig::SIGN_VIDEO);
-        $response = Requests::post(
+        $response = Request::post(
             sprintf('http://%s/%s/', BucketConfig::ED_VIDEO, 'pretreatment'),
             $this->config->getSignHeader($sign),
             $postParams
@@ -50,7 +50,7 @@ class Video {
         $query['bucket_name'] = $this->config->bucketName;
         $sign = $this->config->getSignature($query, BucketConfig::SIGN_VIDEO);
 
-        $response = Requests::get(
+        $response = Request::get(
             sprintf('http://%s/%s/', BucketConfig::ED_VIDEO, 'status'),
             $this->config->getSignHeader($sign),
             $query

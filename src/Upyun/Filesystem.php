@@ -34,7 +34,7 @@ class Filesystem {
         }
         $authHeader = $this->config->getRestApiSignHeader('PUT', $path, $size);
 
-        $response = Requests::put($this->config->getRestApiUrl($path),
+        $response = Request::put($this->config->getRestApiUrl($path),
             array_merge($authHeader,  $params),
             $content
         );
@@ -56,7 +56,7 @@ class Filesystem {
     public function read($path, $resource = NULL, $params = array()) {
         $authHeader = $this->config->getRestApiSignHeader('GET', $path, 0);
 
-        $response = Requests::get($this->config->getRestApiUrl($path),
+        $response = Request::get($this->config->getRestApiUrl($path),
             array_merge($authHeader, $params),
             $resource
         );
@@ -96,7 +96,7 @@ class Filesystem {
     public function has($path) {
         $authHeader = $this->config->getRestApiSignHeader('HEAD', $path, 0);
 
-        $response = Requests::head($this->config->getRestApiUrl($path),
+        $response = Request::head($this->config->getRestApiUrl($path),
             $authHeader
         );
         if($response->status_code === 200) {
@@ -116,7 +116,7 @@ class Filesystem {
     public function info($path) {
         $header = $this->config->getRestApiSignHeader('HEAD', $path, 0);
 
-        $response = Requests::head($this->config->getRestApiUrl($path),
+        $response = Request::head($this->config->getRestApiUrl($path),
             $header
         );
         return Util::getHeaderParams($response->header);
@@ -132,7 +132,7 @@ class Filesystem {
     public function delete($path) {
         $authHeader = $this->config->getRestApiSignHeader('DELETE', $path, 0);
 
-        $reponse = Requests::delete($this->config->getRestApiUrl($path),
+        $reponse = Request::delete($this->config->getRestApiUrl($path),
             $authHeader
         );
         if($reponse->status_code !== 200) {
@@ -152,7 +152,7 @@ class Filesystem {
         $path = rtrim($path, '/') . '/';
         $authHeader = $this->config->getRestApiSignHeader('PUT', $path, 0);
 
-        $response = Requests::put(
+        $response = Request::put(
             $this->config->getRestApiUrl($path),
             array_merge($authHeader, array('folder' => 'true'))
         );
@@ -180,7 +180,7 @@ class Filesystem {
     public function usage() {
         $header = $this->config->getRestApiSignHeader('GET', '/', 0);
 
-        $response = Requests::get(
+        $response = Request::get(
             $this->config->getRestApiUrl('/?usage'),
             $header
         );
@@ -204,7 +204,7 @@ class Filesystem {
         }
 
         $headers = $this->config->getPurgeSignHeader($urlString);
-        $response = Requests::post(
+        $response = Request::post(
             BucketConfig::ED_PURGE,
             $headers,
             array('purge' => $urlString)
