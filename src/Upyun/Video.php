@@ -16,14 +16,19 @@ class Video {
     }
 
     public function pretreat($source, $notifyUrl, $tasks) {
-        $postParams['tasks'] = $this->config->base64Json($tasks);
+        $postParams['tasks'] = Util::base64Json($tasks);
         $postParams['source'] = $source;
         $postParams['notify_url'] = $notifyUrl;
         $postParams['bucket_name'] = $this->config->bucketName;
-        $sign = $this->config->getSignature($postParams, BucketConfig::SIGN_VIDEO);
+        $sign = Signature::getSignature(
+            $this->config,
+            $postParams,
+            Signature::SIGN_VIDEO
+        );
+        
         $response = Request::post(
             sprintf('http://%s/%s/', BucketConfig::ED_VIDEO, 'pretreatment'),
-            $this->config->getSignHeader($sign),
+            array('Authorization' => "UpYun {$this->config->operatorName}:$sign"),
             $postParams
         );
 
@@ -48,11 +53,15 @@ class Video {
 
         $query['task_ids'] = $taskIds;
         $query['bucket_name'] = $this->config->bucketName;
-        $sign = $this->config->getSignature($query, BucketConfig::SIGN_VIDEO);
+        $sign = Signature::getSignature(
+            $this->config,
+            $query,
+            Signature::SIGN_VIDEO
+        );
 
         $response = Request::get(
             sprintf('http://%s/%s/', BucketConfig::ED_VIDEO, 'status'),
-            $this->config->getSignHeader($sign),
+            array('Authorization' => "UpYun {$this->config->operatorName}:$sign"),
             $query
         );
 
@@ -85,13 +94,21 @@ class Video {
         if(isset($callbackParams['signature'])) {
             $sign = $callbackParams['signature'];
             unset($callbackParams['signature']);
-            return $sign === $this->config->getSignature($callbackParams, BucketConfig::SIGN_VIDEO);
+            return $sign === Signature::getSignature(
+                $this->config,
+                $callbackParams,
+                Signature::SIGN_VIDEO
+            );
         }
 
         if(isset($data['non_signature'])) {
             $sign = $callbackParams['non_signature'];
             unset($callbackParams['non_signature']);
-            return $sign === $this->config->getSignature($callbackParams, BucketConfig::SIGN_VIDEO_NO_OPERATOR);
+            return $sign === Signature::getSignature(
+                $this->config,
+                $callbackParams,
+                Signature::SIGN_VIDEO_NO_OPERATOR
+            );
         }
         return false;
     }

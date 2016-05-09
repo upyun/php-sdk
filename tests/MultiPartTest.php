@@ -15,7 +15,7 @@ class MultiPartTest extends \PHPUnit_Framework_TestCase{
 
     public function setUp() {
         $config = new BucketConfig(BUCKET, USER_NAME, PWD);
-        $config->formApiKey = 'Mv83tlocuzkmfKKUFbz2s04FzTw=';
+        $config->setFormApiKey('Mv83tlocuzkmfKKUFbz2s04FzTw=');
         $this->multiPart = new MultiPart($config);
     }
 

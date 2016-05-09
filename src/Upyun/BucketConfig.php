@@ -7,7 +7,6 @@ namespace Upyun;
  * @package Upyun
  */
 class BucketConfig {
-
     /**
      * @var string: 服务名
      */
@@ -19,16 +18,19 @@ class BucketConfig {
     /**
      * @var string: 操作员密码
      */
-    public $operatorPassword;
+    private $operatorPassword;
+
+    
     /**
      * @var string: 表单 API 秘钥，通过管理后台获取
      */
-    public $formApiKey;
-
+    private $formApiKey;
+    
     /**
      * @var string: HTTP REST API 和 HTTP FORM  API 所使用的接口地址, 默认 ED_AUTO
      */
-    protected $restApiEndPoint;
+    static $restApiEndPoint;
+
     
     /**
      * 适合不同国内不同线路的接口地址
@@ -54,80 +56,35 @@ class BucketConfig {
      */
     const ED_PURGE           = 'http://purge.upyun.com/purge/';
 
-    /**
-     * 获取分块上传接口的签名
-     */
-    const SIGN_MULTIPART     = 1;
-    /**
-     * 生成视频处理接口的签名
-     */
-    const SIGN_VIDEO         = 2;
-    /**
-     * 生成视频处理接口的签名（不需要操作员时使用）
-     */
-    const SIGN_VIDEO_NO_OPERATOR   = 3;
-
-
     public function __construct($bucketName, $operatorName, $operatorPassword) {
         $this->bucketName = $bucketName;
         $this->operatorName = $operatorName;
         $this->operatorPassword = $operatorPassword;
-        $this->restApiEndPoint = self::ED_AUTO;
+        self::$restApiEndPoint = self::ED_AUTO;
+    }
+    
+    public function setOperatorPassword($operatorPassword) {
+        $this->operatorPassword = $operatorPassword; 
+    }
+    
+    public function getMd5OperatorPassword() {
+        if(! $this->operatorPassword) {
+            throw new \Exception('operator password is empty.');
+        }
+        
+        return md5($this->operatorPassword);
+    }
+    
+    public function getFormApiKey() {
+        if(! $this->formApiKey) {
+            throw new \Exception('form api key is empty.');
+        }
+        
+       return $this->formApiKey; 
     }
 
-    public function setRestApiEndPoint($restApiEndPoint) {
-        $this->restApiEndPoint = $restApiEndPoint;
-    }
-
-    /**
-     * 生成 REST API 签名
-     * @param $method
-     * @param $path
-     * @param $date
-     * @param $contentLength
-     *
-     * @return mixed
-     */
-    public function generateRestApiSignature($method, $path, $date, $contentLength) {
-        $path = '/' . $this->bucketName . '/' . ltrim($path, '/');
-        $md5Pwd = md5($this->operatorPassword);
-        return md5("$method&$path&$date&$contentLength&$md5Pwd");
-    }
-
-    /**
-     * 获取 RESET API 请求需要的签名头
-     * @param $method
-     * @param $path
-     * @param $contentLength
-     *
-     * @return array
-     */
-    public function getRestApiSignHeader($method, $path, $contentLength) {
-        $date = gmdate('D, d M Y H:i:s \G\M\T');
-        $sign = $this->generateRestApiSignature($method, $path, $date, $contentLength);
-        $header = $this->getSignHeader($sign);
-        $header['Date'] = $date;
-        return $header;
-    }
-
-    /**
-     * 获取请求缓存刷新接口需要的签名头
-     * @param $urlString
-     *
-     * @return array
-     */
-    public function getPurgeSignHeader($urlString) {
-        $date = gmdate('D, d M Y H:i:s \G\M\T');
-        $md5Pwd = md5($this->operatorPassword);
-        $sign = md5("$urlString&{$this->bucketName}&$date&$md5Pwd");
-        return array(
-            'Authorization' => "UpYun {$this->bucketName}:{$this->operatorName}:$sign",
-            'Date' => $date,
-        );
-    }
-
-    public function getSignHeader($sign) {
-        return array('Authorization' => "UpYun {$this->operatorName}:$sign");
+    public function setFormApiKey($key) {
+        $this->formApiKey = $key;
     }
 
     /**
@@ -136,46 +93,7 @@ class BucketConfig {
      *
      * @return string
      */
-    public function getRestApiUrl($remoteFilePath) {
-        return "http://{$this->restApiEndPoint}/{$this->bucketName}/" . ltrim($remoteFilePath, '/');
-    }
-    
-    public function getRestApiEntryPoint() {
-        return "http://{$this->restApiEndPoint}/{$this->bucketName}/";
-    }
-
-    public function getPolicy($requestParams) {
-        return $this->base64Json($requestParams);
-    }
-
-    public function base64Json($params) {
-        return base64_encode(json_encode($params));
-    }
-
-    public function getSignature($data, $type, $tokenSecret = '') {
-        if(is_array($data)) {
-            ksort($data);
-            $string = '';
-            foreach($data as $k => $v) {
-                if(is_array($v)) {
-                    $v = implode('', $v);
-                }
-                $string .= "$k$v";
-            }
-            switch($type) {
-                case self::SIGN_MULTIPART:
-                    $string .= $tokenSecret ? $tokenSecret : $this->formApiKey;
-                    break;
-                case self::SIGN_VIDEO:
-                    $string = $this->operatorName . $string . md5($this->operatorPassword);
-                    break;
-                case self::SIGN_VIDEO_NO_OPERATOR:
-                    break;
-
-            }
-            $sign = md5($string);
-            return $sign;
-        }
-        return false;
+    public function getRestApiUrl($remotePath) {
+        return "http://" . self::$restApiEndPoint . Util::pathJoin($this->bucketName, $remotePath);
     }
 }

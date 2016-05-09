@@ -1,0 +1,86 @@
+<?php
+namespace Upyun;
+
+
+/**
+ * Class Signature
+ * @package Upyun
+ */
+class Signature {
+    /**
+     * 获取分块上传接口的签名
+     */
+    const SIGN_MULTIPART     = 1;
+    /**
+     * 生成视频处理接口的签名
+     */
+    const SIGN_VIDEO         = 2;
+    /**
+     * 生成视频处理接口的签名（不需要操作员时使用）
+     */
+    const SIGN_VIDEO_NO_OPERATOR   = 3;
+
+    /**
+     * 获取 RESET API 请求需要的签名头
+     * @param BucketConfig $bucketConfig
+     * @param $method
+     * @param $path
+     * @param $contentLength
+     *
+     * @return array
+     */
+    public static function getRestApiSignHeader($bucketConfig, $method, $remotePath, $contentLength) {
+        $gmtDate = gmdate('D, d M Y H:i:s \G\M\T');
+        $path = Util::pathJoin($bucketConfig->bucketName, $remotePath);
+        $sign = md5("$method&$path&$gmtDate&$contentLength&{$bucketConfig->getMd5OperatorPassword()}");
+        
+        $headers = array(
+            'Authorization' => "UpYun {$bucketConfig->operatorName}:$sign",
+            'Date' => $gmtDate
+        );
+        return $headers;
+    }
+
+    /**
+     * 获取请求缓存刷新接口需要的签名头
+     * @param BucketConfig $bucketConfig
+     * @param $urlString
+     *
+     * @return array
+     */
+    public static function getPurgeSignHeader(BucketConfig $bucketConfig, $urlString) {
+        $date = gmdate('D, d M Y H:i:s \G\M\T');
+        $sign = md5("$urlString&{$bucketConfig->bucketName}&$date&{$bucketConfig->getMd5OperatorPassword()}");
+        return array(
+            'Authorization' => "UpYun {$bucketConfig->bucketName}:{$bucketConfig->operatorName}:$sign",
+            'Date' => $date,
+        );
+    }
+
+    public static function getSignature(BucketConfig $bucketConfig, $data, $type, $tokenSecret = '') {
+        if(is_array($data)) {
+            ksort($data);
+            $string = '';
+            foreach($data as $k => $v) {
+                if(is_array($v)) {
+                    $v = implode('', $v);
+                }
+                $string .= "$k$v";
+            }
+            switch($type) {
+                case self::SIGN_MULTIPART:
+                    $string .= $tokenSecret ? $tokenSecret : $bucketConfig->getFormApiKey();
+                    break;
+                case self::SIGN_VIDEO:
+                    $string = $bucketConfig->operatorName . $string . $bucketConfig->getMd5OperatorPassword();
+                    break;
+                case self::SIGN_VIDEO_NO_OPERATOR:
+                    break;
+
+            }
+            $sign = md5($string);
+            return $sign;
+        }
+        return false;
+    }
+}

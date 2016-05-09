@@ -14,6 +14,7 @@ class Filesystem {
 
     public function setConfig(BucketConfig $config) {
         $this->config = $config;
+        return $this;
     }
 
     /**
@@ -32,9 +33,10 @@ class Filesystem {
         } else {
             $size = strlen($content);
         }
-        $authHeader = $this->config->getRestApiSignHeader('PUT', $path, $size);
+        $authHeader = Signature::getRestApiSignHeader($this->config, 'PUT', $path, $size);
 
-        $response = Request::put($this->config->getRestApiUrl($path),
+        $response = Request::put(
+            $this->config->getRestApiUrl($path),
             array_merge($authHeader,  $params),
             $content
         );
@@ -54,9 +56,10 @@ class Filesystem {
      * @throws \Exception
      */
     public function read($path, $resource = NULL, $params = array()) {
-        $authHeader = $this->config->getRestApiSignHeader('GET', $path, 0);
+        $authHeader = Signature::getRestApiSignHeader($this->config, 'GET', $path, 0);
 
-        $response = Request::get($this->config->getRestApiUrl($path),
+        $response = Request::get(
+            $this->config->getRestApiUrl($path),
             array_merge($authHeader, $params),
             $resource
         );
@@ -94,9 +97,10 @@ class Filesystem {
      * @throws \Exception
      */
     public function has($path) {
-        $authHeader = $this->config->getRestApiSignHeader('HEAD', $path, 0);
+        $authHeader = Signature::getRestApiSignHeader($this->config, 'HEAD', $path, 0);
 
-        $response = Request::head($this->config->getRestApiUrl($path),
+        $response = Request::head(
+            $this->config->getRestApiUrl($path),
             $authHeader
         );
         if($response->status_code === 200) {
@@ -114,9 +118,10 @@ class Filesystem {
      * @return array
      */
     public function info($path) {
-        $header = $this->config->getRestApiSignHeader('HEAD', $path, 0);
+        $header = Signature::getRestApiSignHeader($this->config, 'HEAD', $path, 0);
 
-        $response = Request::head($this->config->getRestApiUrl($path),
+        $response = Request::head(
+            $this->config->getRestApiUrl($path),
             $header
         );
         return Util::getHeaderParams($response->header);
@@ -130,9 +135,10 @@ class Filesystem {
      * @throws \Exception: 删除不存在的文件将会抛出异常
      */
     public function delete($path) {
-        $authHeader = $this->config->getRestApiSignHeader('DELETE', $path, 0);
+        $authHeader = Signature::getRestApiSignHeader($this->config, 'DELETE', $path, 0);
 
-        $reponse = Request::delete($this->config->getRestApiUrl($path),
+        $reponse = Request::delete(
+            $this->config->getRestApiUrl($path),
             $authHeader
         );
         if($reponse->status_code !== 200) {
@@ -150,7 +156,7 @@ class Filesystem {
      */
     public function createDir($path) {
         $path = rtrim($path, '/') . '/';
-        $authHeader = $this->config->getRestApiSignHeader('PUT', $path, 0);
+        $authHeader = Signature::getRestApiSignHeader($this->config, 'PUT', $path, 0);
 
         $response = Request::put(
             $this->config->getRestApiUrl($path),
@@ -178,7 +184,7 @@ class Filesystem {
      * @throws \Exception
      */
     public function usage() {
-        $header = $this->config->getRestApiSignHeader('GET', '/', 0);
+        $header = Signature::getRestApiSignHeader($this->config, 'GET', '/', 0);
 
         $response = Request::get(
             $this->config->getRestApiUrl('/?usage'),
@@ -203,7 +209,7 @@ class Filesystem {
             $urlString = implode("\n", $urls);
         }
 
-        $headers = $this->config->getPurgeSignHeader($urlString);
+        $headers = Signature::getPurgeSignHeader($this->config, $urlString);
         $response = Request::post(
             BucketConfig::ED_PURGE,
             $headers,

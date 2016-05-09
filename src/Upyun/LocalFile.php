@@ -49,7 +49,6 @@ class LocalFile {
         }
     }
 
-
     /**
      * 读取文件块
      * @param $currentPosition: 文件当前读取位置

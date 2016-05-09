@@ -74,8 +74,12 @@ class MultiPart{
             'path' => $remotePath
         );
         $metaData = array_merge($metaData, $data);
-        $policy = $this->config->getPolicy($metaData);
-        $signature = $this->config->getSignature($metaData, BucketConfig::SIGN_MULTIPART);
+        $policy = Util::base64Json($metaData);
+        $signature = Signature::getSignature(
+            $this->config,
+            $metaData,
+            Signature::SIGN_MULTIPART
+        );
         $postData = compact('policy', 'signature');
 
         $response = Request::post(
@@ -114,10 +118,11 @@ class MultiPart{
             'block_hash' => $hash,
         );
         $metaData = array_merge($metaData, $data);
-        $postData['policy'] = $this->config->getPolicy($metaData);
-        $postData['signature'] = $this->config->getSignature(
+        $postData['policy'] = Util::base64Json($metaData);
+        $postData['signature'] = Signature::getSignature(
+            $this->config,
             $metaData,
-            BucketConfig::SIGN_MULTIPART,
+            Signature::SIGN_MULTIPART,
             $blocksInfo->token_secret
         );
         $postData['file'] = array('data' => $fileBlock);
@@ -141,9 +146,15 @@ class MultiPart{
     public function end($initResponse, $data = array()) {
         $metaData['save_token'] = $initResponse->save_token;
         $metaData['expiration'] = $initResponse->expired_at;
+        
         $metaData = array_merge($metaData, $data);
-        $policy = $this->config->getPolicy($metaData);
-        $signature = $this->config->getSignature($metaData, BucketConfig::SIGN_MULTIPART, $initResponse->token_secret);
+        $policy = Util::base64Json($metaData);
+        $signature = Signature::getSignature(
+            $this->config,
+            $metaData,
+            Signature::SIGN_MULTIPART,
+            $initResponse->token_secret
+        );
         $postData = compact('policy', 'signature');
 
         $response = Request::post(

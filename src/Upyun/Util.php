@@ -10,6 +10,7 @@ class Util {
         }
     }
 
+    //todo remove this method
     public static function multiPartPost($postData, $url, $retryTimes = 3) {
         $delimiter = '-------------' . uniqid();
         $data = '';
@@ -57,5 +58,17 @@ class Util {
             $meta[$value[1]] = $value[2];
         }
         return $meta;
+    }
+
+    public static function pathJoin() {
+        $paths = func_get_args();
+        foreach($paths as &$path) {
+            $path = trim($path, '/');
+        }
+        return '/' . implode('/', $paths);
+    }
+    
+    public static function base64Json($params) {
+        return base64_encode(json_encode($params));
     }
 }
