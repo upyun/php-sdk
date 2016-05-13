@@ -238,7 +238,8 @@ class UpYun {
 	*/
 	private function sign($method, $uri, $date, $length){/*{{{*/
         //$uri = urlencode($uri);
-		$sign = "{$method}&{$uri}&{$date}&{$length}&{$this->_password}";
+        $md5password = md5($this->_password);
+		$sign = "{$method}&{$uri}&{$date}&{$length}&{$md5password}";
 		return 'UpYun '.$this->_username.':'.md5($sign);
 	}/*}}}*/
 
