@@ -1,7 +1,7 @@
 <?php
 class UpYun
 {
-    const VERSION = '2.0';
+    const VERSION = '2.2.0';
 
     const ED_AUTO = 'v0.api.upyun.com';
     const ED_TELECOM = 'v1.api.upyun.com';
