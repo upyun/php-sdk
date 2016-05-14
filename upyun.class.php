@@ -181,6 +181,14 @@ class UpYun
         return $this->_do_request('GET', "/{$this->_bucketname}/?usage");
     }
 
+    /**
+     * 获取空间存储使用量，单位 byte
+     */
+    public function getBucketUsage()
+    {
+        return $this->getFolderUsage('/');
+    }
+
     public function getXRequestId()
     {
         return $this->x_request_id;
