@@ -48,7 +48,7 @@ composer require upyun/sdk
 <a name="init"></a>
 ### 初始化UpYun
 ```php
-require_once('upyun.class.php');
+require_once('vendor/autoload.php');
 $upyun = new UpYun('bucketname', 'operator_name', 'operator_pwd');
 ```
 
