@@ -9,7 +9,7 @@ namespace Upyun;
 class MultiPart{
 
     /**
-     * @var BucketConfig
+     * @var Config
      */
     protected $config;
     /**
@@ -17,11 +17,11 @@ class MultiPart{
      */
     protected $blockSize;
 
-    public function __construct(BucketConfig $bucketConfig) {
+    public function __construct(Config $bucketConfig) {
         $this->setConfig($bucketConfig);
     }
 
-    public function setConfig(BucketConfig $bucketConfig) {
+    public function setConfig(Config $bucketConfig) {
         $this->config = $bucketConfig;
     }
 
@@ -83,7 +83,7 @@ class MultiPart{
         $postData = compact('policy', 'signature');
 
         $response = Request::post(
-            sprintf('http://%s/%s/', BucketConfig::ED_FORM, $this->config->bucketName),
+            sprintf('http://%s/%s/', Config::ED_FORM, $this->config->bucketName),
             array(),
             $postData
         );
@@ -129,7 +129,7 @@ class MultiPart{
 
         $newBlocksInfo = Util::multiPartPost(
             $postData,
-            sprintf('http://%s/%s/', BucketConfig::ED_FORM, $this->config->bucketName)
+            sprintf('http://%s/%s/', Config::ED_FORM, $this->config->bucketName)
         );
 
         return json_decode($newBlocksInfo);
@@ -158,7 +158,7 @@ class MultiPart{
         $postData = compact('policy', 'signature');
 
         $response = Request::post(
-            sprintf('http://%s/%s/', BucketConfig::ED_FORM, $this->config->bucketName),
+            sprintf('http://%s/%s/', Config::ED_FORM, $this->config->bucketName),
             array(),
             $postData
         );

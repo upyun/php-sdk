@@ -3,15 +3,15 @@ namespace Upyun;
 
 class Video {
     /**
-     * @var BucketConfig
+     * @var Config
      */
     protected $config;
 
-    public function __construct(BucketConfig $bucketConfig) {
+    public function __construct(Config $bucketConfig) {
         $this->setConfig($bucketConfig);
     }
 
-    public function setConfig(BucketConfig $bucketConfig) {
+    public function setConfig(Config $bucketConfig) {
         $this->config = $bucketConfig;
     }
 
@@ -27,7 +27,7 @@ class Video {
         );
         
         $response = Request::post(
-            sprintf('http://%s/%s/', BucketConfig::ED_VIDEO, 'pretreatment'),
+            sprintf('http://%s/%s/', Config::ED_VIDEO, 'pretreatment'),
             array('Authorization' => "UpYun {$this->config->operatorName}:$sign"),
             $postParams
         );
@@ -60,7 +60,7 @@ class Video {
         );
 
         $response = Request::get(
-            sprintf('http://%s/%s/', BucketConfig::ED_VIDEO, 'status'),
+            sprintf('http://%s/%s/', Config::ED_VIDEO, 'status'),
             array('Authorization' => "UpYun {$this->config->operatorName}:$sign"),
             $query
         );

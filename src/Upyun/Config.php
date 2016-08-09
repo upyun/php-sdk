@@ -2,11 +2,11 @@
 namespace Upyun;
 
 /**
- * Class BucketConfig
+ * Class Config
  * 
  * @package Upyun
  */
-class BucketConfig {
+class Config {
     /**
      * @var string: 服务名
      */

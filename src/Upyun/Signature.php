@@ -22,7 +22,8 @@ class Signature {
 
     /**
      * 获取 RESET API 请求需要的签名头
-     * @param BucketConfig $bucketConfig
+     * 
+*@param Config $bucketConfig
      * @param $method
      * @param $path
      * @param $contentLength
@@ -43,12 +44,13 @@ class Signature {
 
     /**
      * 获取请求缓存刷新接口需要的签名头
-     * @param BucketConfig $bucketConfig
+     * 
+*@param Config $bucketConfig
      * @param $urlString
      *
      * @return array
      */
-    public static function getPurgeSignHeader(BucketConfig $bucketConfig, $urlString) {
+    public static function getPurgeSignHeader( Config $bucketConfig, $urlString) {
         $date = gmdate('D, d M Y H:i:s \G\M\T');
         $sign = md5("$urlString&{$bucketConfig->bucketName}&$date&{$bucketConfig->getOperatorPassword()}");
         return array(
@@ -57,7 +59,7 @@ class Signature {
         );
     }
 
-    public static function getSignature(BucketConfig $bucketConfig, $data, $type, $tokenSecret = '') {
+    public static function getSignature( Config $bucketConfig, $data, $type, $tokenSecret = '') {
         if(is_array($data)) {
             ksort($data);
             $string = '';

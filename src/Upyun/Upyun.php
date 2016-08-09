@@ -1,18 +1,18 @@
 <?php
 namespace Upyun;
 
-class Filesystem {
+class Upyun {
 
     /**
-     * @var BucketConfig
+     * @var Config
      */
     protected $config;
 
-    public function __construct(BucketConfig $config) {
+    public function __construct(Config $config) {
         $this->setConfig($config);
     }
 
-    public function setConfig(BucketConfig $config) {
+    public function setConfig(Config $config) {
         $this->config = $config;
         return $this;
     }
@@ -211,7 +211,7 @@ class Filesystem {
 
         $headers = Signature::getPurgeSignHeader($this->config, $urlString);
         $response = Request::post(
-            BucketConfig::ED_PURGE,
+            Config::ED_PURGE,
             $headers,
             array('purge' => $urlString)
         );

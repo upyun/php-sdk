@@ -1,19 +1,19 @@
 <?php
 namespace Upyun\Tests;
-use Upyun\BucketConfig;
-use Upyun\Filesystem;
+use Upyun\Config;
+use Upyun\Upyun;
 
 class FilesystemTest extends \PHPUnit_Framework_TestCase{
 
     /**
-     * @var Filesystem
+     * @var Upyun
      */
     public static $filesystem;
 
     protected static $tempFilePath;
 
     public static function setUpBeforeClass() {
-        self::$filesystem = new Filesystem(new BucketConfig(BUCKET, USER_NAME, PWD));
+        self::$filesystem = new Upyun(new Config(BUCKET, USER_NAME, PWD));
         self::$tempFilePath = __DIR__ . '/assets/test.txt';
         touch(self::$tempFilePath);
     }
@@ -42,7 +42,7 @@ class FilesystemTest extends \PHPUnit_Framework_TestCase{
     }
 
     public function testWirteWithException() {
-        $fs = new Filesystem(new BucketConfig(BUCKET, USER_NAME, 'error-password'));
+        $fs = new Upyun(new Config(BUCKET, USER_NAME, 'error-password'));
         try {
             $fs->write('test.txt', 'test file content');
         } catch(\Exception $e) {

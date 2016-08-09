@@ -1,10 +1,10 @@
 <?php
 namespace Upyun\Tests;
 
-use Upyun\BucketConfig;
+use Upyun\Config;
 use Upyun\MultiPart;
 use Upyun\LocalFile;
-use Upyun\Filesystem;
+use Upyun\Upyun;
 
 class MultiPartTest extends \PHPUnit_Framework_TestCase{
 
@@ -14,7 +14,7 @@ class MultiPartTest extends \PHPUnit_Framework_TestCase{
     public $multiPart;
 
     public function setUp() {
-        $config = new BucketConfig(BUCKET, USER_NAME, PWD);
+        $config = new Config(BUCKET, USER_NAME, PWD);
         $config->setFormApiKey('Mv83tlocuzkmfKKUFbz2s04FzTw=');
         $this->multiPart = new MultiPart($config);
     }

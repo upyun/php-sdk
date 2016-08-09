@@ -1,17 +1,17 @@
 <?php
 namespace Upyun\Tests;
 use Upyun\Signature;
-use Upyun\BucketConfig;
+use Upyun\Config;
 
 class SignatureTest extends \PHPUnit_Framework_TestCase{
 
     /**
-     * @var BucketConfig;
+     * @var Config;
      */
     public $config;
     
     public function setUp() {
-        $this->config = new BucketConfig('bucket', 'operator', 'password');
+        $this->config = new Config('bucket', 'operator', 'password');
     }
 
     public function testGetRestApiSign() {
