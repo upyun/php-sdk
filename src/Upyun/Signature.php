@@ -33,7 +33,7 @@ class Signature {
     public static function getRestApiSignHeader($bucketConfig, $method, $remotePath, $contentLength) {
         $gmtDate = gmdate('D, d M Y H:i:s \G\M\T');
         $path = Util::pathJoin($bucketConfig->bucketName, $remotePath);
-        $sign = md5("$method&$path&$gmtDate&$contentLength&{$bucketConfig->getOperatorPassword()}");
+        $sign = md5("$method&$path&$gmtDate&$contentLength&{$bucketConfig->operatorPassword}");
         
         $headers = array(
             'Authorization' => "UpYun {$bucketConfig->operatorName}:$sign",
@@ -52,7 +52,7 @@ class Signature {
      */
     public static function getPurgeSignHeader( Config $bucketConfig, $urlString) {
         $gmtDate = gmdate('D, d M Y H:i:s \G\M\T');
-        $sign = md5("$urlString&{$bucketConfig->bucketName}&$gmtDate&{$bucketConfig->getOperatorPassword()}");
+        $sign = md5("$urlString&{$bucketConfig->bucketName}&$gmtDate&{$bucketConfig->operatorPassword}");
         return array(
             'Authorization' => "UpYun {$bucketConfig->bucketName}:{$bucketConfig->operatorName}:$sign",
             'Date' => $gmtDate,
@@ -74,7 +74,7 @@ class Signature {
                     $string .= $tokenSecret ? $tokenSecret : $bucketConfig->getFormApiKey();
                     break;
                 case self::SIGN_VIDEO:
-                    $string = $bucketConfig->operatorName . $string . $bucketConfig->getOperatorPassword();
+                    $string = $bucketConfig->operatorName . $string . $bucketConfig->operatorPassword;
                     break;
                 case self::SIGN_VIDEO_NO_OPERATOR:
                     break;

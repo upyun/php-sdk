@@ -18,7 +18,7 @@ class Config {
     /**
      * @var string: 操作员密码
      */
-    private $operatorPassword;
+    public $operatorPassword;
 
     
     /**
@@ -59,22 +59,14 @@ class Config {
     public function __construct($bucketName, $operatorName, $operatorPassword) {
         $this->bucketName = $bucketName;
         $this->operatorName = $operatorName;
-        $this->operatorPassword = $operatorPassword;
+        $this->setOperatorPassword($operatorPassword);
         self::$restApiEndPoint = self::ED_AUTO;
     }
     
     public function setOperatorPassword($operatorPassword) {
         $this->operatorPassword = md5($operatorPassword); 
     }
-    
-    public function getOperatorPassword() {
-        if(! $this->operatorPassword) {
-            throw new \Exception('operator password is empty.');
-        }
 
-        return $this->operatorPassword;
-    }
-    
     public function getFormApiKey() {
         if(! $this->formApiKey) {
             throw new \Exception('form api key is empty.');
