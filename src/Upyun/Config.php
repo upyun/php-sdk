@@ -3,38 +3,57 @@ namespace Upyun;
 
 /**
  * Class Config
- * 
+ *
  * @package Upyun
  */
 class Config {
     /**
-     * @var string: 服务名
+     * @var string
      */
     public $bucketName;
     /**
-     * @var string: 操作员名称
+     * @var string
      */
     public $operatorName;
     /**
-     * @var string: 操作员密码
+     * @var string
      */
     public $operatorPassword;
 
-    
     /**
-     * @var string: 表单 API 秘钥，通过管理后台获取
+     * @var bool: if true, use ssl
+     */
+    public $useSsl;
+
+    /**
+     * @var string: REST, use rest api upload file; BLOCK use multipart api upload file; AUTO, decide by file size
+     */
+    public $uploadType = 'AUTO';
+
+    /**
+     * @var int: if upload type is AUTO, when file size big than this value will choose block upload, else use rest api upload
+     */
+    public $sizeBoundary = 5 * 1024 * 1024;
+    /**
+     * @var int: default block size 5M
+     */
+    public $defaultBlockSize = 5 * 1024 * 1024;
+    
+
+
+    /**
+     * @var string
      */
     private $formApiKey;
-    
+
     /**
-     * @var string: HTTP REST API 和 HTTP FORM  API 所使用的接口地址, 默认 ED_AUTO
+     * @var string
      */
     static $restApiEndPoint;
 
-    
+
     /**
-     * 适合不同国内不同线路的接口地址
-     * 关于国内不同线路选择的详细描述见: http://docs.upyun.com/api/
+     * different route type, detail see http://docs.upyun.com/api/
      */
     const ED_AUTO            = 'v0.api.upyun.com';
     const ED_TELECOM         = 'v1.api.upyun.com';
@@ -42,17 +61,17 @@ class Config {
     const ED_CTT             = 'v3.api.upyun.com';
 
     /**
-     * 分块上传接口地址
+     * multipart api endpoint
      */
     const ED_FORM            = 'm0.api.upyun.com';
 
     /**
-     * 视频预处理接口地址
+     * media api endpoint
      */
     const ED_VIDEO           = 'p0.api.upyun.com';
 
     /**
-     * 单个 URL 刷新接口地址
+     * purge api endpoint
      */
     const ED_PURGE           = 'http://purge.upyun.com/purge/';
 
@@ -60,19 +79,20 @@ class Config {
         $this->bucketName = $bucketName;
         $this->operatorName = $operatorName;
         $this->setOperatorPassword($operatorPassword);
+        $this->useSsl          = false;
         self::$restApiEndPoint = self::ED_AUTO;
     }
-    
+
     public function setOperatorPassword($operatorPassword) {
-        $this->operatorPassword = md5($operatorPassword); 
+        $this->operatorPassword = md5($operatorPassword);
     }
 
     public function getFormApiKey() {
         if(! $this->formApiKey) {
             throw new \Exception('form api key is empty.');
         }
-        
-       return $this->formApiKey; 
+
+       return $this->formApiKey;
     }
 
     public function setFormApiKey($key) {
