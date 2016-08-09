@@ -64,15 +64,15 @@ class BucketConfig {
     }
     
     public function setOperatorPassword($operatorPassword) {
-        $this->operatorPassword = $operatorPassword; 
+        $this->operatorPassword = md5($operatorPassword); 
     }
     
-    public function getMd5OperatorPassword() {
+    public function getOperatorPassword() {
         if(! $this->operatorPassword) {
             throw new \Exception('operator password is empty.');
         }
-        
-        return md5($this->operatorPassword);
+
+        return $this->operatorPassword;
     }
     
     public function getFormApiKey() {
