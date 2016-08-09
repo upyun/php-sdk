@@ -23,7 +23,7 @@ class Signature {
     /**
      * 获取 RESET API 请求需要的签名头
      * 
-*@param Config $bucketConfig
+     * @param Config $bucketConfig
      * @param $method
      * @param $path
      * @param $contentLength
@@ -45,17 +45,17 @@ class Signature {
     /**
      * 获取请求缓存刷新接口需要的签名头
      * 
-*@param Config $bucketConfig
+     * @param Config $bucketConfig
      * @param $urlString
      *
      * @return array
      */
     public static function getPurgeSignHeader( Config $bucketConfig, $urlString) {
-        $date = gmdate('D, d M Y H:i:s \G\M\T');
-        $sign = md5("$urlString&{$bucketConfig->bucketName}&$date&{$bucketConfig->getOperatorPassword()}");
+        $gmtDate = gmdate('D, d M Y H:i:s \G\M\T');
+        $sign = md5("$urlString&{$bucketConfig->bucketName}&$gmtDate&{$bucketConfig->getOperatorPassword()}");
         return array(
             'Authorization' => "UpYun {$bucketConfig->bucketName}:{$bucketConfig->operatorName}:$sign",
-            'Date' => $date,
+            'Date' => $gmtDate,
         );
     }
 
