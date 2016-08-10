@@ -1,5 +1,6 @@
 <?php
 namespace Upyun;
+use GuzzleHttp\Client;
 
 class Upyun {
 
@@ -34,17 +35,24 @@ class Upyun {
             $size = strlen($content);
         }
         $authHeader = Signature::getRestApiSignHeader($this->config, 'PUT', $path, $size);
+        $client = new Client();
+        $response = $client->request( 'PUT', $this->config->getRestApiUrl($path), [
+            'headers' => array_merge($authHeader, $params),
+            'body' => $content
+        ]);
 
-        $response = Request::put(
-            $this->config->getRestApiUrl($path),
-            array_merge($authHeader,  $params),
-            $content
-        );
-        if($response->status_code !== 200) {
-            $body = json_decode($response->body, true);
-            throw new \Exception(sprintf('%s, with x-request-id=%s', $body['msg'], $body['id']), $body['code']);
+        if($response->getStatusCode() !== 200) {
+            throw new \Exception(sprintf('write file into upyun failed, response code %s', $response->getStatusCode()));
         }
-        return Util::getHeaderParams($response->header);
+
+        $headers = $response->getHeaders();
+        $params = [];
+        foreach ($headers as $header => $value) {
+            if(strpos($header, 'x-upyun-') !== false) {
+                $params[$header] = $value[0];
+            }
+        }
+        return $params;
     }
 
     /**
