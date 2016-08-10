@@ -1,6 +1,8 @@
 <?php
 namespace Upyun;
 
+use GuzzleHttp\Psr7\Request;
+
 class Upyun {
 
     /**
@@ -27,24 +29,24 @@ class Upyun {
      * @throws \Exception
      */
     public function write($path, $content, $params = array()) {
-        if(is_resource($content)) {
-            $stat = fstat($content);
-            $size = $stat['size'];
-        } else {
-            $size = strlen($content);
+        if(!$content) {
+            throw new \Exception('write content can not be empty.');
         }
-        $authHeader = Signature::getRestApiSignHeader($this->config, 'PUT', $path, $size);
+        /**
+         * 1. 路径需要处理空间前缀
+         * 2. 其他请求不需要处理
+         */
 
-        $response = Request::put(
-            $this->config->getRestApiUrl($path),
-            array_merge($authHeader,  $params),
-            $content
-        );
-        if($response->status_code !== 200) {
-            $body = json_decode($response->body, true);
-            throw new \Exception(sprintf('%s, with x-request-id=%s', $body['msg'], $body['id']), $body['code']);
-        }
-        return Util::getHeaderParams($response->header);
+        /*
+        $req = $this->newRequest();
+        $req->withRequestTarget($path)
+            ->withMethod('POST')
+            ->withHeaders($params)
+            ->addFile($content);
+        $res = $req->send();
+        var_dump($res);die;
+        */
+        return $res;
     }
 
     /**
@@ -56,36 +58,38 @@ class Upyun {
      * @throws \Exception
      */
     public function read($path, $resource = NULL, $params = array()) {
-        $authHeader = Signature::getRestApiSignHeader($this->config, 'GET', $path, 0);
+        $req = new Request($this->config);
+        $req->withRequestTarget($path)
+            ->withMethod('GET')
+            ->withHeaders($params);
 
-        $response = Request::get(
-            $this->config->getRestApiUrl($path),
-            array_merge($authHeader, $params),
-            $resource
-        );
-
-        if($response->status_code !== 200) {
-            $body = json_decode($response->body, true);
-            throw new \Exception(sprintf('%s, with x-request-id=%s', $body['msg'], $body['id']), $body['code']);
-        }
-
-        $params = Util::getHeaderParams($response->header);
-        if(! isset($params['x-upyun-list-iter'])) {
-            return $response->body;
+        if(is_resource($resource)) {
+            $req->pipe($resource)
+                ->send();
+            return $resource;
         } else {
-            $files = array();
-            if(!$response->body) {
-                return array('files' => $files, 'is_end' => true);
-            }
+            $response = $req->send();
 
-            $lines = explode("\n", $response->body);
-            foreach($lines as $line) {
-                $file = array();
-                list($file['name'], $file['type'], $file['size'], $file['time']) = explode("\t", $line, 4);
-                array_push($files, $file);
-            }
+            $params = $response->getHeaders();
 
-            return array('files' => $files, 'is_end' => $params['x-upyun-list-iter'] === 'g2gCZAAEbmV4dGQAA2VvZg');
+
+            if(! isset($params['x-upyun-list-iter'])) {
+                return $response->body;
+            } else {
+                $files = array();
+                if(!$response->body) {
+                    return array('files' => $files, 'is_end' => true);
+                }
+
+                $lines = explode("\n", $response->body);
+                foreach($lines as $line) {
+                    $file = array();
+                    list($file['name'], $file['type'], $file['size'], $file['time']) = explode("\t", $line, 4);
+                    array_push($files, $file);
+                }
+
+                return array('files' => $files, 'is_end' => $params['x-upyun-list-iter'] === 'g2gCZAAEbmV4dGQAA2VvZg');
+            }
         }
     }
 
@@ -217,5 +221,9 @@ class Upyun {
         );
         $result = json_decode($response->body, true);
         return $result['invalid_domain_of_url'];
+    }
+
+    private function newRequest() {
+        return new Http\StorageRequest($this->config);
     }
 }

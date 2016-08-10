@@ -33,11 +33,11 @@ class Config {
     /**
      * @var int: if upload type is AUTO, when file size big than this value will choose block upload, else use rest api upload
      */
-    public $sizeBoundary = 5 * 1024 * 1024;
+    public $sizeBoundary = 5242880;
     /**
      * @var int: default block size 5M
      */
-    public $defaultBlockSize = 5 * 1024 * 1024;
+    public $defaultBlockSize = 5242880;
     
 
 

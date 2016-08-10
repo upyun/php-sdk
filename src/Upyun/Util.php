@@ -71,4 +71,12 @@ class Util {
     public static function base64Json($params) {
         return base64_encode(json_encode($params));
     }
+
+    public static function stringifyHeaders($headers) {
+        $return = array();
+        foreach ($headers as $key => $value) {
+            $return[] = "$key: $value";
+        }
+        return $return;
+    }
 }
