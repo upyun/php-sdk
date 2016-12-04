@@ -178,7 +178,7 @@ class UpYun
      */
     public function getFolderUsage($bucket = '/')
     {
-        return $this->_do_request('GET', "/{$this->_bucketname}/?usage");
+        return $this->_do_request('GET', "{$bucket}?usage");
     }
 
     /**
