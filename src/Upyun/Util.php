@@ -10,64 +10,32 @@ class Util {
         }
     }
 
-    //todo remove this method
-    public static function multiPartPost($postData, $url, $retryTimes = 3) {
-        $delimiter = '-------------' . uniqid();
-        $data = '';
-        foreach($postData as $name => $content) {
-            if(is_array($content)) {
-                //上传文件
-                $data .= "--" . $delimiter . "\r\n";
-                $filename = isset($content['name']) ? $content['name'] : $name;
-                $data .= 'Content-Disposition: form-data; name="' . $name . '"; filename="' . $filename . "\" \r\n";
-                $type = isset($content['type']) ? $content['type'] : 'application/octet-stream';
-                $data .= 'Content-Type: ' . $type . "\r\n\r\n";
-                $data .= $content['data'] . "\r\n";
-            } else {
-                //普通参数
-                $data .= "--" . $delimiter . "\r\n";
-                $data .= 'Content-Disposition: form-data; name="' . $name . '"';
-                $data .= "\r\n\r\n" . $content . "\r\n";
+    public static function getHeaderParams($headers) {
+        $params = [];
+        foreach ($headers as $header => $value) {
+            if(strpos($header, 'x-upyun-') !== false) {
+                $params[$header] = $value[0];
             }
         }
-        $data .= "--" . $delimiter . "--";
-
-        $handle = curl_init($url);
-        curl_setopt($handle, CURLOPT_POST, true);
-        curl_setopt($handle, CURLOPT_HTTPHEADER , array(
-                'Content-Type: multipart/form-data; boundary=' . $delimiter,
-                'Content-Length: ' . strlen($data))
-        );
-        curl_setopt($handle, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($handle, CURLOPT_POSTFIELDS, $data);
-
-        $times = 0;
-        do{
-            $result = curl_exec($handle);
-            $times++;
-        } while($result === false && $times < $retryTimes);
-
-        curl_close($handle);
-        return $result;
-    }
-
-    public static function getHeaderParams($header) {
-        preg_match_all('~(x-upyun-[a-z\-]*): ([0-9a-zA-Z]{0,32})~i', $header, $result, PREG_SET_ORDER);
-        $meta = array();
-        foreach($result as $value) {
-            $meta[$value[1]] = $value[2];
-        }
-        return $meta;
-    }
-
-    public static function pathJoin() {
-        $paths = func_get_args();
-        foreach($paths as &$path) {
-            $path = trim($path, '/');
-        }
-        return '/' . implode('/', $paths);
+        return $params;
     }
     
+    public static function parseDir($body) {
+        $files = array();
+        if(!$body) {
+            return array('files' => $files, 'is_end' => true);
+        }
+
+        $lines = explode("\n", $body);
+        foreach($lines as $line) {
+            $file = [];
+            list($file['name'], $file['type'], $file['size'], $file['time']) = explode("\t", $line, 4);
+            $files[] = $file;
+        }
+
+        return $files;
+    }
+
     public static function base64Json($params) {
         return base64_encode(json_encode($params));
     }
@@ -78,5 +46,13 @@ class Util {
             $return[] = "$key: $value";
         }
         return $return;
+    }
+    
+    public static function md5Hash($resource) {
+        rewind($resource);
+        $ctx = hash_init('md5');
+        hash_update_stream($ctx, $resource);
+        $md5 = hash_final($ctx);
+        return $md5;
     }
 }

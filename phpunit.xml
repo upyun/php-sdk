@@ -11,8 +11,8 @@
     <testsuites>
         <testsuite name="upyun test cases">
             <file>./tests/BucketConfigTest.php</file>
-            <file>./tests/FilesystemTest.php</file>
-            <file>./tests/MultiPartTest.php</file>
+            <file>./tests/UpyunTest.php</file>
+            <file>./tests/Api/MultiTest.php</file>
         </testsuite>
     </testsuites>
 </phpunit>

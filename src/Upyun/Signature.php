@@ -22,7 +22,7 @@ class Signature {
 
     /**
      * 获取 RESET API 请求需要的签名头
-     * 
+     *
      * @param Config $bucketConfig
      * @param $method
      * @param $path
@@ -32,19 +32,21 @@ class Signature {
      */
     public static function getRestApiSignHeader($bucketConfig, $method, $remotePath, $contentLength) {
         $gmtDate = gmdate('D, d M Y H:i:s \G\M\T');
-        $path = Util::pathJoin($bucketConfig->bucketName, $remotePath);
+        $path = '/' . $bucketConfig->bucketName . '/' . ltrim($remotePath, '/');
+
         $sign = md5("$method&$path&$gmtDate&$contentLength&{$bucketConfig->operatorPassword}");
-        
+
         $headers = array(
             'Authorization' => "UpYun {$bucketConfig->operatorName}:$sign",
-            'Date' => $gmtDate
+            'Date' => $gmtDate,
+            'User-agent' => 'Php-Sdk/' . $bucketConfig->getVersion() . ' (rest api)'
         );
         return $headers;
     }
 
     /**
      * 获取请求缓存刷新接口需要的签名头
-     * 
+     *
      * @param Config $bucketConfig
      * @param $urlString
      *
@@ -56,6 +58,7 @@ class Signature {
         return array(
             'Authorization' => "UpYun {$bucketConfig->bucketName}:{$bucketConfig->operatorName}:$sign",
             'Date' => $gmtDate,
+            'User-agent' => 'Php-Sdk/' . $bucketConfig->getVersion() . ' (purge api)'
         );
     }
 

@@ -31,14 +31,20 @@ class Config {
     public $uploadType = 'AUTO';
 
     /**
-     * @var int: if upload type is AUTO, when file size big than this value will choose block upload, else use rest api upload
+     * @var int: if upload type is AUTO, when file size big than 10M will choose block upload, else use rest api upload
      */
-    public $sizeBoundary = 5242880;
+    public $sizeBoundary = 10485760;
     /**
-     * @var int: default block size 5M
+     * @var int: max block size 5M
      */
-    public $defaultBlockSize = 5242880;
+    public $maxBlockSize = 5242880;
+
+    public $blockExpiration = 60;
+
+    public $timeout = 60;
     
+    private $version = '3.0.0';
+
 
 
     /**
@@ -98,14 +104,8 @@ class Config {
     public function setFormApiKey($key) {
         $this->formApiKey = $key;
     }
-
-    /**
-     * 根据文件路径,获取接口地址
-     * @param $remoteFilePath
-     *
-     * @return string
-     */
-    public function getRestApiUrl($remotePath) {
-        return "http://" . self::$restApiEndPoint . Util::pathJoin($this->bucketName, $remotePath);
+    
+    public function getVersion() {
+        return $this->version; 
     }
 }

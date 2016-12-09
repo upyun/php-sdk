@@ -1,7 +1,11 @@
 <?php
 namespace Upyun;
 
-use GuzzleHttp\Psr7\Request;
+use Upyun\Api\Rest;
+
+use GuzzleHttp\Client;
+use GuzzleHttp\Psr7;
+use GuzzleHttp;
 
 class Upyun {
 
@@ -32,21 +36,10 @@ class Upyun {
         if(!$content) {
             throw new \Exception('write content can not be empty.');
         }
-        /**
-         * 1. 路径需要处理空间前缀
-         * 2. 其他请求不需要处理
-         */
 
-        /*
-        $req = $this->newRequest();
-        $req->withRequestTarget($path)
-            ->withMethod('POST')
-            ->withHeaders($params)
-            ->addFile($content);
-        $res = $req->send();
-        var_dump($res);die;
-        */
-        return $res;
+        $upload = new Uploader($this->config);
+        return $upload->upload($path, $content, $params);
+        return Util::getHeaderParams($response->getHeaders());
     }
 
     /**
@@ -57,39 +50,26 @@ class Upyun {
      * @return mixed: 读取文件时返回文件内容或 TRUE；读取目录时返回一个包含文件列表的数组
      * @throws \Exception
      */
-    public function read($path, $resource = NULL, $params = array()) {
-        $req = new Request($this->config);
-        $req->withRequestTarget($path)
-            ->withMethod('GET')
-            ->withHeaders($params);
-
-        if(is_resource($resource)) {
-            $req->pipe($resource)
-                ->send();
-            return $resource;
-        } else {
-            $response = $req->send();
-
-            $params = $response->getHeaders();
+    public function read($path, $saveHandler = NULL, $params = array()) {
+        $req = new Rest($this->config);
+        $response = $req->request('GET', $path)
+            ->withHeaders($params)
+            ->send();
 
 
-            if(! isset($params['x-upyun-list-iter'])) {
-                return $response->body;
+        $params = Util::getHeaderParams($response->getHeaders());
+
+
+        if(! isset($params['x-upyun-list-iter'])) {
+            if(is_resource($saveHandler)) {
+                Psr7\copy_to_stream($response->getBody(), Psr7\stream_for($saveHandler));
+                return true;
             } else {
-                $files = array();
-                if(!$response->body) {
-                    return array('files' => $files, 'is_end' => true);
-                }
-
-                $lines = explode("\n", $response->body);
-                foreach($lines as $line) {
-                    $file = array();
-                    list($file['name'], $file['type'], $file['size'], $file['time']) = explode("\t", $line, 4);
-                    array_push($files, $file);
-                }
-
-                return array('files' => $files, 'is_end' => $params['x-upyun-list-iter'] === 'g2gCZAAEbmV4dGQAA2VvZg');
+                return $response->getBody()->getContents();
             }
+        } else {
+            $files = Util::parseDir($response->getBody());
+            return array('files' => $files, 'is_end' => $params['x-upyun-list-iter'] === 'g2gCZAAEbmV4dGQAA2VvZg');
         }
     }
 
@@ -101,19 +81,20 @@ class Upyun {
      * @throws \Exception
      */
     public function has($path) {
-        $authHeader = Signature::getRestApiSignHeader($this->config, 'HEAD', $path, 0);
-
-        $response = Request::head(
-            $this->config->getRestApiUrl($path),
-            $authHeader
-        );
-        if($response->status_code === 200) {
-            return true;
-        } else if($response->status_code === 404) {
-           return false;
-        } else {
-            throw new \Exception('head request failed, with status code: ' . $response->status_code);
+        $req = new Rest($this->config);
+        try {
+            $response = $req->request('HEAD', $path)
+                            ->send();
+        } catch(GuzzleHttp\Exception\BadResponseException $e) {
+            $statusCode = $e->getResponse()->getStatusCode();
+            if($statusCode === 404) {
+                return false;
+            } else {
+                throw $e;
+            }
         }
+
+        return true;
     }
 
     /**
@@ -122,34 +103,27 @@ class Upyun {
      * @return array
      */
     public function info($path) {
-        $header = Signature::getRestApiSignHeader($this->config, 'HEAD', $path, 0);
-
-        $response = Request::head(
-            $this->config->getRestApiUrl($path),
-            $header
-        );
-        return Util::getHeaderParams($response->header);
+        $req = new Rest($this->config);
+        $response = $req->request('HEAD', $path)
+                        ->send();
+        return Util::getHeaderParams($response->getHeaders());
     }
 
     /**
      * 删除文件或者目录
      * @param $path
+     * @param $async
      *
      * @return mixed
      * @throws \Exception: 删除不存在的文件将会抛出异常
      */
-    public function delete($path) {
-        $authHeader = Signature::getRestApiSignHeader($this->config, 'DELETE', $path, 0);
-
-        $reponse = Request::delete(
-            $this->config->getRestApiUrl($path),
-            $authHeader
-        );
-        if($reponse->status_code !== 200) {
-            $body = json_decode($reponse->body, true);
-            throw new \Exception(sprintf('%s, with x-request-id=%s', $body['msg'], $body['id']), $body['code']);
+    public function delete($path, $async = false) {
+        $req = new Rest($this->config);
+        $req->request('DELETE', $path);
+        if($async) {
+            $req->withHeader('x-upyun-async', 'true');
         }
-        return $reponse->body;
+        $req->send();
     }
 
     /**
@@ -160,16 +134,10 @@ class Upyun {
      */
     public function createDir($path) {
         $path = rtrim($path, '/') . '/';
-        $authHeader = Signature::getRestApiSignHeader($this->config, 'PUT', $path, 0);
-
-        $response = Request::put(
-            $this->config->getRestApiUrl($path),
-            array_merge($authHeader, array('folder' => 'true'))
-        );
-        if($response->status_code !== 200) {
-            $body = json_decode($response->body, true);
-            throw new \Exception(sprintf('%s, with x-request-id=%s', $body['msg'], $body['id']), $body['code']);
-        }
+        $req = new Rest($this->config);
+        $req->request('POST', $path)
+            ->withHeader('folder', 'true')
+            ->send();
     }
 
     /**
@@ -188,17 +156,13 @@ class Upyun {
      * @throws \Exception
      */
     public function usage() {
-        $header = Signature::getRestApiSignHeader($this->config, 'GET', '/', 0);
 
-        $response = Request::get(
-            $this->config->getRestApiUrl('/?usage'),
-            $header
-        );
-        if($response->status_code !== 200) {
-            $body = json_decode($response->body, true);
-            throw new \Exception(sprintf('%s, with x-request-id=%s', $body['msg'], $body['id']), $body['code']);
-        }
-        return $response->body;
+        $req = new Rest($this->config);
+        $response = $req->request('GET', '/?usage')
+            ->withHeader('folder', 'true')
+            ->send();
+
+        return $response->getBody()->getContents();
     }
 
     /**
@@ -213,17 +177,14 @@ class Upyun {
             $urlString = implode("\n", $urls);
         }
 
-        $headers = Signature::getPurgeSignHeader($this->config, $urlString);
-        $response = Request::post(
-            Config::ED_PURGE,
-            $headers,
-            array('purge' => $urlString)
-        );
-        $result = json_decode($response->body, true);
+        $client = new Client([
+            'timeout' => $this->config->timeout
+        ]);
+        $response = $client->request('POST', Config::ED_PURGE, [
+            'headers' =>  Signature::getPurgeSignHeader($this->config, $urlString),
+            'form_params' => ['purge' => $urlString]
+        ]);
+        $result = json_decode($response->getBody()->getContents(), true);
         return $result['invalid_domain_of_url'];
-    }
-
-    private function newRequest() {
-        return new Http\StorageRequest($this->config);
     }
 }
