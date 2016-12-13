@@ -41,7 +41,13 @@ class Config {
 
     public $blockExpiration = 60;
 
+    /**
+     * @var int: request timeout seconds
+     */
     public $timeout = 60;
+    
+    
+    public $videoNotifyUrl;
     
     private $version = '3.0.0';
 

@@ -10,10 +10,15 @@ class UpyunTest extends \PHPUnit_Framework_TestCase{
      */
     public static $upyun;
 
+
+    protected static $taskId;
+
     protected static $tempFilePath;
 
     public static function setUpBeforeClass() {
-        self::$upyun        = new Upyun(new Config(BUCKET, USER_NAME, PWD));
+        $config = new Config(BUCKET, USER_NAME, PWD);
+        $config->videoNotifyUrl = 'http://localhost:9999';
+        self::$upyun        = new Upyun($config);
         self::$tempFilePath = __DIR__ . '/assets/test.txt';
         touch(self::$tempFilePath);
     }
@@ -156,5 +161,34 @@ class UpyunTest extends \PHPUnit_Framework_TestCase{
         $urls = self::$upyun->purge($invalidUrl);
         $this->assertTrue(count($urls) === 1);
         $this->assertTrue($urls[0] === $invalidUrl);
+    }
+
+    public function testProcessVideo() {
+        $source = 'php-sdk-sample.mp4';
+        self::$upyun->write($source, fopen(__DIR__ . '/assets/SampleVideo_640x360_1mb.mp4', 'r'));
+        $result = self::$upyun->processVideo($source, array(
+            array('type' => 'video', 'avopts' => '/s/240p(4:3)/as/1/r/30', 'return_info' => true, 'save_as' => '/video/result.mp4')
+        ));
+        $this->assertTrue(strlen($result[0]) === 32);
+        self::$taskId = $result[0];
+    }
+
+    /**
+     * @depends testProcessVideo
+     */
+    public function testQueryVideoStatus() {
+        sleep(2);
+        $status = self::$upyun->queryVideoProcessStatus(array(self::$taskId));
+        $this->assertTrue(array_key_exists(self::$taskId, $status));
+    }
+
+    /**
+     * @depends testProcessVideo
+     */
+    public function testQueryVideoResult() {
+        sleep(2);
+        $result = self::$upyun->queryVideoProcessResult(array(self::$taskId));
+        $this->assertTrue($result[self::$taskId]['path'][0] === '/video/result.mp4');
+        $this->assertTrue($result[self::$taskId]['status_code'] === 200);
     }
 }
