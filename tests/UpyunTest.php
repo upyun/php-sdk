@@ -144,6 +144,7 @@ class UpyunTest extends \PHPUnit_Framework_TestCase{
     public function testDeleteDir() {
         $result = self::$upyun->createDir('/test-delete-dir');
         $this->assertEquals($result, true);
+        sleep(1);
         $result = self::$upyun->deleteDir('/test-delete-dir');
         $this->assertEquals($result, true);
     }

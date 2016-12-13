@@ -62,6 +62,16 @@ class Signature {
         );
     }
 
+    public static function getFormSignature(Config $bucketConfig, $data) {
+        $data['bucket'] = $bucketConfig->bucketName;
+        $policy = Util::base64Json($data);
+        $signature = md5($policy . '&' . $bucketConfig->getFormApiKey());
+        return array(
+            'policy' => $policy,
+            'signature' => $signature
+        );
+    }
+
     public static function getSignature( Config $bucketConfig, $data, $type, $tokenSecret = '') {
         if(is_array($data)) {
             ksort($data);

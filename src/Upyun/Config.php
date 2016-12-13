@@ -49,6 +49,9 @@ class Config {
     
     public $videoNotifyUrl;
     
+    public $formReturnUrl;
+    public $formNotifyUrl;
+    
     private $version = '3.0.0';
 
 
