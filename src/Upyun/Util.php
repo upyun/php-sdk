@@ -13,6 +13,7 @@ class Util {
     public static function getHeaderParams($headers) {
         $params = [];
         foreach ($headers as $header => $value) {
+            $header = strtolower($header);
             if(strpos($header, 'x-upyun-') !== false) {
                 $params[$header] = $value[0];
             }
