@@ -38,7 +38,7 @@ class Upyun {
         }
 
         $upload = new Uploader($this->config);
-        return $upload->upload($path, $content, $params);
+        $response = $upload->upload($path, $content, $params);
         return Util::getHeaderParams($response->getHeaders());
     }
 
@@ -83,7 +83,7 @@ class Upyun {
     public function has($path) {
         $req = new Rest($this->config);
         try {
-            $response = $req->request('HEAD', $path)
+            $req->request('HEAD', $path)
                             ->send();
         } catch(GuzzleHttp\Exception\BadResponseException $e) {
             $statusCode = $e->getResponse()->getStatusCode();
@@ -114,7 +114,7 @@ class Upyun {
      * @param $path
      * @param $async
      *
-     * @return mixed
+     * @return bool
      * @throws \Exception: 删除不存在的文件将会抛出异常
      */
     public function delete($path, $async = false) {
@@ -123,21 +123,25 @@ class Upyun {
         if($async) {
             $req->withHeader('x-upyun-async', 'true');
         }
-        $req->send();
+        $res = $req->send();
+        return $res->getStatusCode() === 200;
     }
 
     /**
      * 创建目录
+     *
      * @param $path
      *
+     * @return bool
      * @throws \Exception
      */
     public function createDir($path) {
         $path = rtrim($path, '/') . '/';
         $req = new Rest($this->config);
-        $req->request('POST', $path)
+        $res = $req->request('POST', $path)
             ->withHeader('folder', 'true')
             ->send();
+        return $res->getStatusCode() === 200;
     }
 
     /**

@@ -23,7 +23,6 @@ class MultiTest extends \PHPUnit_Framework_TestCase{
         $filePath = __DIR__ . '/../assets/sample.jpeg';
         $stream = Psr7\stream_for(fopen($filePath, 'rb'));
         $r = $this->multiPart->upload('test-sample.jpeg', $stream, md5_file($filePath));
-        $this->assertEquals($r->path, '/test-sample.jpeg');
-        $this->assertEquals($r->file_size, PIC_SIZE);
+        $this->assertEquals($r->getStatusCode(), 200);
     }
 }

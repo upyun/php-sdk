@@ -55,7 +55,7 @@ class UpyunTest extends \PHPUnit_Framework_TestCase{
      * @depends testWriteString
      */
     public function testReadFile() {
-        $name = 'test.txt';
+        $name = 'test-read.txt';
         $str = 'test file content 2';
         self::$upyun->write($name, $str);
 
@@ -73,10 +73,10 @@ class UpyunTest extends \PHPUnit_Framework_TestCase{
      * @depends testReadFile
      */
     public function testDeleteFile() {
-        self::$upyun->write('test.txt', 'test file content 3');
-        $r = self::$upyun->delete('test.txt');
+        self::$upyun->write('test-delete.txt', 'test file content 3');
+        $r = self::$upyun->delete('test-delete.txt');
         try {
-            self::$upyun->read('test.txt');
+            self::$upyun->read('test-delete.txt');
         } catch(\Exception $e) {
             return ;
         }
@@ -93,11 +93,11 @@ class UpyunTest extends \PHPUnit_Framework_TestCase{
     /**
      */
     public function testHas() {
-        sleep(1); // upyun server limit delete rate, so..
-        self::$upyun->write('test.txt', 'test file content 4');
-        $this->assertEquals(self::$upyun->has('test.txt'), true);
-        self::$upyun->delete('test.txt');
-        $this->assertEquals(self::$upyun->has('test.txt'), false);
+        $name = 'test-has.txt';
+        self::$upyun->write($name, 'test file content 4');
+        $this->assertEquals(self::$upyun->has($name), true);
+        self::$upyun->delete($name);
+        $this->assertEquals(self::$upyun->has($name), false);
     }
 
     /**
@@ -105,8 +105,8 @@ class UpyunTest extends \PHPUnit_Framework_TestCase{
      * @depends testDeleteFile
      */
     public function testInfo() {
-        self::$upyun->write('test.txt', 'test file content 4');
-        $info = self::$upyun->info('test.txt');
+        self::$upyun->write('test-info.txt', 'test file content 4');
+        $info = self::$upyun->info('test-info.txt');
         $this->assertEquals($info['x-upyun-file-type'], 'file');
         $this->assertEquals($info['x-upyun-file-size'], 19);
     }
@@ -135,13 +135,12 @@ class UpyunTest extends \PHPUnit_Framework_TestCase{
 
     /**
      * @depends testCreateDir
-     * @depends testHas
      */
     public function testDeleteDir() {
-        self::$upyun->createDir('/test-dir');
-        $this->assertEquals(self::$upyun->has('/test-dir'), true);
-        self::$upyun->deleteDir('/test-dir');
-        $this->assertEquals(self::$upyun->has('/test-dir'), false);
+        $result = self::$upyun->createDir('/test-delete-dir');
+        $this->assertEquals($result, true);
+        $result = self::$upyun->deleteDir('/test-delete-dir');
+        $this->assertEquals($result, true);
     }
 
     public function testUsage() {

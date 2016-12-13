@@ -26,7 +26,7 @@ class Multi {
      * @param Psr7\stream $resource content that will be stored in upyun
      * @param array $params
      *
-     * @return
+     * @return Psr7\Response
      * @throws \Exception
      */
     public function upload($path, $stream, $fileHash, $params = []) {
@@ -138,6 +138,6 @@ class Multi {
         $response = $client->request('POST', $this->url, [
             'form_params' => $postData
         ]);
-        return  json_decode($response->getBody()->getContents());
+        return $response;
     }
 }
