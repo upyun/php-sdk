@@ -194,17 +194,17 @@ class Upyun {
     }
 
     public function processVideo($source, $tasks) {
-        $video = new Api\Video($this->config);
+        $video = new Api\Pretreat($this->config);
         return $video->process($source, $tasks);
     }
 
     public function queryVideoProcessStatus($taskIds) {
-        $video = new Api\Video($this->config);
+        $video = new Api\Pretreat($this->config);
         return $video->query($taskIds, '/status');
     }
 
     public function queryVideoProcessResult($taskIds) {
-        $video = new Api\Video($this->config);
+        $video = new Api\Pretreat($this->config);
         return $video->query($taskIds, '/result');
     }
 }

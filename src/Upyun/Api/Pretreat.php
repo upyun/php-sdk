@@ -8,7 +8,7 @@ use Upyun\Signature;
 use Upyun\Util;
 
 
-class Video {
+class Pretreat {
 
     protected $url = 'http://p0.api.upyun.com';
 
