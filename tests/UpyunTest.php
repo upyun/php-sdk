@@ -102,6 +102,7 @@ class UpyunTest extends \PHPUnit_Framework_TestCase{
         self::$upyun->write($name, 'test file content 4');
         $this->assertEquals(self::$upyun->has($name), true);
         self::$upyun->delete($name);
+        sleep(2);
         $this->assertEquals(self::$upyun->has($name), false);
     }
 
