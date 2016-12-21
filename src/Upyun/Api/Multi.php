@@ -22,9 +22,10 @@ class Multi {
     }
 
     /**
-     * @param $path upyun storage path
-     * @param Psr7\stream $resource content that will be stored in upyun
-     * @param array $params
+     * @param string $path 文件存储路径
+     * @param Psr7\stream $stream 通过 `Psr7\stream_for` 方法格式化的流资源
+     * @param string $fileHash 文件 md5 值
+     * @param array $params 其他自定义参数
      *
      * @return Psr7\Response
      * @throws \Exception

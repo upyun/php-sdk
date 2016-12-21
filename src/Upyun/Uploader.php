@@ -2,7 +2,7 @@
 namespace Upyun;
 
 use Upyun\Api\Rest;
-use Upyun\Api\Multi;
+use Upyun\Api\Form;
 use GuzzleHttp\Psr7;
 
 class Uploader {
@@ -18,10 +18,15 @@ class Uploader {
         $this->config = $config;
     }
 
-    public function upload($path, $file, $params) {
+    public function upload($path, $file, $params, $withAsyncProcess) {
         $stream = Psr7\stream_for($file);
         $size = $stream->getSize();
         $useBlock = $this->needUseBlock($size);
+
+        if ($withAsyncProcess) {
+            $req = new Form($this->config);
+            return $req->upload($path, $stream, $params);
+        }
 
         if(! $useBlock) {
             $req = new Rest($this->config);
@@ -31,11 +36,6 @@ class Uploader {
                        ->send();
         } else {
             return $this->pointUpload($path, $stream, $params);
-            /**
-             * 也可以使用分块上传替代, 不推荐使用
-             */
-            //$req = new Multi($this->config);
-            //return $req->upload($path, $stream, Util::md5Hash($file), $params);
         }
     }
 

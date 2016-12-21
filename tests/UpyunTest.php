@@ -17,7 +17,8 @@ class UpyunTest extends \PHPUnit_Framework_TestCase{
 
     public static function setUpBeforeClass() {
         $config = new Config(BUCKET, USER_NAME, PWD);
-        $config->videoNotifyUrl = 'http://localhost:9999';
+        $config->setFormApiKey('Mv83tlocuzkmfKKUFbz2s04FzTw=');
+        $config->processNotifyUrl = 'http://localhost:9999';
         self::$upyun        = new Upyun($config);
         self::$tempFilePath = __DIR__ . '/assets/test.txt';
         touch(self::$tempFilePath);
@@ -44,6 +45,27 @@ class UpyunTest extends \PHPUnit_Framework_TestCase{
         self::$upyun->write($filename, $f);
         $size = getUpyunFileSize($filename);
         $this->assertEquals($size, PIC_SIZE);
+    }
+
+    public function testWriteWithAsyncProcess() {
+        $filename = 'test_async.jpeg';
+        $newFilename = 'test_async.png';
+        $f = fopen(__DIR__ . '/assets/sample.jpeg', 'rb');
+        if(!$f) {
+            throw new \Exception('open test file failed!');
+        }
+        $result = self::$upyun->write($filename, $f, array(
+            'apps' => array(
+                array(
+                    'name' => 'thumb',
+                    'x-gmkerl-thumb' => '/format/png/fw/50',
+                    'save_as' => $newFilename,
+                )
+            )
+        ), true);
+        $size = getUpyunFileSize($filename);
+        $this->assertEquals($size, PIC_SIZE);
+        $this->assertEquals($result, true);
     }
 
     public function testWriteWithException() {
@@ -165,10 +187,10 @@ class UpyunTest extends \PHPUnit_Framework_TestCase{
         $this->assertTrue($urls[0] === $invalidUrl);
     }
 
-    public function testProcessVideo() {
+    public function testProcess() {
         $source = 'php-sdk-sample.mp4';
         self::$upyun->write($source, fopen(__DIR__ . '/assets/SampleVideo_640x360_1mb.mp4', 'r'));
-        $result = self::$upyun->processVideo($source, array(
+        $result = self::$upyun->process($source, array(
             array('type' => 'video', 'avopts' => '/s/240p(4:3)/as/1/r/30', 'return_info' => true, 'save_as' => '/video/result.mp4')
         ));
         $this->assertTrue(strlen($result[0]) === 32);
@@ -176,20 +198,20 @@ class UpyunTest extends \PHPUnit_Framework_TestCase{
     }
 
     /**
-     * @depends testProcessVideo
+     * @depends testProcess
      */
-    public function testQueryVideoStatus() {
+    public function testQueryProcessStatus() {
         sleep(2);
-        $status = self::$upyun->queryVideoProcessStatus(array(self::$taskId));
+        $status = self::$upyun->queryProcessStatus(array(self::$taskId));
         $this->assertTrue(array_key_exists(self::$taskId, $status));
     }
 
     /**
-     * @depends testProcessVideo
+     * @depends testProcess
      */
-    public function testQueryVideoResult() {
+    public function testQueryProcessResult() {
         sleep(2);
-        $result = self::$upyun->queryVideoProcessResult(array(self::$taskId));
+        $result = self::$upyun->queryProcessResult(array(self::$taskId));
         $this->assertTrue($result[self::$taskId]['path'][0] === '/video/result.mp4');
         $this->assertTrue($result[self::$taskId]['status_code'] === 200);
     }

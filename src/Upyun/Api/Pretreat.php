@@ -25,7 +25,7 @@ class Pretreat {
 
         $params = array(
             'bucket_name' => $this->config->bucketName,
-            'notify_url' => $this->config->videoNotifyUrl,
+            'notify_url' => $this->config->processNotifyUrl,
             'source' => $source,
             'tasks' => $encodedTasks,
             'accept' => 'json'
