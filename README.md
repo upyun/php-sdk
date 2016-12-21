@@ -52,27 +52,27 @@ $bucketConfig = new Config('yourBucketName', 'yourOperatorName', 'yourOperatorPw
 $client = new Upyun($bucketConfig);
 ```
 
-1. 字符串写入又拍云服务器
+#### 字符串写入又拍云服务器
 
 ```
 $client->write('/save/path', 'file content');
 ```
 
-2. 文件流写入又拍云服务器
+#### 文件流写入又拍云服务器
 
 ```
 $file = fopen('/local/path/file', 'r');
 $client->write('/save/path', $file);
 ```
 
-3. 上传图片并转换格式为 `png`，详见[上传作图](http://docs.upyun.com/cloud/image/#_2)
+#### 上传图片并转换格式为 `png`，详见[上传作图](http://docs.upyun.com/cloud/image/#_2)
 
 ```
 $file = fopen('/local/path/image.jpg', 'r');
 $client->write('/save/image.png', $file, array('x-gmkerl-thumb' => '/format/png'));
 ```
 
-4. 下载文件并保存到本地 
+#### 下载文件并保存到本地 
 
 ```
 $saveLocal = fopen('/local/path/image.jpg', 'w');
