@@ -35,7 +35,7 @@
 
 <a name="install"></a>
 ### 安装
-php > 5.5，使用 `composer` 安装
+PHP >= 5.5，使用 `composer` 安装
 ```
 composer require upyun/sdk
 ```
