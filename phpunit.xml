@@ -10,12 +10,9 @@
          bootstrap="tests/bootstrap.php">
     <testsuites>
         <testsuite name="upyun test cases">
-            <directory>./tests/</directory>
+            <file>./tests/SignatureTest.php</file>
+            <file>./tests/UpyunTest.php</file>
+            <file>./tests/Api/MultiTest.php</file>
         </testsuite>
     </testsuites>
-    <filter>
-        <whitelist>
-          <file>./upyun.class.php</file>
-        </whitelist>
-    </filter>
 </phpunit>
