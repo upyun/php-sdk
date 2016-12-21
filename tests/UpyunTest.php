@@ -124,7 +124,7 @@ class UpyunTest extends \PHPUnit_Framework_TestCase{
         self::$upyun->write($name, 'test file content 4');
         $this->assertEquals(self::$upyun->has($name), true);
         self::$upyun->delete($name);
-        sleep(2);
+        sleep(5);
         $this->assertEquals(self::$upyun->has($name), false);
     }
 
@@ -167,7 +167,7 @@ class UpyunTest extends \PHPUnit_Framework_TestCase{
     public function testDeleteDir() {
         $result = self::$upyun->createDir('/test-delete-dir');
         $this->assertEquals($result, true);
-        sleep(1);
+        sleep(5);
         $result = self::$upyun->deleteDir('/test-delete-dir');
         $this->assertEquals($result, true);
     }
@@ -201,7 +201,7 @@ class UpyunTest extends \PHPUnit_Framework_TestCase{
      * @depends testProcess
      */
     public function testQueryProcessStatus() {
-        sleep(2);
+        sleep(5);
         $status = self::$upyun->queryProcessStatus(array(self::$taskId));
         $this->assertTrue(array_key_exists(self::$taskId, $status));
     }
@@ -210,7 +210,7 @@ class UpyunTest extends \PHPUnit_Framework_TestCase{
      * @depends testProcess
      */
     public function testQueryProcessResult() {
-        sleep(2);
+        sleep(5);
         $result = self::$upyun->queryProcessResult(array(self::$taskId));
         $this->assertTrue($result[self::$taskId]['path'][0] === '/video/result.mp4');
         $this->assertTrue($result[self::$taskId]['status_code'] === 200);
