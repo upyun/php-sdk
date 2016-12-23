@@ -27,19 +27,37 @@
     <fieldset>
         <legend>Client Upload Demo</legend>
         <input name="file" type="file">
-        <input name="policy" type="hidden" id="policy">
-        <input name="signature" type="hidden" id="signature">
-        <input type="submit" value="submit" class="submit" id="submit">
+        <input type="button" value="submit" class="submit" id="upload">
     </fieldset>
 </form>
 
 <script>
     // 文件保存的路径
     var save_path = '/test/filename.txt';
-    // 获取 policy 和 secret
-    $.getJSON('http://localhost:9000/policy.php?save_path=/test/filename.txt', function (data) {
-        document.getElementById('policy').value = data.policy;
-        document.getElementById('signature').value = data.signature;
+    $('#upload').on('click', function() {
+        // 获取 policy 和 secret
+        $.getJSON('http://localhost:9000/policy.php?save_path=' + save_path, function (data) {
+            var uploadData = new FormData($('#demoForm')[0]);
+            uploadData.append('policy', data.policy);
+            uploadData.append('signature', data.signature);
+            $.ajax({
+                url: '//v0.api.upyun.com/sdkimg',
+                type: 'POST',
+                data: uploadData,
+                cache: false,
+                processData: false,
+                contentType: false,
+            }).done(function(data, textStatus) {
+                alert('upload success');
+            }).fail(function(res, textStatus, error) {
+                try {
+                    var body = JSON.parse(res.responseText);
+                    alert('error: ' + body.message);
+                } catch(e) {
+                    console.error(e);
+                }
+            });
+        });
     });
 </script>
 </body>
