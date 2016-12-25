@@ -80,7 +80,7 @@ class Multi {
 
     private function blockUpload($blocksInfo, $blockId, Psr7\Stream $stream, $params = []) {
         $startPosition = $blockId * $this->config->maxBlockSize;
-        $endPosition   = $blockId >= $blocksInfo->blocks - 1 ? $stream->getSize() : $startPosition + $this->blockSize;
+        $endPosition   = $blockId >= $blocksInfo->blocks - 1 ? $stream->getSize() : $startPosition + $this->config->maxBlockSize;
 
         $stream->seek($startPosition);
 
