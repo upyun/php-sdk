@@ -6,4 +6,4 @@ filter:
 tools:
     php_code_sniffer:
         config:
-            standard: PSR4
+            standard: PSR2
