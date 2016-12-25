@@ -52,7 +52,7 @@ class Uploader {
         $req = new Rest($this->config);
         $headers = array();
         if (is_array($params)) {
-            foreach($params as $key => $val) {
+            foreach ($params as $key => $val) {
                 $headers['X-Upyun-Meta-' . $key] = $val;
             }
         }
@@ -87,7 +87,7 @@ class Uploader {
             }
             $data   = Util::getHeaderParams($res->getHeaders());
             $partId = $data['x-upyun-next-part-id'];
-        } while($partId != -1);
+        } while ($partId != -1);
 
         $res = $req->request('PUT', $path)
             ->withHeaders(array(

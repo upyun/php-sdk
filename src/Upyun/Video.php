@@ -25,7 +25,7 @@ class Video {
             $postParams,
             Signature::SIGN_VIDEO
         );
-        
+
         $response = Request::post(
             sprintf('http://%s/%s/', Config::ED_VIDEO, 'pretreatment'),
             array('Authorization' => "UpYun {$this->config->operatorName}:$sign"),
@@ -45,7 +45,7 @@ class Video {
 
     public function status($taskIds) {
         $limit = 20;
-        if(count($taskIds) <= $limit) {
+        if (count($taskIds) <= $limit) {
             $taskIds = implode(',', $taskIds);
         } else {
             throw new \Exception('can not query more than ' . $limit . ' tasks at one time!');
@@ -85,13 +85,13 @@ class Video {
             'signature',
         );
         $callbackParams = array();
-        foreach($callbackKeys as $key) {
-            if(isset($_POST[$key])) {
+        foreach ($callbackKeys as $key) {
+            if (isset($_POST[$key])) {
                $callbackParams[$key] = Util::trim($_POST[$key]);
             }
         }
 
-        if(isset($callbackParams['signature'])) {
+        if (isset($callbackParams['signature'])) {
             $sign = $callbackParams['signature'];
             unset($callbackParams['signature']);
             return $sign === Signature::getSignature(
@@ -101,7 +101,7 @@ class Video {
             );
         }
 
-        if(isset($data['non_signature'])) {
+        if (isset($callbackParams['non_signature'])) {
             $sign = $callbackParams['non_signature'];
             unset($callbackParams['non_signature']);
             return $sign === Signature::getSignature(

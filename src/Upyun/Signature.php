@@ -52,7 +52,7 @@ class Signature {
      *
      * @return array
      */
-    public static function getPurgeSignHeader( Config $bucketConfig, $urlString) {
+    public static function getPurgeSignHeader(Config $bucketConfig, $urlString) {
         $gmtDate = gmdate('D, d M Y H:i:s \G\M\T');
         $sign = md5("$urlString&{$bucketConfig->bucketName}&$gmtDate&{$bucketConfig->operatorPassword}");
         return array(
@@ -73,16 +73,16 @@ class Signature {
     }
 
     public static function getSignature( Config $bucketConfig, $data, $type, $tokenSecret = '') {
-        if(is_array($data)) {
+        if (is_array($data)) {
             ksort($data);
             $string = '';
-            foreach($data as $k => $v) {
-                if(is_array($v)) {
+            foreach ($data as $k => $v) {
+                if (is_array($v)) {
                     $v = implode('', $v);
                 }
                 $string .= "$k$v";
             }
-            switch($type) {
+            switch ($type) {
                 case self::SIGN_MULTIPART:
                     $string .= $tokenSecret ? $tokenSecret : $bucketConfig->getFormApiKey();
                     break;
@@ -91,7 +91,6 @@ class Signature {
                     break;
                 case self::SIGN_VIDEO_NO_OPERATOR:
                     break;
-
             }
             $sign = md5($string);
             return $sign;
