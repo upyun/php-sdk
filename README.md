@@ -40,6 +40,12 @@ PHP >= 5.5，使用 `composer` 安装
 composer require upyun/sdk
 ```
 
+如果不适应 `composer` 管理，可以直接下载[压缩包](https://github.com/upyun/php-sdk/releases)，解压后，项目中添加如下代码：
+
+```
+require_once '/path/to/php-sdk/vendor/autoload.php';
+```
+
 <a name="usage"></a>
 ### 初始化
 
