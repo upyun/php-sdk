@@ -65,7 +65,17 @@ class Signature {
     public static function getFormSignature(Config $bucketConfig, $data) {
         $data['bucket'] = $bucketConfig->bucketName;
         $policy = Util::base64Json($data);
-        $signature = md5($policy . '&' . $bucketConfig->getFormApiKey());
+        $signParams = array(
+            'method' => 'POST',
+            'uri' => '/' . $bucketConfig->bucketName . '/',
+        );
+        $signParams['date'] = isset($data['date']) ? $data['date'] : gmdate('D, d M Y H:i:s \G\M\T');
+        $signParams['policy'] = $policy;
+        if (isset($data['content-md5'])) {
+            $signParams['md5'] = $data['content-md5'];
+        };
+
+        $signature = base64_encode(hash_hmac('sha1', implode('&', $signParams), $bucketConfig->operatorPassword, true));
         return array(
             'policy' => $policy,
             'signature' => $signature

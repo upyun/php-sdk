@@ -20,7 +20,7 @@ class Util {
         }
         return $params;
     }
-    
+
     public static function parseDir($body) {
         $files = array();
         if(!$body) {
@@ -38,7 +38,7 @@ class Util {
     }
 
     public static function base64Json($params) {
-        return base64_encode(json_encode($params));
+        return base64_encode(json_encode($params, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
     }
 
     public static function stringifyHeaders($headers) {
@@ -48,7 +48,7 @@ class Util {
         }
         return $return;
     }
-    
+
     public static function md5Hash($resource) {
         rewind($resource);
         $ctx = hash_init('md5');
