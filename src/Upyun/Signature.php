@@ -67,9 +67,12 @@ class Signature {
         $policy = Util::base64Json($data);
         $signParams = array(
             'method' => 'POST',
-            'uri' => '/' . $bucketConfig->bucketName . '/',
+            'uri' => '/' . $bucketConfig->bucketName,
         );
-        $signParams['date'] = isset($data['date']) ? $data['date'] : gmdate('D, d M Y H:i:s \G\M\T');
+        if (isset($data['date'])) {
+            $signParams['date'] = $data['date'];
+        }
+
         $signParams['policy'] = $policy;
         if (isset($data['content-md5'])) {
             $signParams['md5'] = $data['content-md5'];
