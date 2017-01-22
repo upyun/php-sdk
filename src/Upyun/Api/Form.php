@@ -30,8 +30,8 @@ class Form extends Rest{
                     'contents' => $policy,
                 ),
                 array(
-                    'name' => 'signature',
-                    'contents' => $signature,
+                    'name' => 'authorization',
+                    'contents' => 'UPYUN ' . $this->config->operatorName . ':' . $signature,
                 ),
                 array(
                     'name' => 'file',
