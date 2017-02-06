@@ -37,7 +37,7 @@ class Upyun {
     }
 
     /**
-     * 更新服务配置
+     * 配置服务信息
      *
      * 当需要操作的新的服务时，使用该方法传入新的服务配置即可
      *
@@ -57,8 +57,7 @@ class Upyun {
      *
      * @param string $path 被上传的文件在又拍云存储服务中保存的路径
      * @param string|resource $content 被上传的文件内容（字符串），或者打开该文件获得的文件句柄（文件流）。当上传本地大文件时，推荐使用文件流的方式上传
-     * @param array $params 上传文件时，附加的自定义参数。支持 Content-MD5 Content-Type Content-Secret 等，详见 [上传参数](http://docs.upyun
-     * .com/api/rest_api/#_2)，例如：
+     * @param array $params 上传文件时，附加的自定义参数。支持 Content-MD5 Content-Type Content-Secret 等，详见 [上传参数](http://docs.upyun.com/api/rest_api/#_2)，例如：
      * - 设置文件[保护秘钥](http://docs.upyun.com/api/rest_api/#Content-Secret) `write($path, $content, array('Content-Secret' => 'my-secret'))`；
      * - 添加[文件元信息](http://docs.upyun.com/api/rest_api/#metadata) `write($path, $content, array('X-Upyun-Meta-Foo' =>
      * 'bar'))`
@@ -304,7 +303,7 @@ class Upyun {
     }
 
     /**
-     * 音视频预处理任务进度查询
+     * 查询异步云处理任务进度
      *
      * 根据 `process` 方法返回的任务 ID，通过该访问查询处理进度
      *
@@ -325,7 +324,7 @@ class Upyun {
     }
 
     /**
-     * 音视频预处理任务结果查询
+     *  查询异步云处理任务结果
      *
      * 根据 `process` 方法返回的任务 ID，通过该访问查询处理结果，会包含每个任务详细信息
      * @param array $taskIds 任务 ID

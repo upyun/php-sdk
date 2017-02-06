@@ -63,6 +63,8 @@ $bucketConfig = new Config('yourBucketName', 'yourOperatorName', 'yourOperatorPw
 $client = new Upyun($bucketConfig);
 ```
 
+详细文档见 [api.md](api.md)
+
 #### 字符串写入又拍云服务器
 
 ```
