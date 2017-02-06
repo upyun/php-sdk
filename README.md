@@ -97,7 +97,7 @@ $client->read('/remote/server/image.png', $saveLocal);
 ## 贡献代码
  1. Fork
  2. 为新特性创建一个新的分支
- 3. 发送一个 pull request 到 develop 分支
+ 3. 发送一个 pull request 到 master 分支
 
 <a name="community"></a>
 ## 社区
