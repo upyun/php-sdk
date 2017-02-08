@@ -24,7 +24,7 @@ class Util {
     public static function parseDir($body) {
         $files = array();
         if(!$body) {
-            return array('files' => $files, 'is_end' => true);
+            return array();
         }
 
         $lines = explode("\n", $body);

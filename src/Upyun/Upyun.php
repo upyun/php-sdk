@@ -129,7 +129,7 @@ class Upyun {
                 return $response->getBody()->getContents();
             }
         } else {
-            $files = Util::parseDir($response->getBody());
+            $files = Util::parseDir($response->getBody()->getContents());
             return array('files' => $files, 'is_end' => $params['x-upyun-list-iter'] === 'g2gCZAAEbmV4dGQAA2VvZg', 'iter' => $params['x-upyun-list-iter']);
         }
     }
