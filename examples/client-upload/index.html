@@ -39,7 +39,7 @@
         $.getJSON('http://localhost:9000/policy.php?save_path=' + save_path, function (data) {
             var uploadData = new FormData($('#demoForm')[0]);
             uploadData.append('policy', data.policy);
-            uploadData.append('signature', data.signature);
+            uploadData.append('authorization', data.authorization);
             $.ajax({
                 url: '//v0.api.upyun.com/sdkimg',
                 type: 'POST',
