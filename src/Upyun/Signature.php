@@ -21,25 +21,34 @@ class Signature {
     const SIGN_VIDEO_NO_OPERATOR   = 3;
 
     /**
-     * 获取 RESET API 请求需要的签名头
+     * 获取 Header 签名
      *
      * @param Config $bucketConfig
      * @param $method
-     * @param $path
-     * @param $contentLength
+     * @param $path  请求路径
+     * @param $contentMd5 文件内容 md5
      *
      * @return array
      */
-    public static function getRestApiSignHeader($bucketConfig, $method, $remotePath, $contentLength) {
+    public static function getHeaderSign($bucketConfig, $method, $path, $contentMd5 = null) {
         $gmtDate = gmdate('D, d M Y H:i:s \G\M\T');
-        $path = '/' . $bucketConfig->bucketName . '/' . ltrim($remotePath, '/');
 
-        $sign = md5("$method&$path&$gmtDate&$contentLength&{$bucketConfig->operatorPassword}");
+        $signParams = array(
+            $method,
+            $path,
+            $gmtDate
+        );
+
+        if ($contentMd5) {
+            $signParams[] = $contentMd5;
+        }
+
+        $sign = self::calcSignature($bucketConfig, $signParams);
 
         $headers = array(
-            'Authorization' => "UpYun {$bucketConfig->operatorName}:$sign",
+            'Authorization' => "UPYUN {$bucketConfig->operatorName}:$sign",
             'Date' => $gmtDate,
-            'User-agent' => 'Php-Sdk/' . $bucketConfig->getVersion() . ' (rest api)'
+            'User-agent' => 'Php-Sdk/' . $bucketConfig->getVersion()
         );
         return $headers;
     }
@@ -62,6 +71,13 @@ class Signature {
         );
     }
 
+    /**
+     * 获取表单 API 需要的签名，依据 body 签名规则计算
+     * @param Config $bucketConfig
+     * @param $data
+     *
+     * @return array
+     */
     public static function getFormSignature(Config $bucketConfig, $data) {
         $data['bucket'] = $bucketConfig->bucketName;
         $policy = Util::base64Json($data);
@@ -78,14 +94,18 @@ class Signature {
             $signParams['md5'] = $data['content-md5'];
         };
 
-        $signature = base64_encode(hash_hmac('sha1', implode('&', $signParams), $bucketConfig->operatorPassword, true));
+        $signature = self::calcSignature($bucketConfig, $signParams);
         return array(
             'policy' => $policy,
             'signature' => $signature
         );
     }
 
-    public static function getSignature( Config $bucketConfig, $data, $type, $tokenSecret = '') {
+    private static function calcSignature(Config $bucketConfig, $signParams) {
+        return base64_encode(hash_hmac('sha1', implode('&', $signParams), $bucketConfig->operatorPassword, true));
+    }
+
+    public static function getSignature(Config $bucketConfig, $data, $type, $tokenSecret = '') {
         if (is_array($data)) {
             ksort($data);
             $string = '';
