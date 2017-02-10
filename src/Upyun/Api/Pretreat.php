@@ -31,10 +31,12 @@ class Pretreat {
             'accept' => 'json'
         );
 
-        $url = $this->url . '/pretreatment';
-        $signature = Signature::getSignature($this->config, $params, Signature::SIGN_VIDEO);
-        $response = $client->request('POST', $url, [
-            'headers' => array('Authorization' => "UPYUN {$this->config->operatorName}:$signature"),
+        $path = '/pretreatment/';
+        $method = 'POST';
+        $signedHeaders = Signature::getHeaderSign($this->config, $method, $path);
+
+        $response = $client->request($method, $this->url . $path, [
+            'headers' => $signedHeaders,
             'form_params' => $params
         ]);
 
@@ -49,15 +51,16 @@ class Pretreat {
         ]);
 
         $params = array(
-            'bucket_name' => $this->config->bucketName,
+            'service' => $this->config->bucketName,
             'task_ids' => implode(',', $taskIds)
         );
+        $path = $path . '?' . http_build_query($params);
 
+        $method = 'GET';
         $url = $this->url . $path;
-        $signature = Signature::getSignature($this->config, $params, Signature::SIGN_VIDEO);
-        $response = $client->request('GET', $url, [
-            'headers' => array('Authorization' => "UPYUN {$this->config->operatorName}:$signature"),
-            'query' => $params
+        $signedHeaders = Signature::getHeaderSign($this->config, $method, $path);
+        $response = $client->request($method, $url, [
+            'headers' => $signedHeaders
         ]);
 
         if ($response->getStatusCode() === 200) {

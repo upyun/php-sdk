@@ -320,7 +320,7 @@ class Upyun {
      */
     public function queryProcessStatus($taskIds) {
         $video = new Api\Pretreat($this->config);
-        return $video->query($taskIds, '/status');
+        return $video->query($taskIds, '/status/');
     }
 
     /**
@@ -346,6 +346,6 @@ class Upyun {
      */
     public function queryProcessResult($taskIds) {
         $video = new Api\Pretreat($this->config);
-        return $video->query($taskIds, '/result');
+        return $video->query($taskIds, '/result/');
     }
 }

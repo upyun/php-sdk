@@ -28,7 +28,7 @@ class Rest {
         $this->config   = $config;
         $this->endpoint = Config::$restApiEndPoint . '/' . $config->bucketName;
     }
-    
+
     public function request($method, $storagePath) {
         $this->method = strtoupper($method);
         $this->storagePath = '/' . ltrim($storagePath, '/');
@@ -57,14 +57,14 @@ class Rest {
         ]);
 
         $url = ($this->config->useSsl ? 'https://' : 'http://') . $this->endpoint . $this->storagePath;
-        $bodySize = 0;
         $body = null;
         if($this->file && $this->method === 'PUT') {
-            $bodySize = $this->file->getSize();
             $body = $this->file;
         }
-        
-        $authHeader = Signature::getRestApiSignHeader($this->config, $this->method, $this->storagePath, $bodySize);
+        // TODO urlencode path
+        $path = '/' . $this->config->bucketName . '/' . ltrim($this->storagePath, '/');
+
+        $authHeader = Signature::getHeaderSign($this->config, $this->method, $path);
         $response = $client->request($this->method, $url, [
             'headers' => array_merge($authHeader, $this->headers),
             'body' => $body
