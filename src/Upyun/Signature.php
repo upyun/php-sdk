@@ -21,10 +21,10 @@ class Signature {
     const SIGN_VIDEO_NO_OPERATOR   = 3;
 
     /**
-     * 获取 Header 签名
+     * 获取 Header 签名需要的请求头
      *
      * @param Config $bucketConfig
-     * @param $method
+     * @param $method 请求方法
      * @param $path  请求路径
      * @param $contentMd5 文件内容 md5
      *
@@ -33,20 +33,11 @@ class Signature {
     public static function getHeaderSign($bucketConfig, $method, $path, $contentMd5 = null) {
         $gmtDate = gmdate('D, d M Y H:i:s \G\M\T');
 
-        $signParams = array(
-            $method,
-            $path,
-            $gmtDate
-        );
-
-        if ($contentMd5) {
-            $signParams[] = $contentMd5;
-        }
-
-        $sign = self::calcSignature($bucketConfig, $signParams);
+        $policy = null;
+        $sign = self::getBodySignature($bucketConfig, $method, $path, $gmtDate, $policy, $contentMd5);
 
         $headers = array(
-            'Authorization' => "UPYUN {$bucketConfig->operatorName}:$sign",
+            'Authorization' => $sign,
             'Date' => $gmtDate,
             'User-agent' => 'Php-Sdk/' . $bucketConfig->getVersion()
         );
@@ -74,35 +65,32 @@ class Signature {
     /**
      * 获取表单 API 需要的签名，依据 body 签名规则计算
      * @param Config $bucketConfig
-     * @param $data
+     * @param $method 请求方法
+     * @param $uri 请求路径
+     * @param $date 请求时间
+     * @param $policy
+     * @param $contentMd5 请求 body 的 md5
      *
      * @return array
      */
-    public static function getFormSignature(Config $bucketConfig, $data) {
-        $data['bucket'] = $bucketConfig->bucketName;
-        $policy = Util::base64Json($data);
-        $signParams = array(
-            'method' => 'POST',
-            'uri' => '/' . $bucketConfig->bucketName,
+    public static function getBodySignature(Config $bucketConfig, $method, $uri, $date = null, $policy = null, $contentMd5 = null) {
+        $data = array(
+            $method,
+            $uri
         );
-        if (isset($data['date'])) {
-            $signParams['date'] = $data['date'];
+        if ($date) {
+            $data[] = $date;
         }
 
-        $signParams['policy'] = $policy;
-        if (isset($data['content-md5'])) {
-            $signParams['md5'] = $data['content-md5'];
-        };
+        if ($policy) {
+            $data[] = $policy;
+        }
 
-        $signature = self::calcSignature($bucketConfig, $signParams);
-        return array(
-            'policy' => $policy,
-            'signature' => $signature
-        );
-    }
-
-    private static function calcSignature(Config $bucketConfig, $signParams) {
-        return base64_encode(hash_hmac('sha1', implode('&', $signParams), $bucketConfig->operatorPassword, true));
+        if ($contentMd5) {
+            $data[] = $contentMd5;
+        }
+        $signature = base64_encode(hash_hmac('sha1', implode('&', $data), $bucketConfig->operatorPassword, true));
+        return 'UPYUN ' . $bucketConfig->operatorName . ':' . $signature;
     }
 
     public static function getSignature(Config $bucketConfig, $data, $type, $tokenSecret = '') {
