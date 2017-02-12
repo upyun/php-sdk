@@ -3,6 +3,7 @@
 namespace Upyun\Api;
 
 use Upyun\Signature;
+use Upyun\Util;
 use GuzzleHttp\Client;
 
 class Form extends Rest{
@@ -14,16 +15,16 @@ class Form extends Rest{
             $params['expiration'] = time() + 30 * 60 * 60; // 30 分钟
         }
 
-        $result = Signature::getFormSignature($this->config, $params);
-        $policy = $result['policy'];
-        $signature = $result['signature'];
+        $policy = Util::base64Json($params);
+        $method = 'POST';
+        $signature = Signature::getBodySignature($this->config, $method, '/' . $params['bucket'], null, $policy);
         $client = new Client([
             'timeout' => $this->config->timeout,
         ]);
 
         $url = ($this->config->useSsl ? 'https://' : 'http://') . $this->endpoint;
 
-        $response = $client->request('POST', $url, array(
+        $response = $client->request($method, $url, array(
             'multipart' => array(
                 array(
                     'name' => 'policy',
@@ -31,7 +32,7 @@ class Form extends Rest{
                 ),
                 array(
                     'name' => 'authorization',
-                    'contents' => 'UPYUN ' . $this->config->operatorName . ':' . $signature,
+                    'contents' => $signature,
                 ),
                 array(
                     'name' => 'file',

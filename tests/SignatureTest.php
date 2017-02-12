@@ -19,15 +19,8 @@ class SignatureTest extends \PHPUnit_Framework_TestCase{
         $this->assertEquals($sign , '2aa0afd612df8fab4b3fded36c396234');
     }
 
-    public function testGetFormSignature() {
-        $config = new Config('upyun-temp', 'upyun', 'upyun520');
-        $sign = Signature::getFormSignature($config, array(
-            'save-key' => '/demo.jpg',
-            'expiration' => '1478674618',
-            'date' => 'Wed, 9 Nov 2016 14:26:58 GMT',
-            'content-md5' => '7ac66c0f148de9519b8bd264312c4d64'
-        ));
-        $this->assertEquals($sign['policy'], 'eyJzYXZlLWtleSI6Ii9kZW1vLmpwZyIsImV4cGlyYXRpb24iOiIxNDc4Njc0NjE4IiwiZGF0ZSI6IldlZCwgOSBOb3YgMjAxNiAxNDoyNjo1OCBHTVQiLCJjb250ZW50LW1kNSI6IjdhYzY2YzBmMTQ4ZGU5NTE5YjhiZDI2NDMxMmM0ZDY0IiwiYnVja2V0IjoidXB5dW4tdGVtcCJ9');
-        $this->assertEquals($sign['signature'], 'aWqUna7XpJ3mJ6Clz6AMeay++Qk=');
+    public function testGetBodySignature() {
+        $sign = Signature::getBodySignature($this->config, 'POST', '/bucket');
+        $this->assertEquals($sign, 'UPYUN operator:Xx3G6+DAvUyCL2Y2npSW/giTFI8=');
     }
 }
