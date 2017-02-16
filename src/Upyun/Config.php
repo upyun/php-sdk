@@ -56,6 +56,11 @@ class Config {
      */
     public $processNotifyUrl;
 
+    /**
+     * @var boolean curl debug
+     */
+    public $debug = false;
+
     private $version = '3.0.0';
 
 

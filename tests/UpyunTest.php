@@ -29,7 +29,7 @@ class UpyunTest extends \PHPUnit_Framework_TestCase{
     }
 
     public function testWriteString() {
-        $filename = 'test.txt';
+        $filename = '/中文/测试 +.txt';
         $content = 'test file content';
         self::$upyun->write($filename, $content);
         $size = getUpyunFileSize($filename);

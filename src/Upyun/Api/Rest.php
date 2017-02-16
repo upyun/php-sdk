@@ -6,6 +6,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Psr7;
 use Upyun\Config;
 use Upyun\Signature;
+use Upyun\Util;
 
 class Rest {
     /**
@@ -61,13 +62,22 @@ class Rest {
         if($this->file && $this->method === 'PUT') {
             $body = $this->file;
         }
-        // TODO urlencode path
-        $path = '/' . $this->config->bucketName . '/' . ltrim($this->storagePath, '/');
 
-        $authHeader = Signature::getHeaderSign($this->config, $this->method, $path);
-        $response = $client->request($this->method, $url, [
-            'headers' => array_merge($authHeader, $this->headers),
-            'body' => $body
+        $request = new Psr7\Request(
+            $this->method,
+            Util::encodeURI($url),
+            $this->headers,
+            $body
+        );
+        $authHeader = Signature::getHeaderSign($this->config,
+            $this->method,
+            $request->getUri()->getPath()
+        );
+        foreach($authHeader as $head => $value) {
+            $request = $request->withHeader($head, $value);
+        }
+        $response = $client->send($request, [
+            'debug' => $this->config->debug
         ]);
 
         return $response;
