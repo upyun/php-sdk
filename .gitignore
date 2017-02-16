@@ -4,3 +4,4 @@ vendor
 composer.lock
 release*
 .php_cs.cache
+coverage.clover
