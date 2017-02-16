@@ -16,7 +16,7 @@ do {
     ));
 
     if (is_array($list['files'])) {
-        foreach($list['files'] as $file) {
+        foreach ($list['files'] as $file) {
             $total++;
             if ($file['type'] === 'N') {
                 echo '文件名: ';
@@ -28,9 +28,8 @@ do {
             echo ' 修改时间:' . date('Y-m-d H:i:s', $file['time']);
             echo "\n";
         }
-
     }
     $start = $list['iter'];
-} while(!$list['is_end']);
+} while (!$list['is_end']);
 
 echo '总共存有文件 ' . $total . ' 个';

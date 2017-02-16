@@ -5,7 +5,8 @@ use Upyun\Api\Rest;
 use Upyun\Api\Form;
 use GuzzleHttp\Psr7;
 
-class Uploader {
+class Uploader
+{
     /**
      * @var Config
      */
@@ -14,11 +15,13 @@ class Uploader {
     protected $useBlock = false;
 
 
-    public function __construct(Config $config) {
+    public function __construct(Config $config)
+    {
         $this->config = $config;
     }
 
-    public function upload($path, $file, $params, $withAsyncProcess) {
+    public function upload($path, $file, $params, $withAsyncProcess)
+    {
         $stream = Psr7\stream_for($file);
         $size = $stream->getSize();
         $useBlock = $this->needUseBlock($size);
@@ -48,7 +51,8 @@ class Uploader {
      * @return mixed|\Psr\Http\Message\ResponseInterface
      * @throws \Exception
      */
-    private function pointUpload($path, $stream, $params) {
+    private function pointUpload($path, $stream, $params)
+    {
         $req = new Rest($this->config);
         $headers = array();
         if (is_array($params)) {
@@ -102,11 +106,12 @@ class Uploader {
         return $res;
     }
 
-    private function needUseBlock($fileSize) {
+    private function needUseBlock($fileSize)
+    {
         if ($this->config->uploadType === 'BLOCK') {
             return true;
-        } else if ($this->config->uploadType === 'AUTO' &&
-                  $fileSize >= $this->config->sizeBoundary ) {
+        } elseif ($this->config->uploadType === 'AUTO' &&
+                  $fileSize >= $this->config->sizeBoundary) {
             return true;
         } else {
             return false;

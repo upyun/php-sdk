@@ -1,8 +1,10 @@
 <?php
 namespace Upyun;
-class Util {
 
-    public static function trim($str) {
+class Util
+{
+    public static function trim($str)
+    {
         if (is_array($str)) {
             return array_map(array('Util', 'trim'), $str);
         } else {
@@ -10,7 +12,8 @@ class Util {
         }
     }
 
-    public static function getHeaderParams($headers) {
+    public static function getHeaderParams($headers)
+    {
         $params = [];
         foreach ($headers as $header => $value) {
             $header = strtolower($header);
@@ -21,7 +24,8 @@ class Util {
         return $params;
     }
 
-    public static function parseDir($body) {
+    public static function parseDir($body)
+    {
         $files = array();
         if (!$body) {
             return array();
@@ -37,11 +41,13 @@ class Util {
         return $files;
     }
 
-    public static function base64Json($params) {
+    public static function base64Json($params)
+    {
         return base64_encode(json_encode($params, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
     }
 
-    public static function stringifyHeaders($headers) {
+    public static function stringifyHeaders($headers)
+    {
         $return = array();
         foreach ($headers as $key => $value) {
             $return[] = "$key: $value";
@@ -49,7 +55,8 @@ class Util {
         return $return;
     }
 
-    public static function md5Hash($resource) {
+    public static function md5Hash($resource)
+    {
         rewind($resource);
         $ctx = hash_init('md5');
         hash_update_stream($ctx, $resource);
@@ -62,7 +69,8 @@ class Util {
      * So should `encodeURI` first, before `new Psr7\Request`
      * @see http://stackoverflow.com/questions/4929584/encodeuri-in-php
      */
-    public static function encodeURI($url) {
+    public static function encodeURI($url)
+    {
         $unescaped = array(
             '%2D'=>'-','%5F'=>'_','%2E'=>'.','%21'=>'!', '%7E'=>'~',
             '%2A'=>'*', '%27'=>"'", '%28'=>'(', '%29'=>')'
@@ -74,6 +82,6 @@ class Util {
         $score = array(
             '%23'=>'#'
         );
-        return strtr(rawurlencode($url), array_merge($reserved,$unescaped,$score));
+        return strtr(rawurlencode($url), array_merge($reserved, $unescaped, $score));
     }
 }

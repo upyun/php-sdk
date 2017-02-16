@@ -6,9 +6,10 @@ use Upyun\Signature;
 use Upyun\Util;
 use GuzzleHttp\Client;
 
-class Form extends Rest{
-
-    public function upload($path, $stream, $params) {
+class Form extends Rest
+{
+    public function upload($path, $stream, $params)
+    {
         $params['save-key'] = $path;
         $params['bucket'] = $this->config->bucketName;
         if (!isset($params['expiration'])) {

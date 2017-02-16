@@ -20,7 +20,8 @@ use GuzzleHttp;
  *
  * @package Upyun
  */
-class Upyun {
+class Upyun
+{
 
     /**
      * @var Config: 服务配置
@@ -32,7 +33,8 @@ class Upyun {
      *
      * @param Config $config 服务配置
      */
-    public function __construct(Config $config) {
+    public function __construct(Config $config)
+    {
         $this->setConfig($config);
     }
 
@@ -45,7 +47,8 @@ class Upyun {
      *
      * @return $this
      */
-    public function setConfig(Config $config) {
+    public function setConfig(Config $config)
+    {
         $this->config = $config;
         return $this;
     }
@@ -84,7 +87,8 @@ class Upyun {
      *
      * @throws \Exception 上传失败时，抛出异常
      */
-    public function write($path, $content, $params = array(), $withAsyncProcess = false) {
+    public function write($path, $content, $params = array(), $withAsyncProcess = false)
+    {
         if (!$content) {
             throw new \Exception('write content can not be empty.');
         }
@@ -111,7 +115,8 @@ class Upyun {
      *
      * @throws \Exception
      */
-    public function read($path, $saveHandler = null, $params = array()) {
+    public function read($path, $saveHandler = null, $params = array())
+    {
         $req = new Rest($this->config);
         $response = $req->request('GET', $path)
             ->withHeaders($params)
@@ -144,7 +149,8 @@ class Upyun {
      * @return bool 存在时返回 `true`，否则返回 `false`
      * @throws \Exception
      */
-    public function has($path) {
+    public function has($path)
+    {
         $req = new Rest($this->config);
         try {
             $req->request('HEAD', $path)
@@ -171,7 +177,8 @@ class Upyun {
      * - `x-upyun-file-size` 文件大小
      * - `x-upyun-file-date` 文件的创建时间
      */
-    public function info($path) {
+    public function info($path)
+    {
         $req = new Rest($this->config);
         $response = $req->request('HEAD', $path)
                         ->send();
@@ -187,7 +194,8 @@ class Upyun {
      * @return bool 删除成功返回 true，否则 false
      * @throws \Exception 删除不存在的文件将会抛出异常
      */
-    public function delete($path, $async = false) {
+    public function delete($path, $async = false)
+    {
         $req = new Rest($this->config);
         $req->request('DELETE', $path);
         if ($async) {
@@ -205,7 +213,8 @@ class Upyun {
      * @return bool 创建成功返回 true，否则返回 false
      * @throws \Exception
      */
-    public function createDir($path) {
+    public function createDir($path)
+    {
         $path = rtrim($path, '/') . '/';
         $req = new Rest($this->config);
         $res = $req->request('POST', $path)
@@ -222,7 +231,8 @@ class Upyun {
      * @return bool 成功返回 true，否则 false
      * @throws \Exception
      */
-    public function deleteDir($path) {
+    public function deleteDir($path)
+    {
         return $this->delete($path);
     }
 
@@ -233,7 +243,8 @@ class Upyun {
      * @return string 存储使用量，单位字节
      * @throws \Exception
      */
-    public function usage($path = '/') {
+    public function usage($path = '/')
+    {
         $path = rtrim($path, '/') . '/';
         $req = new Rest($this->config);
         $response = $req->request('GET', $path . '?usage')
@@ -249,7 +260,8 @@ class Upyun {
      *
      * @return array 刷新失败的 url 列表，若全部刷新成功则为空数组
      */
-    public function purge($urls) {
+    public function purge($urls)
+    {
         $urlString = $urls;
         if (is_array($urls)) {
             $urlString = implode("\n", $urls);
@@ -295,7 +307,8 @@ class Upyun {
      * )
      * ```
      */
-    public function process($source, $tasks) {
+    public function process($source, $tasks)
+    {
         $video = new Api\Pretreat($this->config);
         return $video->process($source, $tasks);
     }
@@ -316,7 +329,8 @@ class Upyun {
      * )
      * ```
      */
-    public function queryProcessStatus($taskIds) {
+    public function queryProcessStatus($taskIds)
+    {
         $video = new Api\Pretreat($this->config);
         return $video->query($taskIds, '/status/');
     }
@@ -342,7 +356,8 @@ class Upyun {
      * )
      * ```
      */
-    public function queryProcessResult($taskIds) {
+    public function queryProcessResult($taskIds)
+    {
         $video = new Api\Pretreat($this->config);
         return $video->query($taskIds, '/result/');
     }

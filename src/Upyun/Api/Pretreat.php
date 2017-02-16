@@ -7,8 +7,8 @@ use Upyun\Config;
 use Upyun\Signature;
 use Upyun\Util;
 
-
-class Pretreat {
+class Pretreat
+{
 
     /**
      * @var Config
@@ -17,11 +17,13 @@ class Pretreat {
 
     protected $url = 'http://p0.api.upyun.com';
 
-    public function __construct(Config $config) {
+    public function __construct(Config $config)
+    {
         $this->config = $config;
     }
 
-    public function process($source, $tasks) {
+    public function process($source, $tasks)
+    {
         $encodedTasks = Util::base64Json($tasks);
 
         $client = new Client([
@@ -50,7 +52,8 @@ class Pretreat {
     }
 
 
-    public function query($taskIds, $path) {
+    public function query($taskIds, $path)
+    {
         $client = new Client([
             'timeout' => $this->config->timeout,
         ]);

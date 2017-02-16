@@ -1,12 +1,12 @@
 <?php
 namespace Upyun;
 
-
 /**
  * Class Signature
  * @package Upyun
  */
-class Signature {
+class Signature
+{
     /**
      * 获取分块上传接口的签名
      */
@@ -30,7 +30,8 @@ class Signature {
      *
      * @return array
      */
-    public static function getHeaderSign($bucketConfig, $method, $path, $contentMd5 = null) {
+    public static function getHeaderSign($bucketConfig, $method, $path, $contentMd5 = null)
+    {
         $gmtDate = gmdate('D, d M Y H:i:s \G\M\T');
 
         $policy = null;
@@ -52,7 +53,8 @@ class Signature {
      *
      * @return array
      */
-    public static function getPurgeSignHeader(Config $bucketConfig, $urlString) {
+    public static function getPurgeSignHeader(Config $bucketConfig, $urlString)
+    {
         $gmtDate = gmdate('D, d M Y H:i:s \G\M\T');
         $sign = md5("$urlString&{$bucketConfig->bucketName}&$gmtDate&{$bucketConfig->operatorPassword}");
         return array(
@@ -73,7 +75,8 @@ class Signature {
      *
      * @return array
      */
-    public static function getBodySignature(Config $bucketConfig, $method, $uri, $date = null, $policy = null, $contentMd5 = null) {
+    public static function getBodySignature(Config $bucketConfig, $method, $uri, $date = null, $policy = null, $contentMd5 = null)
+    {
         $data = array(
             $method,
             $uri
@@ -93,7 +96,8 @@ class Signature {
         return 'UPYUN ' . $bucketConfig->operatorName . ':' . $signature;
     }
 
-    public static function getSignature(Config $bucketConfig, $data, $type, $tokenSecret = '') {
+    public static function getSignature(Config $bucketConfig, $data, $type, $tokenSecret = '')
+    {
         if (is_array($data)) {
             ksort($data);
             $string = '';
