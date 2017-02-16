@@ -6,7 +6,8 @@ namespace Upyun;
  *
  * @package Upyun
  */
-class Config {
+class Config
+{
     /**
      * @var string 服务名称
      */
@@ -99,7 +100,8 @@ class Config {
      */
     const ED_PURGE           = 'http://purge.upyun.com/purge/';
 
-    public function __construct($bucketName, $operatorName, $operatorPassword) {
+    public function __construct($bucketName, $operatorName, $operatorPassword)
+    {
         $this->bucketName = $bucketName;
         $this->operatorName = $operatorName;
         $this->setOperatorPassword($operatorPassword);
@@ -107,23 +109,27 @@ class Config {
         self::$restApiEndPoint = self::ED_AUTO;
     }
 
-    public function setOperatorPassword($operatorPassword) {
+    public function setOperatorPassword($operatorPassword)
+    {
         $this->operatorPassword = md5($operatorPassword);
     }
 
-    public function getFormApiKey() {
+    public function getFormApiKey()
+    {
         if (! $this->formApiKey) {
             throw new \Exception('form api key is empty.');
         }
 
-       return $this->formApiKey;
+        return $this->formApiKey;
     }
 
-    public function setFormApiKey($key) {
+    public function setFormApiKey($key)
+    {
         $this->formApiKey = $key;
     }
 
-    public function getVersion() {
+    public function getVersion()
+    {
         return $this->version;
     }
 }

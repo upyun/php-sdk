@@ -7,11 +7,13 @@ define('BUCKET', 'sdkimg');
 define('PIC_PATH', dirname(__FILE__) . '/assets/sample.jpeg');
 define('PIC_SIZE', filesize(PIC_PATH));
 
-function getFileUrl($path) {
+function getFileUrl($path)
+{
     return "http://" . BUCKET . ".b0.upaiyun.com/" . ltrim($path, '/');
 }
 
-function getUpyunFileSize($path) {
+function getUpyunFileSize($path)
+{
     $url = getFileUrl($path);
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_NOBODY, true);

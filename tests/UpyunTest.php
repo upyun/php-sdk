@@ -1,9 +1,11 @@
 <?php
 namespace Upyun\Tests;
+
 use Upyun\Config;
 use Upyun\Upyun;
 
-class UpyunTest extends \PHPUnit_Framework_TestCase{
+class UpyunTest extends \PHPUnit_Framework_TestCase
+{
 
     /**
      * @var Upyun
@@ -15,7 +17,8 @@ class UpyunTest extends \PHPUnit_Framework_TestCase{
 
     protected static $tempFilePath;
 
-    public static function setUpBeforeClass() {
+    public static function setUpBeforeClass()
+    {
         $config = new Config(BUCKET, USER_NAME, PWD);
         $config->setFormApiKey('Mv83tlocuzkmfKKUFbz2s04FzTw=');
         $config->processNotifyUrl = 'http://localhost:9999';
@@ -24,11 +27,13 @@ class UpyunTest extends \PHPUnit_Framework_TestCase{
         touch(self::$tempFilePath);
     }
 
-    public static function tearDownAfterClass() {
+    public static function tearDownAfterClass()
+    {
         unlink(self::$tempFilePath);
     }
 
-    public function testWriteString() {
+    public function testWriteString()
+    {
         $filename = '/中文/测试 +.txt';
         $content = 'test file content';
         self::$upyun->write($filename, $content);
@@ -36,7 +41,8 @@ class UpyunTest extends \PHPUnit_Framework_TestCase{
         $this->assertEquals($size, strlen($content));
     }
 
-    public function testWriteStream() {
+    public function testWriteStream()
+    {
         $filename = 'test.jpeg';
         $f = fopen(__DIR__ . '/assets/sample.jpeg', 'rb');
         if (!$f) {
@@ -47,7 +53,8 @@ class UpyunTest extends \PHPUnit_Framework_TestCase{
         $this->assertEquals($size, PIC_SIZE);
     }
 
-    public function testWriteWithAsyncProcess() {
+    public function testWriteWithAsyncProcess()
+    {
         $filename = 'test_async.jpeg';
         $newFilename = 'test_async.png';
         $f = fopen(__DIR__ . '/assets/sample.jpeg', 'rb');
@@ -68,7 +75,8 @@ class UpyunTest extends \PHPUnit_Framework_TestCase{
         $this->assertEquals($result, true);
     }
 
-    public function testWriteWithException() {
+    public function testWriteWithException()
+    {
         $fs = new Upyun(new Config(BUCKET, USER_NAME, 'error-password'));
         try {
             $fs->write('test.txt', 'test file content');
@@ -81,7 +89,8 @@ class UpyunTest extends \PHPUnit_Framework_TestCase{
     /**
      * @depends testWriteString
      */
-    public function testReadFile() {
+    public function testReadFile()
+    {
         $name = 'test-read.txt';
         $str = 'test file content 2';
         self::$upyun->write($name, $str);
@@ -99,7 +108,8 @@ class UpyunTest extends \PHPUnit_Framework_TestCase{
      * @depends testWriteString
      * @depends testReadFile
      */
-    public function testDeleteFile() {
+    public function testDeleteFile()
+    {
         self::$upyun->write('test-delete.txt', 'test file content 3');
         self::$upyun->delete('test-delete.txt');
         try {
@@ -113,13 +123,15 @@ class UpyunTest extends \PHPUnit_Framework_TestCase{
     /**
      * @expectedException \Exception
      */
-    public function testDeleteNotExistsFile() {
+    public function testDeleteNotExistsFile()
+    {
         self::$upyun->delete('not-exists-test.txt');
     }
 
     /**
      */
-    public function testHas() {
+    public function testHas()
+    {
         $name = 'test-has.txt';
         self::$upyun->write($name, 'test file content 4');
         $this->assertEquals(self::$upyun->has($name), true);
@@ -132,7 +144,8 @@ class UpyunTest extends \PHPUnit_Framework_TestCase{
      * @depends testWriteString
      * @depends testDeleteFile
      */
-    public function testInfo() {
+    public function testInfo()
+    {
         self::$upyun->write('test-info.txt', 'test file content 4');
         $info = self::$upyun->info('test-info.txt');
         $this->assertEquals($info['x-upyun-file-type'], 'file');
@@ -141,14 +154,16 @@ class UpyunTest extends \PHPUnit_Framework_TestCase{
 
     /**
      */
-    public function testCreateDir() {
+    public function testCreateDir()
+    {
         self::$upyun->createDir('/test-dir');
         $this->assertEquals(self::$upyun->has('/test-dir'), true);
         self::$upyun->createDir('/test-dir2/');
         $this->assertEquals(self::$upyun->has('/test-dir2'), true);
     }
 
-    public function testReadDir() {
+    public function testReadDir()
+    {
         $list = self::$upyun->read('/test-dir2/');
         $this->assertEquals($list['is_end'], true);
         self::$upyun->write('/test-dir2/test.txt', 'test file content 5');
@@ -164,7 +179,8 @@ class UpyunTest extends \PHPUnit_Framework_TestCase{
     /**
      * @depends testCreateDir
      */
-    public function testDeleteDir() {
+    public function testDeleteDir()
+    {
         $result = self::$upyun->createDir('/test-delete-dir');
         $this->assertEquals($result, true);
         sleep(5);
@@ -172,12 +188,14 @@ class UpyunTest extends \PHPUnit_Framework_TestCase{
         $this->assertEquals($result, true);
     }
 
-    public function testUsage() {
+    public function testUsage()
+    {
         $size = self::$upyun->usage();
         $this->assertTrue($size > 0);
     }
 
-    public function testPurge() {
+    public function testPurge()
+    {
         $urls = self::$upyun->purge(getFileUrl('test.txt'));
         $this->assertTrue(empty($urls));
 
@@ -187,7 +205,8 @@ class UpyunTest extends \PHPUnit_Framework_TestCase{
         $this->assertTrue($urls[0] === $invalidUrl);
     }
 
-    public function testProcess() {
+    public function testProcess()
+    {
         $source = 'php-sdk-sample.mp4';
         self::$upyun->write($source, fopen(__DIR__ . '/assets/SampleVideo_640x360_1mb.mp4', 'r'));
         $result = self::$upyun->process($source, array(
@@ -200,7 +219,8 @@ class UpyunTest extends \PHPUnit_Framework_TestCase{
     /**
      * @depends testProcess
      */
-    public function testQueryProcessStatus() {
+    public function testQueryProcessStatus()
+    {
         sleep(5);
         $status = self::$upyun->queryProcessStatus(array(self::$taskId));
         $this->assertTrue(array_key_exists(self::$taskId, $status));
@@ -209,7 +229,8 @@ class UpyunTest extends \PHPUnit_Framework_TestCase{
     /**
      * @depends testProcess
      */
-    public function testQueryProcessResult() {
+    public function testQueryProcessResult()
+    {
         sleep(5);
         $result = self::$upyun->queryProcessResult(array(self::$taskId));
         $this->assertTrue($result[self::$taskId]['path'][0] === '/video/result.mp4');

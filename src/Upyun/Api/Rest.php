@@ -8,7 +8,8 @@ use Upyun\Config;
 use Upyun\Signature;
 use Upyun\Util;
 
-class Rest {
+class Rest
+{
     /**
      * @var Config
      */
@@ -25,12 +26,14 @@ class Rest {
     protected $file;
 
 
-    public function __construct(Config $config) {
+    public function __construct(Config $config)
+    {
         $this->config   = $config;
         $this->endpoint = Config::$restApiEndPoint . '/' . $config->bucketName;
     }
 
-    public function request($method, $storagePath) {
+    public function request($method, $storagePath)
+    {
         $this->method = strtoupper($method);
         $this->storagePath = '/' . ltrim($storagePath, '/');
         return $this;
@@ -42,7 +45,8 @@ class Rest {
      *
      * @return $this
      */
-    public function withFile($file) {
+    public function withFile($file)
+    {
         $stream = Psr7\stream_for($file);
         $this->file = $stream;
 
@@ -52,7 +56,8 @@ class Rest {
     /**
      * @return mixed|\Psr\Http\Message\ResponseInterface
      */
-    public function send() {
+    public function send()
+    {
         $client = new Client([
             'timeout' => $this->config->timeout,
         ]);
@@ -83,14 +88,16 @@ class Rest {
         return $response;
     }
 
-    public function withHeader($header, $value) {
+    public function withHeader($header, $value)
+    {
         $header = strtolower(trim($header));
 
         $this->headers[$header] = $value;
         return $this;
     }
 
-    public function withHeaders($headers) {
+    public function withHeaders($headers)
+    {
         if (is_array($headers)) {
             foreach ($headers as $header => $value) {
                 $this->withHeader($header, $value);

@@ -7,7 +7,8 @@ use Upyun\Config;
 use Upyun\Signature;
 use Upyun\Util;
 
-class Multi {
+class Multi
+{
     /**
      * @var Config
      */
@@ -15,7 +16,8 @@ class Multi {
 
     protected $url;
 
-    public function __construct(Config $config) {
+    public function __construct(Config $config)
+    {
         $this->config = $config;
         $this->url = ($this->config->useSsl ? 'https://' : 'http://') . Config::ED_FORM . '/'.
                      $this->config->bucketName;
@@ -30,7 +32,8 @@ class Multi {
      * @return Psr7\Response
      * @throws \Exception
      */
-    public function upload($path, $stream, $fileHash, $params = []) {
+    public function upload($path, $stream, $fileHash, $params = [])
+    {
         $path = '/' . ltrim($path, '/');
         $initInfo = $this->initRequest($path, $stream, $fileHash, $params);
         $blockStatus = $initInfo->status;
@@ -51,7 +54,8 @@ class Multi {
         }
     }
 
-    private function initRequest($path, Psr7\Stream $stream, $fileHash, $params) {
+    private function initRequest($path, Psr7\Stream $stream, $fileHash, $params)
+    {
         $metaData = array(
             'expiration' => time() + $this->config->blockExpiration,
             'file_blocks' => ceil($stream->getSize() / $this->config->maxBlockSize),
@@ -78,7 +82,8 @@ class Multi {
         return $initInfo;
     }
 
-    private function blockUpload($blocksInfo, $blockId, Psr7\Stream $stream, $params = []) {
+    private function blockUpload($blocksInfo, $blockId, Psr7\Stream $stream, $params = [])
+    {
         $startPosition = $blockId * $this->config->maxBlockSize;
         $endPosition   = $blockId >= $blocksInfo->blocks - 1 ? $stream->getSize() : $startPosition + $this->config->maxBlockSize;
 
@@ -104,7 +109,7 @@ class Multi {
 
         $multipart = [];
         foreach ($postData as $key => $value) {
-           $multipart[] = ['name' => $key, 'contents' => $value];
+            $multipart[] = ['name' => $key, 'contents' => $value];
         }
         $multipart[] = [
             'name' => 'file',
@@ -122,7 +127,8 @@ class Multi {
         return json_decode($response->getBody()->getContents());
     }
 
-    private function endRequest($initInfo, $data = array()) {
+    private function endRequest($initInfo, $data = array())
+    {
         $metaData = array();
         $metaData['save_token'] = $initInfo->save_token;
         $metaData['expiration'] = $initInfo->expired_at;
