@@ -1,4 +1,10 @@
 build:
+    environment:
+        php:
+            version: 5.5
+    dependencies:
+        before:
+            - composer install
     tests:
         override:
             -
