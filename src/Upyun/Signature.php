@@ -95,31 +95,4 @@ class Signature
         $signature = base64_encode(hash_hmac('sha1', implode('&', $data), $bucketConfig->operatorPassword, true));
         return 'UPYUN ' . $bucketConfig->operatorName . ':' . $signature;
     }
-
-    public static function getSignature(Config $bucketConfig, $data, $type, $tokenSecret = '')
-    {
-        if (is_array($data)) {
-            ksort($data);
-            $string = '';
-            foreach ($data as $k => $v) {
-                if (is_array($v)) {
-                    $v = implode('', $v);
-                }
-                $string .= "$k$v";
-            }
-            switch ($type) {
-                case self::SIGN_MULTIPART:
-                    $string .= $tokenSecret ? $tokenSecret : $bucketConfig->getFormApiKey();
-                    break;
-                case self::SIGN_VIDEO:
-                    $string = $bucketConfig->operatorName . $string . $bucketConfig->operatorPassword;
-                    break;
-                case self::SIGN_VIDEO_NO_OPERATOR:
-                    break;
-            }
-            $sign = md5($string);
-            return $sign;
-        }
-        return false;
-    }
 }

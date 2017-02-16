@@ -12,7 +12,6 @@
         <testsuite name="upyun test cases">
             <file>./tests/SignatureTest.php</file>
             <file>./tests/UpyunTest.php</file>
-            <file>./tests/Api/MultiTest.php</file>
         </testsuite>
     </testsuites>
 </phpunit>

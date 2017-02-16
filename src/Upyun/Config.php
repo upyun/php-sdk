@@ -36,15 +36,6 @@ class Config
      * @var int 上传的接口类型设置为 `AUTO` 时，文件大小的边界值：小于该值时，使用 rest api，否则使用断点续传。 默认 30M
      */
     public $sizeBoundary = 31457280;
-    /**
-     * @var int 分块上传`Multi`接口的最大分块值
-     */
-    public $maxBlockSize = 5242880;
-
-    /**
-     * @var int 分块时，每个块的过期时间
-     */
-    public $blockExpiration = 60;
 
     /**
      * @var int request timeout seconds
