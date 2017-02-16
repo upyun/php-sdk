@@ -37,14 +37,14 @@ class Multi {
 
         $newBlockStatus = $blockStatus;
 
-        for($blockId = 0; $blockId < $initInfo->blocks; $blockId++) {
-            if($blockStatus[$blockId] === 0) {
+        for ($blockId = 0; $blockId < $initInfo->blocks; $blockId++) {
+            if ($blockStatus[$blockId] === 0) {
                 $return = $this->blockUpload($initInfo, $blockId, $stream);
                 $newBlockStatus = $return->status;
             }
         }
 
-        if(array_sum($newBlockStatus) === $initInfo->blocks) {
+        if (array_sum($newBlockStatus) === $initInfo->blocks) {
             return $this->endRequest($initInfo, $params);
         } else {
             throw new \Exception(sprintf("chunk upload failed! current every block status is : [%s]", implode(',', $newBlockStatus)));
@@ -93,6 +93,7 @@ class Multi {
             'block_hash' => md5($fileBlock),
         );
         $metaData = array_merge($metaData, $params);
+        $postData = array();
         $postData['policy'] = Util::base64Json($metaData);
         $postData['signature'] = Signature::getSignature(
             $this->config,
@@ -102,7 +103,7 @@ class Multi {
         );
 
         $multipart = [];
-        foreach($postData as $key => $value) {
+        foreach ($postData as $key => $value) {
            $multipart[] = ['name' => $key, 'contents' => $value];
         }
         $multipart[] = [
@@ -122,6 +123,7 @@ class Multi {
     }
 
     private function endRequest($initInfo, $data = array()) {
+        $metaData = array();
         $metaData['save_token'] = $initInfo->save_token;
         $metaData['expiration'] = $initInfo->expired_at;
 

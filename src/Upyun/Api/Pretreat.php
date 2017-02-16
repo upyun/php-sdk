@@ -10,6 +10,11 @@ use Upyun\Util;
 
 class Pretreat {
 
+    /**
+     * @var Config
+     */
+    protected $config;
+
     protected $url = 'http://p0.api.upyun.com';
 
     public function __construct(Config $config) {

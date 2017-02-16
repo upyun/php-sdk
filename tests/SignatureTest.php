@@ -16,7 +16,7 @@ class SignatureTest extends \PHPUnit_Framework_TestCase{
 
     public function testGetSignature() {
         $sign = Signature::getSignature($this->config, array('a' => 'a', 'b' => 'b'), Signature::SIGN_MULTIPART, '123');
-        $this->assertEquals($sign , '2aa0afd612df8fab4b3fded36c396234');
+        $this->assertEquals($sign, '2aa0afd612df8fab4b3fded36c396234');
     }
 
     public function testGetBodySignature() {

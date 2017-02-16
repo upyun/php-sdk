@@ -39,7 +39,7 @@ class UpyunTest extends \PHPUnit_Framework_TestCase{
     public function testWriteStream() {
         $filename = 'test.jpeg';
         $f = fopen(__DIR__ . '/assets/sample.jpeg', 'rb');
-        if(!$f) {
+        if (!$f) {
             throw new \Exception('open test file failed!');
         }
         self::$upyun->write($filename, $f);
@@ -51,7 +51,7 @@ class UpyunTest extends \PHPUnit_Framework_TestCase{
         $filename = 'test_async.jpeg';
         $newFilename = 'test_async.png';
         $f = fopen(__DIR__ . '/assets/sample.jpeg', 'rb');
-        if(!$f) {
+        if (!$f) {
             throw new \Exception('open test file failed!');
         }
         $result = self::$upyun->write($filename, $f, array(
@@ -72,7 +72,7 @@ class UpyunTest extends \PHPUnit_Framework_TestCase{
         $fs = new Upyun(new Config(BUCKET, USER_NAME, 'error-password'));
         try {
             $fs->write('test.txt', 'test file content');
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return ;
         }
         throw new \Exception('should get sign error.');
@@ -101,10 +101,10 @@ class UpyunTest extends \PHPUnit_Framework_TestCase{
      */
     public function testDeleteFile() {
         self::$upyun->write('test-delete.txt', 'test file content 3');
-        $r = self::$upyun->delete('test-delete.txt');
+        self::$upyun->delete('test-delete.txt');
         try {
             self::$upyun->read('test-delete.txt');
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return ;
         }
         throw new \Exception('delete file failed');

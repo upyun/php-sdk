@@ -3,7 +3,7 @@ namespace Upyun;
 class Util {
 
     public static function trim($str) {
-        if(is_array($str)) {
+        if (is_array($str)) {
             return array_map(array('Util', 'trim'), $str);
         } else {
             return trim($str);
@@ -14,7 +14,7 @@ class Util {
         $params = [];
         foreach ($headers as $header => $value) {
             $header = strtolower($header);
-            if(strpos($header, 'x-upyun-') !== false) {
+            if (strpos($header, 'x-upyun-') !== false) {
                 $params[$header] = $value[0];
             }
         }
@@ -23,12 +23,12 @@ class Util {
 
     public static function parseDir($body) {
         $files = array();
-        if(!$body) {
+        if (!$body) {
             return array();
         }
 
         $lines = explode("\n", $body);
-        foreach($lines as $line) {
+        foreach ($lines as $line) {
             $file = [];
             list($file['name'], $file['type'], $file['size'], $file['time']) = explode("\t", $line, 4);
             $files[] = $file;

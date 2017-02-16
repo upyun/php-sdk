@@ -59,7 +59,7 @@ class Rest {
 
         $url = ($this->config->useSsl ? 'https://' : 'http://') . $this->endpoint . $this->storagePath;
         $body = null;
-        if($this->file && $this->method === 'PUT') {
+        if ($this->file && $this->method === 'PUT') {
             $body = $this->file;
         }
 
@@ -73,7 +73,7 @@ class Rest {
             $this->method,
             $request->getUri()->getPath()
         );
-        foreach($authHeader as $head => $value) {
+        foreach ($authHeader as $head => $value) {
             $request = $request->withHeader($head, $value);
         }
         $response = $client->send($request, [
@@ -91,7 +91,7 @@ class Rest {
     }
 
     public function withHeaders($headers) {
-        if(is_array($headers)) {
+        if (is_array($headers)) {
             foreach ($headers as $header => $value) {
                 $this->withHeader($header, $value);
             }
