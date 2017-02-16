@@ -28,7 +28,7 @@ class Uploader {
             return $req->upload($path, $stream, $params);
         }
 
-        if(! $useBlock) {
+        if (! $useBlock) {
             $req = new Rest($this->config);
             return $req->request('PUT', $path)
                        ->withHeaders($params)
@@ -103,9 +103,9 @@ class Uploader {
     }
 
     private function needUseBlock($fileSize) {
-        if($this->config->uploadType === 'BLOCK') {
+        if ($this->config->uploadType === 'BLOCK') {
             return true;
-        } else if($this->config->uploadType === 'AUTO' &&
+        } else if ($this->config->uploadType === 'AUTO' &&
                   $fileSize >= $this->config->sizeBoundary ) {
             return true;
         } else {

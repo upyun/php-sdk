@@ -85,7 +85,7 @@ class Upyun {
      * @throws \Exception 上传失败时，抛出异常
      */
     public function write($path, $content, $params = array(), $withAsyncProcess = false) {
-        if(!$content) {
+        if (!$content) {
             throw new \Exception('write content can not be empty.');
         }
 
@@ -111,7 +111,7 @@ class Upyun {
      *
      * @throws \Exception
      */
-    public function read($path, $saveHandler = NULL, $params = array()) {
+    public function read($path, $saveHandler = null, $params = array()) {
         $req = new Rest($this->config);
         $response = $req->request('GET', $path)
             ->withHeaders($params)
@@ -121,8 +121,8 @@ class Upyun {
         $params = Util::getHeaderParams($response->getHeaders());
 
 
-        if(! isset($params['x-upyun-list-iter'])) {
-            if(is_resource($saveHandler)) {
+        if (! isset($params['x-upyun-list-iter'])) {
+            if (is_resource($saveHandler)) {
                 Psr7\copy_to_stream($response->getBody(), Psr7\stream_for($saveHandler));
                 return true;
             } else {
@@ -149,9 +149,9 @@ class Upyun {
         try {
             $req->request('HEAD', $path)
                             ->send();
-        } catch(GuzzleHttp\Exception\BadResponseException $e) {
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
             $statusCode = $e->getResponse()->getStatusCode();
-            if($statusCode === 404) {
+            if ($statusCode === 404) {
                 return false;
             } else {
                 throw $e;
@@ -190,7 +190,7 @@ class Upyun {
     public function delete($path, $async = false) {
         $req = new Rest($this->config);
         $req->request('DELETE', $path);
-        if($async) {
+        if ($async) {
             $req->withHeader('x-upyun-async', 'true');
         }
         $res = $req->send();
@@ -234,11 +234,9 @@ class Upyun {
      * @throws \Exception
      */
     public function usage($path = '/') {
-
         $path = rtrim($path, '/') . '/';
         $req = new Rest($this->config);
         $response = $req->request('GET', $path . '?usage')
-            ->withHeader('folder', 'true')
             ->send();
 
         return $response->getBody()->getContents();
@@ -253,7 +251,7 @@ class Upyun {
      */
     public function purge($urls) {
         $urlString = $urls;
-        if(is_array($urls)) {
+        if (is_array($urls)) {
             $urlString = implode("\n", $urls);
         }
 

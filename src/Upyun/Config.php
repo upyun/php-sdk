@@ -73,7 +73,7 @@ class Config {
     /**
      * @var string rest api 和 form api 的接口地址
      */
-    static $restApiEndPoint;
+    public static $restApiEndPoint;
 
 
     /**
@@ -112,7 +112,7 @@ class Config {
     }
 
     public function getFormApiKey() {
-        if(! $this->formApiKey) {
+        if (! $this->formApiKey) {
             throw new \Exception('form api key is empty.');
         }
 
