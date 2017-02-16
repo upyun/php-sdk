@@ -11,7 +11,7 @@ build:
                 command: phpunit
                 coverage:
                     file: coverage.clover
-                    format: php-clover
+                    format: clover
 filter:
     paths:
         - 'src/*'
