@@ -29,7 +29,7 @@ class Rest
     public function __construct(Config $config)
     {
         $this->config   = $config;
-        $this->endpoint = Config::$restApiEndPoint . '/' . $config->bucketName;
+        $this->endpoint = $config->getProtocol() . Config::$restApiEndPoint . '/' . $config->bucketName;
     }
 
     public function request($method, $storagePath)
@@ -62,7 +62,7 @@ class Rest
             'timeout' => $this->config->timeout,
         ]);
 
-        $url = ($this->config->useSsl ? 'https://' : 'http://') . $this->endpoint . $this->storagePath;
+        $url = $this->endpoint . $this->storagePath;
         $body = null;
         if ($this->file && $this->method === 'PUT') {
             $body = $this->file;

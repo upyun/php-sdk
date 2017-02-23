@@ -23,9 +23,7 @@ class Form extends Rest
             'timeout' => $this->config->timeout,
         ]);
 
-        $url = ($this->config->useSsl ? 'https://' : 'http://') . $this->endpoint;
-
-        $response = $client->request($method, $url, array(
+        $response = $client->request($method, $this->endpoint, array(
             'multipart' => array(
                 array(
                     'name' => 'policy',
