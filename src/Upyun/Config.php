@@ -77,11 +77,6 @@ class Config
     const ED_CTT             = 'v3.api.upyun.com';
 
     /**
-     * 分块上传接口请求地址
-     */
-    const ED_FORM            = 'm0.api.upyun.com';
-
-    /**
      * 异步云处理接口地址
      */
     const ED_VIDEO           = 'p0.api.upyun.com';
@@ -122,5 +117,15 @@ class Config
     public function getVersion()
     {
         return $this->version;
+    }
+
+    public function getPretreatEndPoint()
+    {
+        return $this->getProtocol() . self::ED_VIDEO;
+    }
+
+    public function getProtocol()
+    {
+        return $this->useSsl ? 'https://' : 'http://';
     }
 }

@@ -15,8 +15,6 @@ class Pretreat
      */
     protected $config;
 
-    protected $url = 'http://p0.api.upyun.com';
-
     public function __construct(Config $config)
     {
         $this->config = $config;
@@ -42,7 +40,8 @@ class Pretreat
         $method = 'POST';
         $signedHeaders = Signature::getHeaderSign($this->config, $method, $path);
 
-        $response = $client->request($method, $this->url . $path, [
+        $url = $this->config->getPretreatEndPoint() . $path;
+        $response = $client->request($method, $url, [
             'headers' => $signedHeaders,
             'form_params' => $params
         ]);
@@ -65,7 +64,7 @@ class Pretreat
         $path = $path . '?' . http_build_query($params);
 
         $method = 'GET';
-        $url = $this->url . $path;
+        $url = $this->config->getPretreatEndPoint() . $path;
         $signedHeaders = Signature::getHeaderSign($this->config, $method, $path);
         $response = $client->request($method, $url, [
             'headers' => $signedHeaders
