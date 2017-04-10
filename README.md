@@ -3,15 +3,15 @@
 
 又拍云存储PHP SDK，基于[又拍云存储 HTTP API 接口](http://docs.upyun.com/api/) 开发。SDK 包含了文件上传下载刷新等基本操作，以及图片、视频云处理等功能。
 
-- [更新说明](#update instructions)
-- [使用说明](#use instructions)
+- [更新说明](#update-instructions)
+- [使用说明](#use-instructions)
   - [安装](#install)
   - [使用](#usage)
 - [贡献代码](#contribute)
 - [社区](#community)
 - [许可证](#license)
 
-<a name="update instructions"></a>
+<a name="update-instructions"></a>
 ## 更新说明
 #### 3.0.0
 
@@ -30,7 +30,7 @@
 
 
 
-<a name="use instructions"></a>
+<a name="use-instructions"></a>
 ## 使用说明
 
 <a name="install"></a>
