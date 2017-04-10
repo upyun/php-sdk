@@ -40,6 +40,8 @@
 
 1.使用 `composer` 安装
 
+推荐配置 composer 使用国内全量镜像: https://pkg.phpcomposer.com/（国内使用速度快很多），再安装
+
 ```
 composer require upyun/sdk
 ```
