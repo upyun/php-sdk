@@ -10,3 +10,4 @@ DEMO 使用 `sdkimg` 空间进行演示, 上传成功后, 访问路径为 `http:
 - `php -S localhost:9000`
 
 打开浏览器访问 `http://localhost:9000`, 选则文件上传即可.
+示例中使用 body 签名，避免 header 签名存在跨域失败的情况，因为 `Access-Control-Allow-Headers: *` 兼容性不好，是刚设定的协议[标准](https://github.com/whatwg/fetch)
