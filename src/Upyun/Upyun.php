@@ -171,18 +171,28 @@ class Upyun
      * 获取云存储文件/目录的基本信息
      *
      * @param string $path 云存储的文件路径
+     * @param array $otherHeaders 设置了后，方法将返回其他 http header 中的信息，默认为空
      *
      * @return array 返回一个数组，包含以下 key
      * - `x-upyun-file-type` 当 $path 是目录时，值为 *folder*，当 $path 是文件时，值为 *file*，
      * - `x-upyun-file-size` 文件大小
      * - `x-upyun-file-date` 文件的创建时间
      */
-    public function info($path)
+    public function info($path, $otherHeaders = array())
     {
         $req = new Rest($this->config);
         $response = $req->request('HEAD', $path)
                         ->send();
-        return Util::getHeaderParams($response->getHeaders());
+        return Util::getHeaderParams($response->getHeaders(), $otherHeaders);
+    }
+
+    public function getMimetype($path)
+    {
+        $params = $this->info($path, array('content-type'));
+        if (isset($params['content-type'])) {
+            return explode(';', $params['content-type'])[0];
+        }
+        return '';
     }
 
     /**

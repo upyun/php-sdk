@@ -153,6 +153,15 @@ class UpyunTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @depends testInfo
+     */
+    public function testGetMimetype()
+    {
+        $type = self::$upyun->getMimetype('test-info.txt');
+        $this->assertEquals($type, 'text/plain');
+    }
+
+    /**
      */
     public function testCreateDir()
     {
