@@ -173,7 +173,7 @@ class Upyun
      * @param string $path 云存储的文件路径
      * @param array $otherHeaders 设置了后，方法将返回其他 http header 中的信息，默认为空
      *
-     * @return array 返回一个数组，包含以下 key
+     * @return array 返回一个数组，默认包含以下 key
      * - `x-upyun-file-type` 当 $path 是目录时，值为 *folder*，当 $path 是文件时，值为 *file*，
      * - `x-upyun-file-size` 文件大小
      * - `x-upyun-file-date` 文件的创建时间
@@ -189,7 +189,7 @@ class Upyun
     /**
      * 获取文件的文档类型
      * @param string $path 云存储文件路径
-     * @return string 文档类型，获取失败返回空字符串
+     * @return string 文档类型，e.g: `appcation/json`，获取失败返回空字符串
      */
     public function getMimetype($path)
     {

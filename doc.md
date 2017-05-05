@@ -12,6 +12,7 @@
     * [read](#read) 读取云存储文件/目录内容
     * [has](#has) 判断文件是否存在于又拍云存储
     * [info](#info) 获取云存储文件/目录的基本信息
+    * [getMimetype](#getMimetype) 获取云存储文件类型
     * [delete](#delete) 删除文件或者目录
     * [createDir](#createdir) 创建目录
     * [deleteDir](#deletedir) 删除文件或者目录
@@ -184,7 +185,38 @@ Upyun::has( string $path )
 获取云存储文件/目录的基本信息
 
 ```php
-Upyun::info( string $path )
+Upyun::info( string $path, array $otherHeaders)
+```
+
+  
+
+
+**参数列表:**
+
+
+- **string** `$path`  
+  云存储的文件路径
+
+- **string** `$otherHeaders`  
+  设置了后，方法将返回其他 http header 中的信息，默认为空
+
+**返回值：**
+
+返回一个数组，默认包含以下 key
+- `x-upyun-file-type` 当 $path 是目录时，值为 *folder*，当 $path 是文件时，值为 *file*，
+- `x-upyun-file-size` 文件大小
+- `x-upyun-file-date` 文件的创建时间
+
+
+
+---
+
+### getMimetype
+
+获取云存储文件的文档类型
+
+```php
+Upyun::getMimetype( string $path )
 ```
 
   
@@ -199,10 +231,7 @@ Upyun::info( string $path )
 
 **返回值：**
 
-返回一个数组，包含以下 key
-- `x-upyun-file-type` 当 $path 是目录时，值为 *folder*，当 $path 是文件时，值为 *file*，
-- `x-upyun-file-size` 文件大小
-- `x-upyun-file-date` 文件的创建时间
+文档类型，e.g: `appcation/json`，获取失败返回空字符串
 
 
 
