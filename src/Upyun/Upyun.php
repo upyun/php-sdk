@@ -186,6 +186,11 @@ class Upyun
         return Util::getHeaderParams($response->getHeaders(), $otherHeaders);
     }
 
+    /**
+     * 获取文件的文档类型
+     * @param string $path 云存储文件路径
+     * @return string 文档类型，获取失败返回空字符串
+     */
     public function getMimetype($path)
     {
         $params = $this->info($path, array('content-type'));
