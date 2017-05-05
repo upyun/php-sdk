@@ -12,12 +12,15 @@ class Util
         }
     }
 
-    public static function getHeaderParams($headers)
+    public static function getHeaderParams($headers, $otherParams = array())
     {
         $params = [];
+        $otherParams = array_map('strtolower', $otherParams);
         foreach ($headers as $header => $value) {
             $header = strtolower($header);
             if (strpos($header, 'x-upyun-') !== false) {
+                $params[$header] = $value[0];
+            } else if (in_array($header, $otherParams)) {
                 $params[$header] = $value[0];
             }
         }
