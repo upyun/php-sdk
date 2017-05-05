@@ -12,7 +12,7 @@
     * [read](#read) 读取云存储文件/目录内容
     * [has](#has) 判断文件是否存在于又拍云存储
     * [info](#info) 获取云存储文件/目录的基本信息
-    * [getMimetype](#getMimetype) 获取云存储文件类型
+    * [getMimetype](#getmimetype) 获取云存储文件类型
     * [delete](#delete) 删除文件或者目录
     * [createDir](#createdir) 创建目录
     * [deleteDir](#deletedir) 删除文件或者目录
