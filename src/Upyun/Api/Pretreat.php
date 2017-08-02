@@ -17,6 +17,9 @@ class Pretreat
 
     public function __construct(Config $config)
     {
+        if (!$config->processNotifyUrl) {
+            throw new \Exception("should config prosessNotifyUrl first.");
+        }
         $this->config = $config;
     }
 
@@ -29,7 +32,7 @@ class Pretreat
         ]);
 
         $params = array(
-            'bucket_name' => $this->config->bucketName,
+            'service' => $this->config->bucketName,
             'notify_url' => $this->config->processNotifyUrl,
             'source' => $source,
             'tasks' => $encodedTasks,

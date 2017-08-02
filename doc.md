@@ -385,7 +385,11 @@ Upyun::process( string $source, array $tasks )
 ```
 
   该方法是基于[又拍云云处理](http://docs.upyun.com/cloud/) 服务实现，可以实现音视频的转码、切片、剪辑；文件的压缩解压缩；文件拉取功能
-所有需要调用该方法处理的资源，必须已经上传到云存储服务，未上传到云存储的文件，同时需要云处理功能，请使用 `write` 方法。
+  
+  注意：
+  - 所有需要调用该方法处理的资源，必须已经上传到云存储服务
+  - 使用 `process` 之前，必须配置 `config->processNotifyUrl`，否则会提交任务失败
+  
 例如视频转码：
 ```
  process($source, array(
