@@ -366,7 +366,7 @@ class Upyun
      *         'path' => array('/v2.mp4'),
      *         'signature' => '4042c1f07f546d28',
      *         'status_code' => 200,
-     *         'bucket_name' => 'your_storage_bucket',
+     *         'service_name' => 'your_storage_service',
      *         'description' => 'OK',
      *         'task_id' => '9d9c32b63a1034834e77672c6f51f661',
      *         'timestamp' => 1472010684

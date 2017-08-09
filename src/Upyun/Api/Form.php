@@ -11,14 +11,14 @@ class Form extends Rest
     public function upload($path, $stream, $params)
     {
         $params['save-key'] = $path;
-        $params['bucket'] = $this->config->bucketName;
+        $params['service'] = $this->config->serviceName;
         if (!isset($params['expiration'])) {
             $params['expiration'] = time() + 30 * 60 * 60; // 30 分钟
         }
 
         $policy = Util::base64Json($params);
         $method = 'POST';
-        $signature = Signature::getBodySignature($this->config, $method, '/' . $params['bucket'], null, $policy);
+        $signature = Signature::getBodySignature($this->config, $method, '/' . $params['service'], null, $policy);
         $client = new Client([
             'timeout' => $this->config->timeout,
         ]);

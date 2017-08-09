@@ -25,7 +25,7 @@
 ## Upyun
 
 `Upyun\Upyun` 类实现了又拍云云存储和云处理的所有接口，通过该类可以实现文件上传、下载；图片视频等多媒体资源云处理。
-本文档中，提到的"服务"是指又拍云文件加速回又拍云源类型的服务（即原先的存储类空间）。
+本文档中，提到的"服务"是指又拍云文件加速回又拍云源类型的服务（即原先的存储类服务）。
 
 * 命名空间: `\Upyun\Upyun`
 
@@ -490,7 +490,7 @@ array(
         'path' => array('/v2.mp4'),
         'signature' => '4042c1f07f546d28',
         'status_code' => 200,
-        'bucket_name' => 'your_storage_bucket',
+        'service' => 'your_storage_service',
         'description' => 'OK',
         'task_id' => '9d9c32b63a1034834e77672c6f51f661',
         'timestamp' => 1472010684
