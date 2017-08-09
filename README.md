@@ -61,8 +61,8 @@ require_once('vendor/autoload.php'); // 只针对使用 composer 安装
 
 use Upyun\Upyun;
 use Upyun\Config;
-$bucketConfig = new Config('yourBucketName', 'yourOperatorName', 'yourOperatorPwd');
-$client = new Upyun($bucketConfig);
+$serviceConfig = new Config('yourServiceName', 'yourOperatorName', 'yourOperatorPwd');
+$client = new Upyun($serviceConfig);
 ```
 
 详细文档见 [doc.md](doc.md)，以下为部分简单示例

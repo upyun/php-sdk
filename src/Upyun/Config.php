@@ -9,9 +9,14 @@ namespace Upyun;
 class Config
 {
     /**
-     * @var string 服务名称
+     * @var string 服务名称，将会被弃用
      */
     public $bucketName;
+
+    /**
+     * @var string 服务名称
+     */
+    public $serviceName;
     /**
      * @var string 操作员名
      */
@@ -86,9 +91,10 @@ class Config
      */
     const ED_PURGE           = 'http://purge.upyun.com/purge/';
 
-    public function __construct($bucketName, $operatorName, $operatorPassword)
+    public function __construct($serviceName, $operatorName, $operatorPassword)
     {
-        $this->bucketName = $bucketName;
+        $this->serviceName = $serviceName;
+        $this->bucketName = $serviceName;
         $this->operatorName = $operatorName;
         $this->setOperatorPassword($operatorPassword);
         $this->useSsl          = false;

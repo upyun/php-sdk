@@ -32,7 +32,7 @@ class Pretreat
         ]);
 
         $params = array(
-            'service' => $this->config->bucketName,
+            'service' => $this->config->serviceName,
             'notify_url' => $this->config->processNotifyUrl,
             'source' => $source,
             'tasks' => $encodedTasks,
@@ -61,7 +61,7 @@ class Pretreat
         ]);
 
         $params = array(
-            'service' => $this->config->bucketName,
+            'service' => $this->config->serviceName,
             'task_ids' => implode(',', $taskIds)
         );
         $path = $path . '?' . http_build_query($params);

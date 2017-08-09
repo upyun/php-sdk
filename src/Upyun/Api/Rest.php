@@ -29,7 +29,7 @@ class Rest
     public function __construct(Config $config)
     {
         $this->config   = $config;
-        $this->endpoint = $config->getProtocol() . Config::$restApiEndPoint . '/' . $config->bucketName;
+        $this->endpoint = $config->getProtocol() . Config::$restApiEndPoint . '/' . $config->serviceName;
     }
 
     public function request($method, $storagePath)
