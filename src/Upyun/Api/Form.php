@@ -13,7 +13,7 @@ class Form extends Rest
         $params['save-key'] = $path;
         $params['service'] = $this->config->serviceName;
         if (!isset($params['expiration'])) {
-            $params['expiration'] = time() + 30 * 60 * 60; // 30 分钟
+            $params['expiration'] = time() + 30 * 60; // 30 分钟
         }
 
         $policy = Util::base64Json($params);
