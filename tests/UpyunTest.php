@@ -218,11 +218,18 @@ class UpyunTest extends \PHPUnit_Framework_TestCase
     {
         $source = 'php-sdk-sample.mp4';
         self::$upyun->write($source, fopen(__DIR__ . '/assets/SampleVideo_640x360_1mb.mp4', 'r'));
-        $result = self::$upyun->process($source, array(
+        $result = self::$upyun->process(array(
             array('type' => 'video', 'avopts' => '/s/240p(4:3)/as/1/r/30', 'return_info' => true, 'save_as' => '/video/result.mp4')
-        ));
+        ), Upyun::$PROCESS_TYPE_MEDIA, $source);
         $this->assertTrue(strlen($result[0]) === 32);
         self::$taskId = $result[0];
+
+        // test zip
+        $result2 = self::$upyun->process(array(array(
+            'sources' => ['./php-sdk-sample.mp4'],
+            'save_as' => '/php-sdk-sample-mp4.zip'
+        )), Upyun::$PROCESS_TYPE_ZIP);
+        $this->assertTrue(strlen($result2[0]) === 32);
     }
 
     /**

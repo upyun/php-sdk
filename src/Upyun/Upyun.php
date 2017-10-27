@@ -28,6 +28,32 @@ class Upyun
      */
     protected $config;
 
+    // 异步云处理任务类型
+    /**
+     * @var string 异步音视频处理
+     */
+    public static $PROCESS_TYPE_MEDIA = 'media';
+    /**
+     * @var string 文件压缩
+     */
+    public static $PROCESS_TYPE_ZIP = 'zip-file';
+    /**
+     * @var string 解压缩
+     */
+    public static $PROCESS_TYPE_UNZIP = 'unzip-file';
+    /**
+     * @var string 文件拉取
+     */
+    public static $PROCESS_TYPE_SYNC_FILE = 'sync-remote-file-to-upyun';
+    /**
+     * @var string 文档转换
+     */
+    public static $PROCESS_TYPE_CONVERT = 'document-type-convert';
+    /**
+     * @var string 异步图片拼接
+     */
+    public static $PROCESS_TYPE_STITCH = 'picture-stitch';
+
     /**
      * Upyun constructor.
      *
@@ -304,31 +330,64 @@ class Upyun
      *
      * 例如视频转码：
      * ```
-     *  process($source, array(
+     *  process(array(
      *    array(
      *        'type' => 'video',  // video 表示视频任务, audio 表示音频任务
      *        'avopts' => '/s/240p(4:3)/as/1/r/30', // 处理参数，`s` 表示输出的分辨率，`r` 表示视频帧率，`as` 表示是否自动调整分辨率
      *        'save_as' => '/video/240/new.mp4', // 新视频在又拍云存储的保存路径
      *    ),
      *    ... // 同时还可以添加其他任务
-     * ))
+     * ), Upyun::$PROCESS_TYPE_MEDIA, $source)
      * ```
      *
-     * @param string $source 需要预处理的图片、音视频资源在又拍云存储的路径
      * @param array $tasks 需要处理的任务
+     * @param string $type 异步云处理任务类型，可选值:
+     * - `Upyun::$PROCESS_TYPE_MEDIA` 异步音视频处理
+     * - `Upyun::$PROCESS_TYPE_ZIP` 文件压缩
+     * - `Upyun::$PROCESS_TYPE_UNZIP` 文件解压
+     * - `Upyun::$PROCESS_TYPE_SYNC_FILE` 文件拉取
+     * - `Upyun::$PROCESS_TYPE_STITCH` 图片拼接
+     * @param string $source 可选参数，处理异步音视频任务时，需要传递该参数，表示需要处理的文件路径
      *
      * @return array 任务 ID，提交了多少任务，便会返回多少任务 ID，与提交任务的顺序保持一致。可以通过任务 ID 查询处理进度。格式如下：
      * ```
      * array(
-     *     '35f0148d414a688a275bf915ba7cebb2',
-     *     '98adbaa52b2f63d6d7f327a0ff223348',
+     * '35f0148d414a688a275bf915ba7cebb2',
+     * '98adbaa52b2f63d6d7f327a0ff223348',
      * )
      * ```
+     * @throws \Exception
      */
-    public function process($source, $tasks)
+    public function process($tasks, $type, $source = '')
     {
         $video = new Api\Pretreat($this->config);
-        return $video->process($source, $tasks);
+
+        $options = array();
+        switch($type) {
+            case self::$PROCESS_TYPE_MEDIA:
+                $options['accept'] = 'json';
+                $options['source'] = $source;
+                break;
+            case self::$PROCESS_TYPE_ZIP:
+                $options['app_name'] = 'compress';
+                break;
+            case self::$PROCESS_TYPE_UNZIP:
+                $options['app_name'] = 'depress';
+                break;
+            case self::$PROCESS_TYPE_SYNC_FILE:
+                $options['app_name'] = 'spiderman';
+                break;
+            case self::$PROCESS_TYPE_SYNC_FILE:
+                $options['app_name'] = 'uconvert';
+                break;
+            case self::$PROCESS_TYPE_STITCH:
+                $options['app_name'] = 'jigsaw';
+                break;
+            default:
+                throw new \Exception('upyun - not support process type.');
+
+        }
+        return $video->process($tasks, $options);
     }
 
     /**
