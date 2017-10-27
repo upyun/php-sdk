@@ -3,6 +3,8 @@
 
 又拍云存储PHP SDK，基于[又拍云存储 HTTP API 接口](http://docs.upyun.com/api/) 开发。SDK 包含了文件上传下载刷新等基本操作，以及图片、视频云处理等功能。
 
+*如果需要测试回调功能，可以通过[又拍云回调服务](https://hooks.upyun.com/)创建一个临时回调地址*
+
 - [更新说明](#update-instructions)
 - [使用说明](#use-instructions)
   - [安装](#install)
