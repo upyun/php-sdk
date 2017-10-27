@@ -381,7 +381,7 @@ Upyun::purge( array|string $urls )
 异步云处理
 
 ```php
-Upyun::process( string $source, array $tasks )
+Upyun::process( array $tasks, string $type, string $source )
 ```
 
   该方法是基于[又拍云云处理](http://docs.upyun.com/cloud/) 服务实现，可以实现音视频的转码、切片、剪辑；文件的压缩解压缩；文件拉取功能
@@ -392,14 +392,14 @@ Upyun::process( string $source, array $tasks )
   
 例如视频转码：
 ```
- process($source, array(
+ process(array(
    array(
        'type' => 'video',  // video 表示视频任务, audio 表示音频任务
        'avopts' => '/s/240p(4:3)/as/1/r/30', // 处理参数，`s` 表示输出的分辨率，`r` 表示视频帧率，`as` 表示是否自动调整分辨率
        'save_as' => '/video/240/new.mp4', // 新视频在又拍云存储的保存路径
    ),
    ... // 同时还可以添加其他任务
-))
+), Upyun::$PROCESS_TYPE_MEDIA, $source)
 ```
 注意，被处理的资源需要已经上传到又拍云云存储
 
@@ -407,11 +407,19 @@ Upyun::process( string $source, array $tasks )
 **参数列表:**
 
 
-- **string** `$source`  
-  需要预处理的图片、音视频资源在又拍云存储的路径
-
 - **array** `$tasks`  
   需要处理的任务
+
+- **string** `$type`  
+  异步云处理任务类型，可选值:
+  - `Upyun::$PROCESS_TYPE_MEDIA` 异步音视频处理
+  - `Upyun::$PROCESS_TYPE_ZIP` 文件压缩
+  - `Upyun::$PROCESS_TYPE_UNZIP` 文件解压
+  - `Upyun::$PROCESS_TYPE_SYNC_FILE` 文件拉取
+  - `Upyun::$PROCESS_TYPE_STITCH` 图片拼接
+
+- **string** `$source`  
+  可选参数，处理异步音视频任务时，需要传递该参数，表示需要处理的文件路径
 
 
 **返回值：**
