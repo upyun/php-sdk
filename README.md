@@ -1,7 +1,7 @@
 # 又拍云 PHP SDK
 [![Build Status](https://scrutinizer-ci.com/g/upyun/php-sdk/badges/build.png?b=master)](https://scrutinizer-ci.com/g/upyun/php-sdk/build-status/master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/upyun/php-sdk/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/upyun/php-sdk/?branch=master) [![Code Coverage](https://scrutinizer-ci.com/g/upyun/php-sdk/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/upyun/php-sdk/?branch=master) 
 
-又拍云存储PHP SDK，基于[又拍云存储 HTTP API 接口](http://docs.upyun.com/api/) 开发。SDK 包含了文件上传下载刷新等基本操作，以及图片、视频云处理等功能。
+又拍云 PHP SDK，基于[又拍云 HTTP API 接口](http://docs.upyun.com/api/) 开发。SDK 包含了文件上传下载刷新等基本操作，以及图片、视频云处理等功能。
 
 *如果需要测试回调功能，可以通过[又拍云回调服务](https://hooks.upyun.com/)创建一个临时回调地址*
 
@@ -25,7 +25,7 @@
 
 1.使用 `composer` 安装
 
-推荐配置 composer 使用国内全量镜像: https://pkg.phpcomposer.com/ 再安装
+推荐使用该方法安装，成为优雅的 PHPer :fire: 建议使用速度很快的国内[全量镜像](https://pkg.phpcomposer.com/#how-to-use-packagist-mirror)([又拍云赞助](https://pkg.phpcomposer.com/#donation))
 
 ```
 composer require upyun/sdk
