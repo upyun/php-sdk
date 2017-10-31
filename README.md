@@ -5,11 +5,11 @@
 
 *如果需要测试回调功能，可以通过[又拍云回调服务](https://hooks.upyun.com/)创建一个临时回调地址*
 
-- [更新说明](#update-instructions)
 - [使用说明](#use-instructions)
   - [安装](#install)
   - [文档](#doc)
   - [示例](#usage)
+- [更新说明](#update-instructions)
 - [贡献代码](#contribute)
 - [社区](#community)
 - [许可证](#license)
