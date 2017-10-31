@@ -25,7 +25,9 @@
 
 1.使用 `composer` 安装
 
-推荐使用该方法安装，成为优雅的 PHPer :fire: 建议使用速度很快的国内[全量镜像](https://pkg.phpcomposer.com/#how-to-use-packagist-mirror)([又拍云赞助](https://pkg.phpcomposer.com/#donation))
+推荐使用该方法安装，成为优雅的 PHPer :fire: 
+
+建议使用速度很快的国内[全量镜像](https://pkg.phpcomposer.com/#how-to-use-packagist-mirror)([又拍云赞助](https://pkg.phpcomposer.com/#donation))
 
 ```
 composer require upyun/sdk
