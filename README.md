@@ -8,28 +8,11 @@
 - [更新说明](#update-instructions)
 - [使用说明](#use-instructions)
   - [安装](#install)
-  - [使用](#usage)
+  - [文档](#doc)
+  - [示例](#usage)
 - [贡献代码](#contribute)
 - [社区](#community)
 - [许可证](#license)
-
-<a name="update-instructions"></a>
-## 更新说明
-#### 3.0.0
-
-- 重写 API 接口，不兼容 2.x 版本
-- 集合分块、刷新、视频预处理功能
-
-#### 2.2.0
-
-- 增加 composer 支持，特别感谢 [@totoleo](https://github.com/totoleo) 将 `upyun/sdk` 仓库源修改为 UPYUN 官方项目地址
-- 移除不再推荐使用的 API:`rmDir deleteFile readDir getWritedFileInfo`)，建议使用推荐方法替代
-- note: `2.1.0` 版本之前已经被 [@totoleo](https://github.com/totoleo) 使用
-
-#### 2.0.0
-
-- 使用1.0.x系列版本SDK的用户，注意原有部分方法已经不再推荐使用(`@deprecated`标注)，但是出于兼容考虑目前任然保留，建议更新升级程序使用新版SDK提供的方法。
-
 
 
 <a name="use-instructions"></a>
@@ -53,9 +36,15 @@ composer require upyun/sdk
 ```
 require_once '/path/to/php-sdk/vendor/autoload.php';
 ```
+<a name="doc"></a>
+### 文档
+
+详细文档见 [doc.md](doc.md)
 
 <a name="usage"></a>
-### 初始化
+### 示例
+
+先初始化又拍云服务配置：
 
 ```php
 require_once('vendor/autoload.php'); // 只针对使用 composer 安装
@@ -66,8 +55,6 @@ use Upyun\Config;
 $serviceConfig = new Config('yourServiceName', 'yourOperatorName', 'yourOperatorPwd');
 $client = new Upyun($serviceConfig);
 ```
-
-详细文档见 [doc.md](doc.md)，以下为部分简单示例
 
 #### 字符串写入又拍云服务器
 
@@ -96,6 +83,23 @@ $saveLocal = fopen('/local/path/image.jpg', 'w');
 // 第二个参数不传时，read 方法将直接返回文件内容
 $client->read('/remote/server/image.png', $saveLocal);
 ```
+
+<a name="update-instructions"></a>
+## 更新说明
+#### 3.0.0
+
+- 重写 API 接口，不兼容 2.x 版本
+- 集合分块、刷新、视频预处理功能
+
+#### 2.2.0
+
+- 增加 composer 支持，特别感谢 [@totoleo](https://github.com/totoleo) 将 `upyun/sdk` 仓库源修改为 UPYUN 官方项目地址
+- 移除不再推荐使用的 API:`rmDir deleteFile readDir getWritedFileInfo`)，建议使用推荐方法替代
+- note: `2.1.0` 版本之前已经被 [@totoleo](https://github.com/totoleo) 使用
+
+#### 2.0.0
+
+- 使用1.0.x系列版本SDK的用户，注意原有部分方法已经不再推荐使用(`@deprecated`标注)，但是出于兼容考虑目前任然保留，建议更新升级程序使用新版SDK提供的方法。
 
 <a name="contribute"></a>
 ## 贡献代码
