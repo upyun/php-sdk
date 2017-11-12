@@ -1,7 +1,22 @@
 # 又拍云 SDK for PHPer
 [![Build Status](https://scrutinizer-ci.com/g/upyun/php-sdk/badges/build.png?b=master)](https://scrutinizer-ci.com/g/upyun/php-sdk/build-status/master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/upyun/php-sdk/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/upyun/php-sdk/?branch=master) [![Code Coverage](https://scrutinizer-ci.com/g/upyun/php-sdk/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/upyun/php-sdk/?branch=master) 
 
-又拍云 PHP SDK，封装了[又拍云功能丰富的开放 API](http://docs.upyun.com/api/) ，帮助开发者快速对接文件云端存储、图片音视频云处理。该 SDK 包含如下功能：
+又拍云 PHP SDK，封装了[又拍云功能丰富的开放 API](http://docs.upyun.com/api/) ，帮助开发者快速对接文件云端存储、图片音视频云处理、智能鉴黄等功能
+
+- [功能列表](#list)
+- [使用说明](#use-instructions)
+  - [安装](#install)
+  - [文档](#doc)
+  - [示例](#usage)
+- [贡献代码](#contribute)
+- [社区](#community)
+- [许可证](#license)
+
+
+<a name="list"></a>
+## 功能列表
+
+SDK 包含如下功能
 
 - 基于 [rest api](http://docs.upyun.com/api/rest_api/)
     - 文件上传下载、目录创建删除等云存储基本操作
@@ -18,20 +33,11 @@
     - [文件异步解压缩](http://docs.upyun.com/cloud/unzip/)
     - [文件异步拉取](http://docs.upyun.com/cloud/spider/)
     - [异步图片拼接](http://docs.upyun.com/cloud/async_image/)
-- [同步视频处理](http://docs.upyun.com/cloud/sync_video/)：m3u8 文件同步拼接简介、其他视频文件同步截图功能
+- [同步视频处理](http://docs.upyun.com/cloud/sync_video/)：m3u8 文件同步拼接剪辑、其他视频文件同步截图功能
 - [缓存刷新](http://docs.upyun.com/api/purge/)
 
 *功能列表中的异步操作，均可以设置异步回调通知地址，接收异步处理结果*
 *如果需要测试回调功能，可以通过[又拍云回调服务](https://hooks.upyun.com/)创建一个临时回调地址*
-
-- [使用说明](#use-instructions)
-  - [安装](#install)
-  - [文档](#doc)
-  - [示例](#usage)
-- [贡献代码](#contribute)
-- [社区](#community)
-- [许可证](#license)
-
 
 <a name="use-instructions"></a>
 ## 使用说明
