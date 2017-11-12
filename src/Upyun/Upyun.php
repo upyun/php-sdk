@@ -438,4 +438,101 @@ class Upyun
         $video = new Api\Pretreat($this->config);
         return $video->query($taskIds, '/result/');
     }
+
+    /**
+     * 多个 m3u8 文件拼接
+     * @param array $files  保存在又拍云云存储中的多个 m3u8 文件路径
+     * @param string $saveAs 拼接生成的新 m3u8 文件保存路径
+     *
+     * @return array 见 [m3u8 拼接 - 响应](http://docs.upyun.com/cloud/sync_video/#_3)
+     */
+    public function m3u8Concat($files, $saveAs)
+    {
+        $p = new Api\SyncVideo($this->config);
+        return $p->process([
+            'm3u8s' => $files,
+            'save_as' => $saveAs,
+        ], '/m3u8er/concat');
+    }
+
+    /**
+     * 单个 m3u8 文件剪辑
+     * @param string $file 需要剪辑的又拍云云存储中的 m3u8 文件路径
+     * @param string $saveAs 剪辑完成后新的 m3u8 文件保存路径
+     * @param array $slice 需要被保留或删除的片段。
+     * @param bool $$isInclude 默认为 `true` 表示 `$slice` 参数描述的片段被保留，否则表示 `$slice` 参数描述的片段被删除
+     * @param bool $index 指定 `$slice` 参数的格式，默认为 `false` 表示使用时间范围描述片段，单位秒：`[<开始时间>, <结束时间>]`；`true` 表示使用 `m3u8` 文件的分片序号，从 0 开始，这种方式可以一次对多个片段操作
+     *
+     * @return array 见 [m3u8 剪辑 - 响应](http://docs.upyun.com/cloud/sync_video/#_6)
+     */
+    public function m3u8Clip($file, $saveAs, $slice = array(), $isInclude = true, $index = false)
+    {
+        $p = new Api\SyncVideo($this->config);
+        $params = [
+            'm3u8' => $file,
+            'save_as' => $saveAs,
+            'index' => $index,
+        ];
+        if ($$isInclude) {
+            $params['include'] = $slice;
+        } else {
+            $params['exclude'] = $slice;
+        }
+        return $p->process($params, '/m3u8er/clip');
+    }
+
+    /**
+     * 获取单个 m3u8 文件描述信息
+     * @param string $file 又拍云云存储的中的 m3u8 文件路径
+     *
+     * @return array 见 [获取 m3u8 信息 - 响应](http://docs.upyun.com/cloud/sync_video/#_6)
+     */
+    public function m3u8Meta($file)
+    {
+        $p = new Api\SyncVideo($this->config);
+        return $p->process([
+            'm3u8' => $file,
+        ], '/m3u8er/get_meta');
+    }
+
+    /**
+     * 视频截图，可以对 mp4、m3u8 等视频文件进行截图
+     * @param string $file 需要截图的又拍云云存储中的视频文件路径
+     * @param string $saveAs 截图保存路径
+     * @param string $point 截图时间点，`HH:MM:SS` 格式
+     * @param string $size 截图尺寸 `宽x高` 格式的字符串。默认和视频尺寸一致
+     * @param string $format 截图保存的格式，默认根据 `$saveAs` 参数的后缀生成，可以指定 `jpg | png | webp` 三种格式
+     *
+     * @return array 见 [视频截图 - 响应](http://docs.upyun.com/cloud/sync_video/#m3u8_2)
+     */
+    public function snapshot($file, $saveAs, $point, $size = '', $format = '')
+    {
+        $p = new Api\SyncVideo($this->config);
+        $params = [
+            'source' => $file,
+            'save_as' => $saveAs,
+            'point' => $point,
+        ];
+        if ($size) {
+            $params['size'] = $size;
+        }
+        if ($format) {
+            $params['format'] = $format;
+        }
+        return $p->process($params, '/snapshot');
+    }
+
+    /**
+     * 获取音视频文件元信息
+     * @param string $file 又拍云云存储的中的音视频文件路径
+     *
+     * @return array 见 [获取音视频文件信息 - 响应](http://docs.upyun.com/cloud/sync_video/#_16)
+     */
+    public function avMeta($file)
+    {
+        $p = new Api\SyncVideo($this->config);
+        return $p->process([
+            'source' => $file,
+        ], '/avmeta/get_meta');
+    }
 }

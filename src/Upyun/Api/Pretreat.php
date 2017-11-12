@@ -1,7 +1,6 @@
 <?php
 namespace Upyun\Api;
 
-use GuzzleHttp\Psr7;
 use GuzzleHttp\Client;
 use Upyun\Config;
 use Upyun\Signature;

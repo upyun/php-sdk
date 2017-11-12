@@ -91,6 +91,11 @@ class Config
      */
     const ED_PURGE           = 'http://purge.upyun.com/purge/';
 
+    /**
+     * 同步视频处理接口地址
+     */
+    const ED_SYNC_VIDEO           = 'p1.api.upyun.com';
+
     public function __construct($serviceName, $operatorName, $operatorPassword)
     {
         $this->serviceName = $serviceName;
@@ -128,6 +133,11 @@ class Config
     public function getPretreatEndPoint()
     {
         return $this->getProtocol() . self::ED_VIDEO;
+    }
+
+    public function getSyncVideoEndPoint()
+    {
+        return $this->getProtocol() . self::ED_SYNC_VIDEO;
     }
 
     public function getProtocol()
