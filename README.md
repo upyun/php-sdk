@@ -1,15 +1,33 @@
 # 又拍云 SDK for PHPer
 [![Build Status](https://scrutinizer-ci.com/g/upyun/php-sdk/badges/build.png?b=master)](https://scrutinizer-ci.com/g/upyun/php-sdk/build-status/master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/upyun/php-sdk/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/upyun/php-sdk/?branch=master) [![Code Coverage](https://scrutinizer-ci.com/g/upyun/php-sdk/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/upyun/php-sdk/?branch=master) 
 
-又拍云 PHP SDK，基于[又拍云 HTTP API 接口](http://docs.upyun.com/api/) 开发。SDK 包含了文件上传下载刷新等基本操作，以及图片、视频云处理等功能。
+又拍云 PHP SDK，封装了[又拍云功能丰富的开放 API](http://docs.upyun.com/api/) ，帮助开发者快速对接文件云端存储、图片音视频云处理。该 SDK 包含如下功能：
 
+- 基于 [rest api](http://docs.upyun.com/api/rest_api/)
+    - 文件上传下载、目录创建删除等云存储基本操作
+    - [断点续传](http://docs.upyun.com/api/rest_api/#_3)
+- 基于 [form api](http://docs.upyun.com/api/form_api/)
+    - 文件客户端上传 见`examples/client-upload`
+    - 上传预处理操作
+        - [同步音频处理](http://docs.upyun.com/cloud/sync_audio/)
+        - [文档转换](http://docs.upyun.com/cloud/uconvert/)
+        - [异步图片音视频处理](http://docs.upyun.com/api/form_api/#_7)
+        - [异步图片智能鉴黄](http://docs.upyun.com/ai/audit/)
+- [异步云处理](http://docs.upyun.com/cloud/)
+    - [视频音频](http://docs.upyun.com/cloud/av/)异步转码、切片、截图、水印、剪辑、拼接等功能
+    - [文件异步解压缩](http://docs.upyun.com/cloud/unzip/)
+    - [文件异步拉取](http://docs.upyun.com/cloud/spider/)
+    - [异步图片拼接](http://docs.upyun.com/cloud/async_image/)
+- [同步视频处理](http://docs.upyun.com/cloud/sync_video/)：m3u8 文件同步拼接简介、其他视频文件同步截图功能
+- [缓存刷新](http://docs.upyun.com/api/purge/)
+
+*功能列表中的异步操作，均可以设置异步回调通知地址，接收异步处理结果*
 *如果需要测试回调功能，可以通过[又拍云回调服务](https://hooks.upyun.com/)创建一个临时回调地址*
 
 - [使用说明](#use-instructions)
   - [安装](#install)
   - [文档](#doc)
   - [示例](#usage)
-- [更新说明](#update-instructions)
 - [贡献代码](#contribute)
 - [社区](#community)
 - [许可证](#license)
@@ -85,23 +103,6 @@ $saveLocal = fopen('/local/path/image.jpg', 'w');
 // 第二个参数不传时，read 方法将直接返回文件内容
 $client->read('/remote/server/image.png', $saveLocal);
 ```
-
-<a name="update-instructions"></a>
-## 更新说明
-#### 3.0.0
-
-- 重写 API 接口，不兼容 2.x 版本
-- 集合分块、刷新、视频预处理功能
-
-#### 2.2.0
-
-- 增加 composer 支持，特别感谢 [@totoleo](https://github.com/totoleo) 将 `upyun/sdk` 仓库源修改为 UPYUN 官方项目地址
-- 移除不再推荐使用的 API:`rmDir deleteFile readDir getWritedFileInfo`)，建议使用推荐方法替代
-- note: `2.1.0` 版本之前已经被 [@totoleo](https://github.com/totoleo) 使用
-
-#### 2.0.0
-
-- 使用1.0.x系列版本SDK的用户，注意原有部分方法已经不再推荐使用(`@deprecated`标注)，但是出于兼容考虑目前任然保留，建议更新升级程序使用新版SDK提供的方法。
 
 <a name="contribute"></a>
 ## 贡献代码
