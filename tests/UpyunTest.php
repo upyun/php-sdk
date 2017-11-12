@@ -252,4 +252,21 @@ class UpyunTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($result[self::$taskId]['path'][0] === '/video/result.mp4');
         $this->assertTrue($result[self::$taskId]['status_code'] === 200);
     }
+
+    public function testAvMeta()
+    {
+        $source = 'php-sdk-sample.mp4';
+        self::$upyun->write($source, fopen(__DIR__ . '/assets/SampleVideo_640x360_1mb.mp4', 'r'));
+        $result = self::$upyun->avMeta('/php-sdk-sample.mp4');
+        $this->assertTrue(count($result) === 2);
+        $this->assertTrue($result['streams'][0]['type'] === 'video');
+    }
+
+    public function testSnapshot()
+    {
+        $source = 'php-sdk-sample.mp4';
+        self::$upyun->write($source, fopen(__DIR__ . '/assets/SampleVideo_640x360_1mb.mp4', 'r'));
+        $result = self::$upyun->snapshot('/php-sdk-sample.mp4', '/snapshot.jpg', '00:00:01', '720x480', 'jpg');
+        $this->assertTrue($result['status_code'] === 200);
+    }
 }
