@@ -377,7 +377,7 @@ class Upyun
             case self::$PROCESS_TYPE_SYNC_FILE:
                 $options['app_name'] = 'spiderman';
                 break;
-            case self::$PROCESS_TYPE_SYNC_FILE:
+            case self::$PROCESS_TYPE_CONVERT:
                 $options['app_name'] = 'uconvert';
                 break;
             case self::$PROCESS_TYPE_STITCH:
