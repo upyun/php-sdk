@@ -473,7 +473,7 @@ class Upyun
             'save_as' => $saveAs,
             'index' => $index,
         ];
-        if ($$isInclude) {
+        if ($isInclude) {
             $params['include'] = $slice;
         } else {
             $params['exclude'] = $slice;
