@@ -20,7 +20,7 @@ function formAsyncPreProcess($file, $key, $apps=array())
 {
     global $client;
     $fd = fopen($file, 'r');
-    if ($fd != NULL)
+    if ($fd != null)
     {
         // 使用时，按文档和个人需求填写params
         $params = array(
@@ -58,7 +58,7 @@ function formImageSyncProcess()
 {
     global $client;
     $fd = fopen(IMAGE_FILE, 'r');
-    if ($fd != NULL)
+    if ($fd != null)
     {
         // 使用时，按文档和个人需求填写params
         $params = array(
