@@ -111,6 +111,7 @@ class UpyunTest extends \PHPUnit_Framework_TestCase
     public function testDeleteFile()
     {
         self::$upyun->write('test-delete.txt', 'test file content 3');
+        sleep(5);
         self::$upyun->delete('test-delete.txt');
         try {
             self::$upyun->read('test-delete.txt');
@@ -268,5 +269,17 @@ class UpyunTest extends \PHPUnit_Framework_TestCase
         self::$upyun->write($source, fopen(__DIR__ . '/assets/SampleVideo_640x360_1mb.mp4', 'r'));
         $result = self::$upyun->snapshot('/php-sdk-sample.mp4', '/snapshot.jpg', '00:00:01', '720x480', 'jpg');
         $this->assertTrue($result['status_code'] === 200);
+    }
+
+    public function testParallelUpload()
+    {
+        $config = new Config(BUCKET, USER_NAME, PWD);
+        $config->setUploadType('BLOCK_PARALLEL');
+        $upyun = new Upyun($config);
+        $filename = 'test_parallel.jpeg';
+        $upyun->write($filename, fopen(__DIR__ . '/assets/sample.jpeg', 'rb'));
+
+        $size = getUpyunFileSize($filename);
+        $this->assertEquals($size, PIC_SIZE);
     }
 }
