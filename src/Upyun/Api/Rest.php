@@ -103,6 +103,7 @@ class Rest
                 $this->withHeader($header, $value);
             }
         }
+        $this->withHeader('Expect', '');
         return $this;
     }
 
