@@ -309,7 +309,7 @@ class Upyun
         $response = $req->request('PUT', $target)
             ->withHeader('X-Upyun-Copy-Source', $source)
             ->send();
-        return $response->getStatusCode() === 200;
+        return util::isSuccess($response->getStatusCode());
     }
 
     /**
@@ -327,7 +327,7 @@ class Upyun
         $response = $req->request('PUT', $target)
             ->withHeader('X-Upyun-Move-Source', $source)
             ->send();
-        return $response->getStatusCode() === 200;
+        return util::isSuccess($response->getStatusCode());
     }
 
     /**
