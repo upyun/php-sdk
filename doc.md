@@ -349,6 +349,56 @@ Upyun::usage( string $path = &#039;/&#039; )
 ---
 
 
+### copy
+
+复制文件。只能操作文件，不能操作文件夹。
+
+```php
+Upyun::copy( string $source, string $target )
+```
+
+
+**参数列表:**
+
+- **string** `$source`
+  源文件地址
+- **string** `$target`
+  目标文件地址
+
+
+**返回值：**
+
+复制成功返回 true，否则返回 false
+
+
+---
+
+
+### move
+
+移动文件。可以进行文件重命名、文件移动，只能操作文件，不能操作文件夹。
+
+```php
+Upyun::move( string $source, string $target )
+```
+
+
+**参数列表:**
+
+- **string** `$source`
+  需要移动的文件地址
+- **string** `$target`
+  目标文件地址
+
+
+**返回值：**
+
+移动成功返回 true，否则返回 false
+
+
+---
+
+
 ### purge
 
 刷新缓存

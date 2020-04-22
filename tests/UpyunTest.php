@@ -136,6 +136,7 @@ class UpyunTest extends \PHPUnit_Framework_TestCase
         $name = 'test-has.txt';
         self::$upyun->write($name, 'test file content 4');
         $this->assertEquals(self::$upyun->has($name), true);
+        sleep(5);
         self::$upyun->delete($name);
         sleep(5);
         $this->assertEquals(self::$upyun->has($name), false);
@@ -204,6 +205,33 @@ class UpyunTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($size > 0);
     }
 
+    /**
+     * @depends testWriteString
+     */
+    public function testCopy()
+    {
+        $source = 'test-copy.txt';
+        $target = 'test-copy-target.txt';
+        self::$upyun->write($source, 'test file content 6');
+        sleep(5);
+        self::$upyun->copy($source, $target);
+        $this->assertEquals(self::$upyun->has($target), true);
+    }
+
+    /**
+     * @depends testWriteString
+     */
+    public function testMove()
+    {
+        $source = 'test-move.txt';
+        $target = 'test-move-target.txt';
+        self::$upyun->write($source, 'test file content 7');
+        sleep(5);
+        self::$upyun->move($source, $target);
+        $this->assertEquals(self::$upyun->has($source), false);
+        $this->assertEquals(self::$upyun->has($target), true);
+    }
+
     public function testPurge()
     {
         $urls = self::$upyun->purge(getFileUrl('test.txt'));
@@ -265,6 +293,7 @@ class UpyunTest extends \PHPUnit_Framework_TestCase
 
     public function testSnapshot()
     {
+        sleep(5);
         $source = 'php-sdk-sample.mp4';
         self::$upyun->write($source, fopen(__DIR__ . '/assets/SampleVideo_640x360_1mb.mp4', 'r'));
         $result = self::$upyun->snapshot('/php-sdk-sample.mp4', '/snapshot.jpg', '00:00:01', '720x480', 'jpg');
