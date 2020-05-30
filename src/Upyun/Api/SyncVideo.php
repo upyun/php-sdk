@@ -10,7 +10,8 @@ use Upyun\Config;
 use Upyun\Signature;
 
 
-class SyncVideo {
+class SyncVideo
+{
     /**
      * @var Config
      */
@@ -21,16 +22,15 @@ class SyncVideo {
         $this->config = $config;
     }
 
-    public function process($params, $path) {
-        $client = new Client([
-            'timeout' => $this->config->timeout,
-        ]);
+    public function process($params, $path)
+    {
+        $client = $this->config->getGuzzleClient();
 
-        $path = '/' . $this->config->serviceName . $path;
+        $path = '/'.$this->config->serviceName.$path;
         $method = 'POST';
         $signedHeaders = Signature::getHeaderSign($this->config, $method, $path);
 
-        $url = $this->config->getSyncVideoEndPoint() . $path;
+        $url = $this->config->getSyncVideoEndPoint().$path;
         $response = $client->request($method, $url, [
             'headers' => $signedHeaders,
             'json' => $params

@@ -1,5 +1,9 @@
 <?php
+
 namespace Upyun;
+
+use GuzzleHttp\Client;
+use GuzzleHttp\HandlerStack;
 
 /**
  * Class Config
@@ -65,7 +69,9 @@ class Config
 
     private $version = '3.0.0';
 
+    protected $guzzleHandler;
 
+    protected $guzzleClient;
 
     /**
      * @var string 表单 api 的秘钥
@@ -81,25 +87,25 @@ class Config
     /**
      * rest api 和 form api 接口请求地址，详见：http://docs.upyun.com/api/rest_api/
      */
-    const ED_AUTO            = 'v0.api.upyun.com';
-    const ED_TELECOM         = 'v1.api.upyun.com';
-    const ED_CNC             = 'v2.api.upyun.com';
-    const ED_CTT             = 'v3.api.upyun.com';
+    const ED_AUTO = 'v0.api.upyun.com';
+    const ED_TELECOM = 'v1.api.upyun.com';
+    const ED_CNC = 'v2.api.upyun.com';
+    const ED_CTT = 'v3.api.upyun.com';
 
     /**
      * 异步云处理接口地址
      */
-    const ED_VIDEO           = 'p0.api.upyun.com';
+    const ED_VIDEO = 'p0.api.upyun.com';
 
     /**
      * 刷新接口地址
      */
-    const ED_PURGE           = 'http://purge.upyun.com/purge/';
+    const ED_PURGE = 'http://purge.upyun.com/purge/';
 
     /**
      * 同步视频处理接口地址
      */
-    const ED_SYNC_VIDEO           = 'p1.api.upyun.com';
+    const ED_SYNC_VIDEO = 'p1.api.upyun.com';
 
     public function __construct($serviceName, $operatorName, $operatorPassword)
     {
@@ -107,8 +113,40 @@ class Config
         $this->bucketName = $serviceName;
         $this->operatorName = $operatorName;
         $this->setOperatorPassword($operatorPassword);
-        $this->useSsl          = false;
+        $this->useSsl = false;
         self::$restApiEndPoint = self::ED_AUTO;
+    }
+
+    /**
+     * @param $guzzleHandler
+     * @return $this
+     */
+    public function setGuzzleHandler($guzzleHandler)
+    {
+        $this->guzzleHandler = $guzzleHandler;
+
+        return $this;
+    }
+
+    /**
+     * @return HandlerStack|null
+     */
+    public function getGuzzleHandler()
+    {
+        if (isset($this->guzzleHandler)) {
+            $guzzleHandler = $this->guzzleHandler;
+            return is_string($guzzleHandler) ? new $guzzleHandler() : $guzzleHandler;
+        }
+
+        return $this->guzzleHandler;
+    }
+
+    public function getGuzzleClient()
+    {
+        return $this->guzzleClient ?? $this->guzzleClient = new Client([
+                'timeout' => $this->timeout,
+                'handler' => $this->getGuzzleHandler(),
+            ]);
     }
 
     public function setOperatorPassword($operatorPassword)
@@ -118,7 +156,7 @@ class Config
 
     public function getFormApiKey()
     {
-        if (! $this->formApiKey) {
+        if (!$this->formApiKey) {
             throw new \Exception('form api key is empty.');
         }
 
@@ -137,12 +175,12 @@ class Config
 
     public function getPretreatEndPoint()
     {
-        return $this->getProtocol() . self::ED_VIDEO;
+        return $this->getProtocol().self::ED_VIDEO;
     }
 
     public function getSyncVideoEndPoint()
     {
-        return $this->getProtocol() . self::ED_SYNC_VIDEO;
+        return $this->getProtocol().self::ED_SYNC_VIDEO;
     }
 
     public function getProtocol()
