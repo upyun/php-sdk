@@ -1,4 +1,5 @@
 <?php
+
 namespace Upyun\Api;
 
 use GuzzleHttp\Client;
@@ -26,9 +27,7 @@ class Pretreat
     {
         $encodedTasks = Util::base64Json($tasks);
 
-        $client = new Client([
-            'timeout' => $this->config->timeout,
-        ]);
+        $client = $this->config->getGuzzleClient();
 
         $params = array(
             'service' => $this->config->serviceName,
@@ -42,7 +41,7 @@ class Pretreat
         $method = 'POST';
         $signedHeaders = Signature::getHeaderSign($this->config, $method, $path);
 
-        $url = $this->config->getPretreatEndPoint() . $path;
+        $url = $this->config->getPretreatEndPoint().$path;
         $response = $client->request($method, $url, [
             'headers' => $signedHeaders,
             'form_params' => $params
@@ -55,18 +54,16 @@ class Pretreat
 
     public function query($taskIds, $path)
     {
-        $client = new Client([
-            'timeout' => $this->config->timeout,
-        ]);
+        $client = $this->config->getGuzzleClient();
 
         $params = array(
             'service' => $this->config->serviceName,
             'task_ids' => implode(',', $taskIds)
         );
-        $path = $path . '?' . http_build_query($params);
+        $path = $path.'?'.http_build_query($params);
 
         $method = 'GET';
-        $url = $this->config->getPretreatEndPoint() . $path;
+        $url = $this->config->getPretreatEndPoint().$path;
         $signedHeaders = Signature::getHeaderSign($this->config, $method, $path);
         $response = $client->request($method, $url, [
             'headers' => $signedHeaders

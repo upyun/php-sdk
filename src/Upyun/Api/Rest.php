@@ -28,20 +28,20 @@ class Rest
 
     public function __construct(Config $config)
     {
-        $this->config   = $config;
-        $this->endpoint = $config->getProtocol() . Config::$restApiEndPoint . '/' . $config->serviceName;
+        $this->config = $config;
+        $this->endpoint = $config->getProtocol().Config::$restApiEndPoint.'/'.$config->serviceName;
     }
 
     public function request($method, $storagePath)
     {
         $this->method = strtoupper($method);
-        $this->storagePath = '/' . ltrim($storagePath, '/');
+        $this->storagePath = '/'.ltrim($storagePath, '/');
         return $this;
     }
 
 
     /**
-     * @param string|resource $file
+     * @param  string|resource  $file
      *
      * @return $this
      */
@@ -58,11 +58,9 @@ class Rest
      */
     public function send()
     {
-        $client = new Client([
-            'timeout' => $this->config->timeout,
-        ]);
+        $client = $this->config->getGuzzleClient();
 
-        $url = $this->endpoint . $this->storagePath;
+        $url = $this->endpoint.$this->storagePath;
         $body = null;
         if ($this->file && $this->method === 'PUT') {
             $body = $this->file;
@@ -108,7 +106,7 @@ class Rest
 
     public function toRequest()
     {
-        $url = $this->endpoint . $this->storagePath;
+        $url = $this->endpoint.$this->storagePath;
         $body = null;
         if ($this->file && $this->method === 'PUT') {
             $body = $this->file;

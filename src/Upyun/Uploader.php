@@ -1,4 +1,5 @@
 <?php
+
 namespace Upyun;
 
 use Upyun\Api\Rest;
@@ -33,12 +34,12 @@ class Uploader
             return $req->upload($path, $stream, $params);
         }
 
-        if (! $useBlock) {
+        if (!$useBlock) {
             $req = new Rest($this->config);
             return $req->request('PUT', $path)
-                       ->withHeaders($params)
-                       ->withFile($stream)
-                       ->send();
+                ->withHeaders($params)
+                ->withFile($stream)
+                ->send();
         } elseif ($this->config->uploadType === 'BLOCK_PARALLEL') {
             return $this->concurrentPointUpload($path, $stream, $params);
         } else {
@@ -61,7 +62,7 @@ class Uploader
         $headers = array();
         if (is_array($params)) {
             foreach ($params as $key => $val) {
-                $headers['X-Upyun-Meta-' . $key] = $val;
+                $headers['X-Upyun-Meta-'.$key] = $val;
             }
         }
         $res = $req->request('PUT', $path)
@@ -75,10 +76,10 @@ class Uploader
             throw new \Exception('init request failed when poinit upload!');
         }
 
-        $init      = Util::getHeaderParams($res->getHeaders());
-        $uuid      = $init['x-upyun-multi-uuid'];
+        $init = Util::getHeaderParams($res->getHeaders());
+        $uuid = $init['x-upyun-multi-uuid'];
         $blockSize = 1024 * 1024;
-        $partId    = 0;
+        $partId = 0;
         do {
             $fileBlock = $stream->read($blockSize);
             $res = $req->request('PUT', $path)
@@ -93,7 +94,7 @@ class Uploader
             if ($res->getStatusCode() !== 204) {
                 throw new \Exception('upload request failed when poinit upload!');
             }
-            $data   = Util::getHeaderParams($res->getHeaders());
+            $data = Util::getHeaderParams($res->getHeaders());
             $partId = $data['x-upyun-next-part-id'];
         } while ($partId != -1);
 
@@ -116,7 +117,7 @@ class Uploader
             $this->config->uploadType === 'BLOCK_PARALLEL') {
             return true;
         } elseif ($this->config->uploadType === 'AUTO' &&
-                  $fileSize >= $this->config->sizeBoundary) {
+            $fileSize >= $this->config->sizeBoundary) {
             return true;
         } else {
             return false;
@@ -139,7 +140,7 @@ class Uploader
         $headers = array();
         if (is_array($params)) {
             foreach ($params as $key => $val) {
-                $headers['X-Upyun-Meta-' . $key] = $val;
+                $headers['X-Upyun-Meta-'.$key] = $val;
             }
         }
         $res = $req->request('PUT', $path)
@@ -171,9 +172,7 @@ class Uploader
                     ->toRequest();
             }
         };
-        $client = new Client([
-            'timeout' => $this->config->timeout,
-        ]);
+        $client = $this->config->getGuzzleClient();
         $pool = new Pool($client, $requests($req, $path, $stream, $uuid), [
             'concurrency' => $this->config->concurrency,
             'fulfilled' => function ($res) {

@@ -18,10 +18,8 @@ class Form extends Rest
 
         $policy = Util::base64Json($params);
         $method = 'POST';
-        $signature = Signature::getBodySignature($this->config, $method, '/' . $params['service'], null, $policy);
-        $client = new Client([
-            'timeout' => $this->config->timeout,
-        ]);
+        $signature = Signature::getBodySignature($this->config, $method, '/'.$params['service'], null, $policy);
+        $client = $this->config->getGuzzleClient();
 
         $response = $client->request($method, $this->endpoint, array(
             'multipart' => array(
