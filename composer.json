@@ -1,7 +1,10 @@
 {
     "name": "v012345/upyun",
     "description": "UPYUN sdk for php",
-    "keywords": ["UPYUN", "sdk"],
+    "keywords": [
+        "UPYUN",
+        "sdk"
+    ],
     "type": "library",
     "minimum-stability": "stable",
     "homepage": "https://github.com/upyun/php-sdk/",
@@ -17,10 +20,21 @@
         "consolidation/robo": "^1.0"
     },
     "autoload": {
-        "psr-4": { "Upyun\\": "src/Upyun/" }
+        "psr-4": {
+            "Upyun\\": "src/Upyun/"
+        }
     },
     "autoload-dev": {
-        "psr-4": { "Upyun\\Tests\\": "tests/" }
+        "psr-4": {
+            "Upyun\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Upyun\\ServiceProvider"
+            ]
+        }
     },
     "authors": [
         {
@@ -32,12 +46,12 @@
             "email": "riyao.lyu@gmail.com"
         },
         {
-          "name": "totoleo",
-          "email": "totoleo@163.com"
+            "name": "totoleo",
+            "email": "totoleo@163.com"
         },
         {
-          "name": "sabakugaara",
-          "email": "senellise@gmail.com"
+            "name": "sabakugaara",
+            "email": "senellise@gmail.com"
         }
     ]
 }
