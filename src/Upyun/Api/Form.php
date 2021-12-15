@@ -23,22 +23,27 @@ class Form extends Rest
             'timeout' => $this->config->timeout,
         ]);
 
-        $response = $client->request($method, $this->endpoint, array(
-            'multipart' => array(
-                array(
-                    'name' => 'policy',
-                    'contents' => $policy,
-                ),
-                array(
-                    'name' => 'authorization',
-                    'contents' => $signature,
-                ),
-                array(
-                    'name' => 'file',
-                    'contents' => $stream,
+        for ($i = 0; $i < $this->config->retry; $i++) {
+            $response = $client->request($method, $this->endpoint, array(
+                'multipart' => array(
+                    array(
+                        'name' => 'policy',
+                        'contents' => $policy,
+                    ),
+                    array(
+                        'name' => 'authorization',
+                        'contents' => $signature,
+                    ),
+                    array(
+                        'name' => 'file',
+                        'contents' => $stream,
+                    )
                 )
-            )
-        ));
-        return $response->getStatusCode() === 200;
+            ));
+            if ($response->getStatusCode() == 200) {
+                return true;
+            }
+        }
+        return false;
     }
 }
