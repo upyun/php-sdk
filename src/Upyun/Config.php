@@ -43,6 +43,11 @@ class Config
     public $sizeBoundary = 31457280;
 
     /**
+     * @var int 支持 form 上传时重试
+     */
+    public $retry = 1;
+
+    /**
      * @var int 并行式断点续传的并发数
      */
     public $concurrency = 5;
