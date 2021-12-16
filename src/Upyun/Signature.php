@@ -67,13 +67,13 @@ class Signature
     /**
      * 获取表单 API 需要的签名，依据 body 签名规则计算
      * @param Config $serviceConfig
-     * @param $method 请求方法
-     * @param $uri 请求路径
-     * @param $date 请求时间
+     * @param $method string 请求方法
+     * @param $uri string 请求路径
+     * @param $date string 请求时间
      * @param $policy
-     * @param $contentMd5 请求 body 的 md5
+     * @param $contentMd5 string 请求 body 的 md5
      *
-     * @return array
+     * @return string
      */
     public static function getBodySignature(Config $serviceConfig, $method, $uri, $date = null, $policy = null, $contentMd5 = null)
     {
