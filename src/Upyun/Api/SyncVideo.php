@@ -36,7 +36,7 @@ class SyncVideo {
             'json' => $params
         ]);
 
-        $body = $response->getBody()->getContents();
+        $body = (string)$response->getBody();
         return json_decode($body, true);
     }
 }
