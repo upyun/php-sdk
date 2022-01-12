@@ -1,5 +1,5 @@
 {
-    "name": "upyun/sdk",
+    "name": "jasonmann/upyun-sdk",
     "description": "UPYUN sdk for php",
     "keywords": ["UPYUN", "sdk"],
     "type": "library",
