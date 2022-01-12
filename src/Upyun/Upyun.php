@@ -154,7 +154,7 @@ class Upyun
 
         if (! isset($params['x-upyun-list-iter'])) {
             if (is_resource($saveHandler)) {
-                Psr7\copy_to_stream($response->getBody(), Psr7\stream_for($saveHandler));
+                Psr7\Utils::copyToStream($response->getBody(), Psr7\stream_for($saveHandler));
                 return true;
             } else {
                 return $response->getBody()->getContents();
@@ -351,7 +351,7 @@ class Upyun
             'headers' =>  Signature::getPurgeSignHeader($this->config, $urlString),
             'form_params' => ['purge' => $urlString]
         ]);
-        $result = json_decode($response->getBody()->getContents(), true);
+        $result = json_decode((string)$response->getBody(), true);
         return $result['invalid_domain_of_url'];
     }
 
