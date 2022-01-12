@@ -110,6 +110,91 @@ class Uploader
         return $res;
     }
 
+    /**
+     * 初始化一个分片上传事件
+     * @param       $path
+     * @param       $size
+     * @param array $params
+     * @return mixed
+     * @throws \Exception
+     */
+    public function initiateMultipartUpload($path, $size, $params=[])
+    {
+        $req = new Rest($this->config);
+        $headers = array();
+        if (is_array($params)) {
+            foreach ($params as $key => $val) {
+                $headers['X-Upyun-Meta-' . $key] = $val;
+            }
+        }
+
+        $res = $req->request('PUT', $path)
+            ->withHeaders(array_merge(array(
+                'X-Upyun-Multi-Stage' => 'initiate',
+                'X-Upyun-Multi-Type' => Psr7\mimetype_from_filename($path),
+                'X-Upyun-Multi-Length' => $size,
+            ), $headers))
+            ->send();
+        if ($res->getStatusCode() !== 204) {
+            throw new \Exception('init request failed when poinit upload!');
+        }
+        $init      = Util::getHeaderParams($res->getHeaders());
+        $uuid      = $init['x-upyun-multi-uuid'];
+        return $uuid;
+    }
+
+    /**
+     * 上传分片
+     * @param $path
+     * @param $fileBlock
+     * @param $i
+     * @param $uuid
+     * @return mixed
+     * @throws \Exception
+     */
+    public function uploadPart($path, $fileBlock, $i, $uuid)
+    {
+        $req = new Rest($this->config);
+
+        $res = $req->request('PUT', $path)
+            ->withHeaders(array(
+                'X-Upyun-Multi-Stage' => 'upload',
+                'X-Upyun-Multi-Uuid' => $uuid,
+                'X-Upyun-Part-Id' => $i
+            ))
+            ->withFile(Psr7\Utils::streamFor($fileBlock))
+            ->send();
+        if ($res->getStatusCode() !== 204) {
+            throw new \Exception('upload request failed when point upload!');
+        }
+        $data   = Util::getHeaderParams($res->getHeaders());
+        $partId = $data['x-upyun-next-part-id'];
+        return $partId;
+    }
+
+    /**
+     * 完成分片上传
+     * @param $path
+     * @param $uuid
+     * @return array
+     * @throws \Exception
+     */
+    public function completeMultipartUpload($path, $uuid)
+    {
+        $req = new Rest($this->config);
+
+        $res = $req->request('PUT', $path)
+            ->withHeaders(array(
+                'X-Upyun-Multi-Uuid' => $uuid,
+                'X-Upyun-Multi-Stage' => 'complete'
+            ))
+            ->send();
+        if ($res->getStatusCode() != 204 && $res->getStatusCode() != 201) {
+            throw new \Exception('end request failed when poinit upload!');
+        }
+        return Util::getHeaderParams($res->getHeaders());
+    }
+
     private function needUseBlock($fileSize)
     {
         if ($this->config->uploadType === 'BLOCK' ||
