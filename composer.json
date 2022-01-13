@@ -1,5 +1,5 @@
 {
-    "name": "upyun/sdk",
+    "name": "guoxiangke/upyun-sdk",
     "description": "UPYUN sdk for php",
     "keywords": ["UPYUN", "sdk"],
     "type": "library",
@@ -9,7 +9,7 @@
     "require": {
         "php": ">=5.5.0",
         "ext-curl": "*",
-        "guzzlehttp/guzzle": "~6.0"
+        "guzzlehttp/guzzle": "^7.0"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.0",
