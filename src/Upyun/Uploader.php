@@ -24,7 +24,7 @@ class Uploader
 
     public function upload($path, $file, $params, $withAsyncProcess)
     {
-        $stream = Psr7\stream_for($file);
+        $stream = \GuzzleHttp\Psr7\Utils::streamFor($file);
         $size = $stream->getSize();
         $useBlock = $this->needUseBlock($size);
 
@@ -87,7 +87,7 @@ class Uploader
                     'X-Upyun-Multi-Uuid' => $uuid,
                     'X-Upyun-Part-Id' => $partId
                 ))
-                ->withFile(Psr7\stream_for($fileBlock))
+                ->withFile(\GuzzleHttp\Psr7\Utils::streamFor($fileBlock))
                 ->send();
 
             if ($res->getStatusCode() !== 204) {
@@ -167,7 +167,7 @@ class Uploader
                         'X-Upyun-Multi-Uuid' => $uuid,
                         'X-Upyun-Part-Id' => $i
                     ))
-                    ->withFile(Psr7\stream_for($fileBlock))
+                    ->withFile(\GuzzleHttp\Psr7\Utils::streamFor($fileBlock))
                     ->toRequest();
             }
         };
