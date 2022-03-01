@@ -1,4 +1,5 @@
 <?php
+
 namespace Upyun;
 
 /**
@@ -94,5 +95,38 @@ class Signature
         }
         $signature = base64_encode(hash_hmac('sha1', implode('&', $data), $serviceConfig->operatorPassword, true));
         return 'UPYUN ' . $serviceConfig->operatorName . ':' . $signature;
+    }
+
+    /**
+     * 获取防盗链token，前提是已开启token防盗链
+     * https://help.upyun.com/knowledge-base/cdn-token-limite
+     * 使用防盗链生成token时，需要提前设置secret
+     * Config.php里的setUptSecret()方法
+     * @param Config $serviceConfig
+     * @param $uri 请求路径
+     *
+     * @return string _upt参数的值
+     */
+    public function getUptToken(Config $serviceConfig, $uri)
+    {
+        $etime = time() + $serviceConfig->getUptExpiration();
+        $sign = md5("{$serviceConfig->getUptSecret()}&{$etime}&{$uri}");
+        $upt = substr($sign, 12, 8) . $etime;
+        return $upt;
+    }
+
+    /**
+     * 根据传入的URL直接处理成携带upt参数的URL
+     * @param Config $serviceConfig
+     * @param $method 请求方法
+     * @param $url 访问URL
+     *
+     * @return string 携带upt参数的URL
+     */
+    public function getUptUrl(Config $serviceConfig, $url)
+    {
+        $urlObj = parse_url($url);
+        $upt = $this->getUptToken($serviceConfig, $urlObj['path']);
+        return $urlObj['scheme'] . $urlObj['host'] . '?_upt=' . $upt;
     }
 }

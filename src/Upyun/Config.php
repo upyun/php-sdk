@@ -1,4 +1,5 @@
 <?php
+
 namespace Upyun;
 
 /**
@@ -71,6 +72,17 @@ class Config
      * @var string 表单 api 的秘钥
      */
     private $formApiKey;
+
+    /**
+     * @var string token防盗链使用的与CDN平台约定的签名密钥
+     * https://help.upyun.com/knowledge-base/cdn-token-limite
+     */
+    private $uptSecret;
+
+    /**
+     * @var string 防盗链绑定的过期时间
+     */
+    private $uptExpiration = 1800;
 
     /**
      * @var string rest api 和 form api 的接口地址
@@ -158,5 +170,25 @@ class Config
     public function setConcurrency($concurrency)
     {
         $this->concurrency = $concurrency;
+    }
+
+    public function setUptSecret($secret)
+    {
+        $this->uptSecret = $secret;
+    }
+
+    public function getUptSecret()
+    {
+        return $this->uptSecret;
+    }
+
+    public function setUptExpiration($expiration)
+    {
+        $this->uptExpiration = $expiration;
+    }
+    
+    public function getUptExpiration()
+    {
+        return $this->uptExpiration;
     }
 }
