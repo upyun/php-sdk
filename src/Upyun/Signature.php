@@ -107,7 +107,7 @@ class Signature
      *
      * @return string _upt参数的值
      */
-    public function getUptToken(Config $serviceConfig, $uri)
+    public static function getUptToken(Config $serviceConfig, $uri)
     {
         $etime = time() + $serviceConfig->getUptExpiration();
         $sign = md5("{$serviceConfig->getUptSecret()}&{$etime}&{$uri}");
@@ -123,10 +123,10 @@ class Signature
      *
      * @return string 携带upt参数的URL
      */
-    public function getUptUrl(Config $serviceConfig, $url)
+    public static function getUptUrl(Config $serviceConfig, $url)
     {
         $urlObj = parse_url($url);
-        $upt = $this->getUptToken($serviceConfig, $urlObj['path']);
+        $upt = self::getUptToken($serviceConfig, $urlObj['path']);
         return $urlObj['scheme'] . $urlObj['host'] . '?_upt=' . $upt;
     }
 }
