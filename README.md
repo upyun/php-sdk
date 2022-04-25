@@ -54,7 +54,7 @@ SDK 包含如下功能
 建议使用速度很快的国内[全量镜像](https://pkg.phpcomposer.com/#how-to-use-packagist-mirror)([又拍云赞助](https://pkg.phpcomposer.com/#donation))
 
 ```
-composer require upyun/sdk
+composer require jasonmann/upyun-sdk
 ```
 
 2.如果不适应 `composer` 管理，可以直接下载[压缩包](https://github.com/upyun/php-sdk/releases)(注意需要下载 `php-sdk-版本号.zip` 格式的 zip 压缩包，不是 Source code 源码压缩包)，解压后，项目中添加如下代码：

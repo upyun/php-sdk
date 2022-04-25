@@ -73,7 +73,7 @@ class Signature
      * @param $policy
      * @param $contentMd5 请求 body 的 md5
      *
-     * @return array
+     * @return string
      */
     public static function getBodySignature(Config $serviceConfig, $method, $uri, $date = null, $policy = null, $contentMd5 = null)
     {

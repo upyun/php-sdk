@@ -128,6 +128,48 @@ class Upyun
     }
 
     /**
+     * 初始化一个分片上传事件
+     * @param       $path
+     * @param       $size
+     * @param array $params
+     * @return mixed
+     * @throws \Exception
+     */
+    public function initiateMultipartUpload($path, $size, $params=[])
+    {
+        $upload = new Uploader($this->config);
+        return $upload->initiateMultipartUpload($path, $size, $params);
+    }
+
+    /**
+     * 上传分片
+     * @param $path
+     * @param $fileBlock
+     * @param $i
+     * @param $uuid
+     * @return mixed
+     * @throws \Exception
+     */
+    public function uploadPart($path, $fileBlock, $i, $uuid)
+    {
+        $upload = new Uploader($this->config);
+        return $upload->uploadPart($path, $fileBlock, $i, $uuid);
+    }
+
+    /**
+     * 完成分片上传
+     * @param $path
+     * @param $uuid
+     * @return array
+     * @throws \Exception
+     */
+    public function completeMultipartUpload($path, $uuid)
+    {
+        $upload = new Uploader($this->config);
+        return $upload->completeMultipartUpload($path, $uuid);
+    }
+
+    /**
      * 读取云存储文件/目录内容
      *
      * @param string $path 又拍云存储中的文件或者目录路径
@@ -154,7 +196,7 @@ class Upyun
 
         if (! isset($params['x-upyun-list-iter'])) {
             if (is_resource($saveHandler)) {
-                Psr7\copy_to_stream($response->getBody(), Psr7\stream_for($saveHandler));
+                Psr7\Utils::copyToStream($response->getBody(), Psr7\stream_for($saveHandler));
                 return true;
             } else {
                 return $response->getBody()->getContents();
@@ -351,7 +393,7 @@ class Upyun
             'headers' =>  Signature::getPurgeSignHeader($this->config, $urlString),
             'form_params' => ['purge' => $urlString]
         ]);
-        $result = json_decode($response->getBody()->getContents(), true);
+        $result = json_decode((string)$response->getBody(), true);
         return $result['invalid_domain_of_url'];
     }
 

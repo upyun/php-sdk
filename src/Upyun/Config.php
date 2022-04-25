@@ -50,7 +50,7 @@ class Config
     /**
      * @var int request timeout seconds
      */
-    public $timeout = 60;
+    public $timeout = 600;
 
 
     /**
